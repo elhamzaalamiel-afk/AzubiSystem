@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
-// قاعدة البيانات الحقيقية للمستخدمين
+// قاعدة البيانات المحدثة
 let usersDB = [
     {
         name: "Super Admin",
@@ -21,14 +21,19 @@ let usersDB = [
 
 let reportsDB = [];
 let homeworkDB = [];
+let messagesDB = [];
+let calendarSettingsDB = {
+    schoolDays: "Montag, Mittwoch",
+    companyDays: "Dienstag, Donnerstag, Freitag"
+};
 
-// التحقق الصارم من البريد الإلكتروني
+// تسجيل الدخول
 app.post('/api/login', (req, res) => {
     const { email, password, role } = req.body;
     const user = usersDB.find(u => u.email.toLowerCase().trim() === email.toLowerCase().trim());
 
     if (!user) {
-        return res.json({ success: false, message: "E-Mail ist nicht im System registriert / البريد غير مسجل." });
+        return res.json({ success: false, message: "E-Mail ist nicht im System registriert / البريد غير مسجل بالنظام." });
     }
     if (user.password !== password) {
         return res.json({ success: false, message: "Falsches Passwort / كلمة المرور غير صحيحة." });
@@ -63,7 +68,7 @@ app.post('/api/users', (req, res) => {
     res.json({ success: true, user: newUser });
 });
 
-// إحصائيات النظام الحقيقية
+// إحصائيات النظام
 app.get('/api/stats', (req, res) => {
     const azubiCount = usersDB.filter(u => u.role === 'azubi').length;
     res.json({
@@ -74,7 +79,7 @@ app.get('/api/stats', (req, res) => {
     });
 });
 
-// التقارير والتوقيع الرقمي
+// التقارير
 app.post('/api/reports', (req, res) => {
     const { week, dept, text, author } = req.body;
     const newReport = {
@@ -104,6 +109,36 @@ app.post('/api/reports/approve', (req, res) => {
         return res.json({ success: true, report });
     }
     res.json({ success: false, message: "Fehler." });
+});
+
+// إعدادات التقويم
+app.get('/api/calendar', (req, res) => {
+    res.json(calendarSettingsDB);
+});
+
+app.post('/api/calendar', (req, res) => {
+    const { schoolDays, companyDays } = req.body;
+    if (schoolDays) calendarSettingsDB.schoolDays = schoolDays;
+    if (companyDays) calendarSettingsDB.companyDays = companyDays;
+    res.json({ success: true, settings: calendarSettingsDB });
+});
+
+// المراسلات والمحادثات الموجهة
+app.get('/api/messages', (req, res) => {
+    res.json(messagesDB);
+});
+
+app.post('/api/messages', (req, res) => {
+    const { sender, recipient, text } = req.body;
+    const newMsg = {
+        id: Date.now(),
+        sender,
+        recipient: recipient || "Allgemein",
+        text,
+        timestamp: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
+    };
+    messagesDB.push(newMsg);
+    res.json({ success: true, message: newMsg });
 });
 
 // الواجبات

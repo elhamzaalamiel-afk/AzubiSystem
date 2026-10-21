@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AzubiSystem Enterprise</title>
+    <title>AzubiSystem Enterprise - Duales Ausbildungssystem</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         .azubi-bg {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-            background-size: 24px 24px;
+            background-color: #f1f5f9;
+            background-image: radial-gradient(#3b82f6 0.75px, transparent 0.75px), radial-gradient(#3b82f6 0.75px, #f1f5f9 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            background-opacity: 0.08;
+        }
+        .phone-num {
+            direction: ltr !important;
+            unicode-bidi: isolate;
+            display: inline-block;
         }
         @media print { .no-print { display: none !important; } }
     </style>
@@ -20,30 +27,30 @@
 <body class="azubi-bg text-slate-800 h-screen flex flex-col overflow-hidden">
 
     <!-- شاشة تسجيل الدخول -->
-    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 bg-opacity-95 no-print">
+    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 no-print">
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-200">
             <div class="text-center mb-6">
                 <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">AzubiSystem 🇩🇪</h2>
-                <p class="text-sm text-slate-500 mt-2">Enterprise System Login</p>
+                <p class="text-sm text-slate-500 mt-2">Duales Ausbildungssystem Portal</p>
             </div>
             
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1">E-Mail-Adresse</label>
-                    <input type="email" id="loginUser" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm" value="azubisystem.ha@gmail.com">
+                    <input type="email" id="loginUser" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none" value="azubisystem.ha@gmail.com">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Passwort</label>
-                    <input type="password" id="loginPass" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm" value="123456">
+                    <input type="password" id="loginPass" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none" value="123456">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Rolle</label>
-                    <select id="roleSelector" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm bg-white font-semibold">
+                    <select id="roleSelector" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm bg-white font-semibold focus:ring-2 focus:ring-blue-600 focus:outline-none">
                         <option value="admin">Super Admin</option>
                         <option value="azubi">Azubi</option>
                     </select>
                 </div>
-                <button type="button" onclick="doLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition">Anmelden</button>
+                <button type="button" onclick="doLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition shadow-md">Anmelden</button>
             </div>
         </div>
     </div>
@@ -52,7 +59,7 @@
     <div class="flex h-screen overflow-hidden">
         
         <!-- القائمة الجانبية -->
-        <aside class="w-64 bg-slate-900 text-white flex flex-col justify-between no-print shadow-xl">
+        <aside class="w-64 bg-slate-900 text-white flex flex-col justify-between no-print shadow-xl z-20">
             <div>
                 <div class="p-6 text-2xl font-black text-blue-400 border-b border-slate-800 flex items-center justify-between">
                     <span>AzubiSystem</span>
@@ -64,11 +71,12 @@
                         <a href="#" onclick="switchTab('users')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navUsers">👥 Benutzerverwaltung</a>
                         <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navSkills">⭐ Skill Matrix</a>
                         <a href="#" onclick="switchTab('homework')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navHw">📚 Aufgaben</a>
-                        <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navChat">💬 Chat</a>
+                        <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navChat">💬 Chat & Nachrichten</a>
                     </div>
                     <div id="azubiNav" class="hidden space-y-1">
                         <a href="#" onclick="switchTab('azubi-portal')" class="block px-4 py-2.5 rounded-xl bg-blue-600 text-white font-medium" id="navAzubi">📓 Berichtsheft & PDF</a>
                         <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navAI">🤖 Azubi AI Assistant</a>
+                        <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navAzubiChat">💬 Chat & Nachrichten</a>
                     </div>
                     <a href="#" onclick="switchTab('calendar')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navCal">📅 Kalender</a>
                     <a href="#" onclick="switchTab('about')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navAbout">ℹ️ Über uns</a>
@@ -76,21 +84,21 @@
                 </nav>
             </div>
 
+            <!-- مربع الدعم الفني وتثبيت اتجاه رقم الهاتف -->
             <div class="p-4 m-4 bg-slate-800 rounded-xl border border-slate-700 text-xs text-slate-300 space-y-1">
-                <div class="font-bold text-white">Support Center</div>
-                <div class="font-mono text-blue-300 font-semibold">📞 +49 176 63160304</div>
+                <div class="font-bold text-white" id="suppLabel">Support Center</div>
+                <div class="font-mono text-blue-300 font-semibold phone-num">📞 +49 176 63160304</div>
             </div>
         </aside>
 
         <!-- المحتوى الرئيسي -->
         <main class="flex-1 flex flex-col overflow-y-auto">
             
-            <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-8 no-print shadow-sm">
+            <header class="bg-white/90 backdrop-blur border-b border-slate-200 h-16 flex items-center justify-between px-8 no-print shadow-sm">
                 <div class="font-bold text-slate-700 text-lg" id="hdrTitle">Super Admin Kontrollzentrum</div>
                 
                 <div class="flex items-center gap-3">
-                    <!-- قائمة اللغات الـ 7 -->
-                    <select id="langSwitcher" onchange="changeLanguage(this.value)" class="text-xs bg-slate-100 border border-slate-300 px-3 py-1.5 rounded-lg font-semibold text-slate-700 cursor-pointer">
+                    <select id="langSwitcher" onchange="changeLanguage(this.value)" class="text-xs bg-slate-100 border border-slate-300 px-3 py-1.5 rounded-lg font-semibold text-slate-700 cursor-pointer focus:outline-none">
                         <option value="de">🇩🇪 Deutsch</option>
                         <option value="ar">🇸🇦 العربية</option>
                         <option value="en">🇬🇧 English</option>
@@ -109,7 +117,7 @@
                 <div id="tab-dashboard" class="space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <h3 class="text-lg font-black text-slate-900" id="welcomeMsg">Willkommen</h3>
-                        <p class="text-xs text-slate-500 mt-1" id="dashSub">Echtes Enterprise AzubiSystem Aktiv.</p>
+                        <p class="text-xs text-slate-500 mt-1" id="dashSub">Enterprise AzubiSystem Aktiv.</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -159,7 +167,7 @@
                 <div id="tab-ai-assistant" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                         <h3 class="text-lg font-bold text-slate-900">🤖 Azubi AI Assistant</h3>
-                        <p class="text-xs text-slate-500">Formulieren Sie Ihre Berichte professionell.</p>
+                        <p class="text-xs text-slate-500">Formulieren Sie Ihre Berichte professionell nach IHK Standards.</p>
                         <textarea id="aiInput" placeholder="Fügen Sie Ihren Text hier ein..." class="w-full px-4 py-2 border rounded-xl text-sm border-slate-300 h-24"></textarea>
                         <button onclick="runAIAssistant()" class="bg-purple-600 text-white text-xs font-bold px-6 py-2.5 rounded-xl hover:bg-purple-700 transition">✨ Berichtssatz optimieren</button>
                         <div id="aiOutput" class="hidden p-4 bg-purple-50 border border-purple-200 rounded-xl text-xs text-purple-900"></div>
@@ -183,19 +191,38 @@
                     </div>
                 </div>
 
-                <!-- 5. Kalender -->
+                <!-- 5. التقويم وقابليته للتعديل اليدوي -->
                 <div id="tab-calendar" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                        <h3 class="text-lg font-bold text-slate-800">📅 Terminkalender</h3>
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-bold text-slate-800" id="calTitle">📅 Terminkalender</h3>
+                            <button onclick="toggleCalendarEdit()" class="text-xs bg-blue-50 text-blue-600 font-bold px-3 py-1.5 rounded-lg border border-blue-200 hover:bg-blue-100">✏️ Tage anpassen</button>
+                        </div>
+                        
+                        <!-- العرض الجاري -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="p-4 border border-blue-200 bg-blue-50/50 rounded-xl text-xs">
-                                <span class="font-bold text-blue-900 block">🏫 Berufsschultage:</span>
-                                <p>Montag & Mittwoch</p>
+                            <div class="p-4 border border-blue-200 bg-blue-50/50 rounded-xl text-xs space-y-1">
+                                <span class="font-bold text-blue-900 block" id="lblSchoolDays">🏫 Berufsschultage:</span>
+                                <p id="dispSchoolDays" class="font-semibold text-slate-700">Montag & Mittwoch</p>
                             </div>
-                            <div class="p-4 border border-emerald-200 bg-emerald-50/50 rounded-xl text-xs">
-                                <span class="font-bold text-emerald-900 block">🏢 Betriebstage:</span>
-                                <p>Dienstag, Donnerstag & Freitag</p>
+                            <div class="p-4 border border-emerald-200 bg-emerald-50/50 rounded-xl text-xs space-y-1">
+                                <span class="font-bold text-emerald-900 block" id="lblCompDays">🏢 Betriebstage:</span>
+                                <p id="dispCompDays" class="font-semibold text-slate-700">Dienstag, Donnerstag & Freitag</p>
                             </div>
+                        </div>
+
+                        <!-- نموذج التعديل اليدوي -->
+                        <div id="calendarEditBox" class="hidden bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 mt-4">
+                            <h4 class="font-bold text-xs text-slate-700">Arbeits- und Schultage manuell bearbeiten:</h4>
+                            <div>
+                                <label class="text-xs text-slate-600 font-semibold block mb-1">Berufsschultage (أيام المدرسة المهنية):</label>
+                                <input type="text" id="editSchoolDays" class="w-full px-3 py-2 border rounded-lg text-sm border-slate-300" value="Montag, Mittwoch">
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-600 font-semibold block mb-1">Betriebstage (أيام العمل بالشركة):</label>
+                                <input type="text" id="editCompDays" class="w-full px-3 py-2 border rounded-lg text-sm border-slate-300" value="Dienstag, Donnerstag, Freitag">
+                            </div>
+                            <button onclick="saveCalendarDays()" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-700">Speichern</button>
                         </div>
                     </div>
                 </div>
@@ -211,7 +238,7 @@
                             <input type="text" id="newUserOrg" placeholder="Organisation" class="px-4 py-2 border rounded-xl text-sm border-slate-300">
                             <select id="newUserRole" class="px-4 py-2 border rounded-xl text-sm border-slate-300 md:col-span-2">
                                 <option value="Azubi">Azubi</option>
-                                <option value="Lehrer">Lehrer</option>
+                                <option value="Lehrer">Lehrer / Ausbilder</option>
                             </select>
                             <button type="button" onclick="addUser()" class="bg-blue-600 text-white font-semibold py-2 rounded-xl text-sm">Registrieren</button>
                         </div>
@@ -247,31 +274,85 @@
                     <div id="homeworkList" class="space-y-3"></div>
                 </div>
 
-                <!-- 8. الشات -->
+                <!-- 8. نظام المحادثة الموجهة المطور -->
                 <div id="tab-messages" class="hidden space-y-6">
-                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[550px]">
-                        <div class="p-4 bg-slate-900 text-white"><h3 class="font-bold text-sm">Chat</h3></div>
-                        <div id="chatMessages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 text-sm"><p class="text-xs text-slate-400 text-center">Keine Nachrichten.</p></div>
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[580px]">
+                        <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
+                            <h3 class="font-bold text-sm" id="chatHeader">💬 Chat & Vertrauliche Nachricht</h3>
+                            <span class="text-xs text-blue-300">Gesichert / Encrypted</span>
+                        </div>
+                        
+                        <!-- إدخال المستلم والمؤسسة -->
+                        <div class="p-3 bg-slate-100 border-b border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                            <div>
+                                <label class="font-bold text-slate-600 block mb-1">Empfänger-Typ (نوع المستلم):</label>
+                                <select id="msgRecipientType" class="w-full px-3 py-1.5 border rounded-lg bg-white">
+                                    <option value="Betrieb (Firma)">🏢 Betrieb / Firma (الشركة)</option>
+                                    <option value="Berufsschule">🏫 Berufsschule (المدرسة المهنية)</option>
+                                    <option value="Ausbilder / Mentor">👤 Ausbilder / Mentor (المشرف الشخصي)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-600 block mb-1">Empfänger E-Mail / Name (بريد المستلم):</label>
+                                <input type="text" id="msgRecipient" placeholder="z.B. ausbilder@firma.de" class="w-full px-3 py-1.5 border rounded-lg bg-white">
+                            </div>
+                        </div>
+
+                        <div id="chatMessages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 text-sm">
+                            <p class="text-xs text-slate-400 text-center">Keine Nachrichten vorhanden.</p>
+                        </div>
+                        
                         <div class="p-4 bg-white border-t border-slate-200 flex gap-3">
-                            <input type="text" id="chatInput" placeholder="Nachricht..." class="flex-1 px-4 py-2.5 border rounded-xl text-sm border-slate-300">
-                            <button type="button" onclick="sendMessage()" class="bg-blue-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm">Senden</button>
+                            <input type="text" id="chatInput" placeholder="Nachricht eingeben..." class="flex-1 px-4 py-2.5 border rounded-xl text-sm border-slate-300">
+                            <button type="button" onclick="sendMessage()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm">Senden</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- 9. حول النظام -->
+                <!-- 9. حول النظام والمعلومات التفصيلية الكاملة -->
                 <div id="tab-about" class="hidden space-y-6">
                     <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <h3 class="text-2xl font-bold text-slate-900" id="aboutTitle">Über AzubiSystem 🇩🇪</h3>
-                        <p class="text-sm text-slate-600 leading-relaxed" id="aboutDesc">Erweitertes Enterprise-Verwaltungssystem für die duale Ausbildung.</p>
+                        <p class="text-sm text-slate-600 leading-relaxed" id="aboutDesc">
+                            AzubiSystem ist eine spezialisierte digitale Verwaltungsplattform für das duale Ausbildungssystem in Deutschland. Die Plattform verbindet Auszubildende, Ausbildungsbetriebe und Berufsschulen in einer sicheren, DSGVO-konformen Umgebung.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <h4 class="font-bold text-slate-800 mb-1">📜 Compliance & Standards:</h4>
+                                <p class="text-slate-600">Vollständig konform mit dem Berufsbildungsgesetz (BBiG) sowie den Anforderungsprofilen der IHK (Industrie- und Handelskammer) und HWK (Handwerkskammer).</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <h4 class="font-bold text-slate-800 mb-1">🔒 Datenschutz & Sicherheit:</h4>
+                                <p class="text-slate-600">Sichere Datenübertragung, verschlüsselte Kommunikation und strikte Rechteverwaltung gemäß EU-DSGVO Richtlinien.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 10. المساعدة -->
+                <!-- 10. مركز المساعدة المطور والشامل -->
                 <div id="tab-help" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                        <h3 class="text-xl font-bold text-slate-900" id="helpTitle">Hilfe-Center</h3>
-                        <p class="text-xs text-slate-600" id="helpSub">Support: azubisystem.ha@gmail.com</p>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                        <h3 class="text-xl font-bold text-slate-900" id="helpTitle">Hilfe-Center & Support</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl text-xs space-y-2">
+                                <h4 class="font-bold text-blue-900 text-sm">Häufig gestellte Fragen (FAQ):</h4>
+                                <div>
+                                    <p class="font-bold text-slate-800">Wie reiche ich mein Berichtsheft ein?</p>
+                                    <p class="text-slate-600">Gehen Sie zum Menüpunkt "Berichtsheft & PDF", füllen Sie die Tätigkeiten aus und klicken Sie auf "Bericht speichern".</p>
+                                </div>
+                                <div class="pt-2 border-t border-blue-200">
+                                    <p class="font-bold text-slate-800">Wie lade ich den PDF-Bericht herunter?</p>
+                                    <p class="text-slate-600">Klicken Sie im Bereich Berichtsheft auf die Schaltfläche "als PDF Exportieren".</p>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-2">
+                                <h4 class="font-bold text-slate-800">Kontakt zum Support-Team:</h4>
+                                <p class="text-slate-600">E-Mail: <span class="font-mono text-blue-600 font-bold">azubisystem.ha@gmail.com</span></p>
+                                <p class="text-slate-600">Telefon: <span class="font-mono text-blue-600 font-bold phone-num">📞 +49 176 63160304</span></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -279,66 +360,66 @@
         </main>
     </div>
 
-    <!-- كود الجافاسكربت المعالج -->
+    <!-- برمجة الواجهة واللغات والعمليات -->
     <script>
         let currentUser = null;
 
         const translations = {
             de: {
-                navDash: "📊 Dashboard", navUsers: "👥 Benutzerverwaltung", navSkills: "⭐ Skill Matrix", navHw: "📚 Aufgaben", navChat: "💬 Chat", navAzubi: "📓 Berichtsheft & PDF", navAI: "🤖 Azubi AI Assistant", navCal: "📅 Kalender", navAbout: "ℹ️ Über uns", navHelp: "❓ Hilfe-Center",
+                navDash: "📊 Dashboard", navUsers: "👥 Benutzerverwaltung", navSkills: "⭐ Skill Matrix", navHw: "📚 Aufgaben", navChat: "💬 Chat & Nachrichten", navAzubi: "📓 Berichtsheft & PDF", navAI: "🤖 Azubi AI Assistant", navCal: "📅 Kalender", navAbout: "ℹ️ Über uns", navHelp: "❓ Hilfe-Center",
                 hdrAdmin: "Super Admin Kontrollzentrum", btnLogout: "Abmelden",
-                welcome: "Willkommen im System, ", dashSub: "Echtes Enterprise AzubiSystem Aktiv.",
+                welcome: "Willkommen im System, ", dashSub: "Enterprise AzubiSystem Aktiv.",
                 stat1Label: "Azubis", stat2Label: "Gesamt Benutzer", stat3Label: "Berichte", stat4Label: "System Status",
-                aboutTitle: "Über AzubiSystem 🇩🇪", aboutDesc: "Erweitertes Enterprise-Verwaltungssystem für die duale Ausbildung.",
-                helpTitle: "Hilfe-Center", helpSub: "Support: azubisystem.ha@gmail.com"
+                aboutTitle: "Über AzubiSystem 🇩🇪", aboutDesc: "AzubiSystem ist eine spezialisierte digitale Verwaltung für das duale Ausbildungssystem in Deutschland.",
+                helpTitle: "Hilfe-Center & Support", suppLabel: "Support Center"
             },
             ar: {
-                navDash: "📊 لوحة التحكم", navUsers: "👥 إدارة المستخدمين", navSkills: "⭐ خريطة المهارات", navHw: "📚 الواجبات", navChat: "💬 المحادثة", navAzubi: "📓 دفتر التقارير و PDF", navAI: "🤖 المساعد الذكي AI", navCal: "📅 التقويم", navAbout: "ℹ️ حول النظام", navHelp: "❓ مركز المساعدة",
+                navDash: "📊 لوحة التحكم", navUsers: "👥 إدارة المستخدمين", navSkills: "⭐ خريطة المهارات", navHw: "📚 الواجبات", navChat: "💬 المحادثات والمراسلة", navAzubi: "📓 دفتر التقارير و PDF", navAI: "🤖 المساعد الذكي AI", navCal: "📅 التقويم", navAbout: "ℹ️ حول النظام", navHelp: "❓ مركز المساعدة",
                 hdrAdmin: "مركز تحكم المشرف العام", btnLogout: "تسجيل الخروج",
-                welcome: "مرحباً بك في النظام، ", dashSub: "نظام المتدربين المؤسسي الحقيقي مفعل.",
+                welcome: "مرحباً بك في النظام، ", dashSub: "نظام المتدربين المؤسسي مفعل.",
                 stat1Label: "المتدربون", stat2Label: "إجمالي المستخدمين", stat3Label: "التقارير", stat4Label: "حالة النظام",
-                aboutTitle: "حول نظام المتدربين 🇩🇪", aboutDesc: "نظام إدارة متطور ومؤسسي للتدريب المهني المزدوج.",
-                helpTitle: "مركز المساعدة", helpSub: "الدعم الفني: azubisystem.ha@gmail.com"
+                aboutTitle: "حول نظام المتدربين 🇩🇪", aboutDesc: "منصة رقمية متخصصة لإدارة نظام التدريب المهني المزدوج في ألمانيا وفق أعلى المعايير.",
+                helpTitle: "مركز المساعدة والدعم الفني", suppLabel: "مركز الدعم الفني"
             },
             en: {
-                navDash: "📊 Dashboard", navUsers: "👥 Users", navSkills: "⭐ Skill Matrix", navHw: "📚 Homework", navChat: "💬 Chat", navAzubi: "📓 Report Book & PDF", navAI: "🤖 Azubi AI Assistant", navCal: "📅 Calendar", navAbout: "ℹ️ About", navHelp: "❓ Help Center",
+                navDash: "📊 Dashboard", navUsers: "👥 Users", navSkills: "⭐ Skill Matrix", navHw: "📚 Homework", navChat: "💬 Chat & Messages", navAzubi: "📓 Report Book & PDF", navAI: "🤖 Azubi AI Assistant", navCal: "📅 Calendar", navAbout: "ℹ️ About", navHelp: "❓ Help Center",
                 hdrAdmin: "Super Admin Control Center", btnLogout: "Logout",
-                welcome: "Welcome to the system, ", dashSub: "Real Enterprise AzubiSystem Active.",
+                welcome: "Welcome to the system, ", dashSub: "Enterprise AzubiSystem Active.",
                 stat1Label: "Azubis", stat2Label: "Total Users", stat3Label: "Reports", stat4Label: "System Status",
-                aboutTitle: "About AzubiSystem 🇩🇪", aboutDesc: "Advanced enterprise management system for dual vocational training.",
-                helpTitle: "Help Center", helpSub: "Support: azubisystem.ha@gmail.com"
+                aboutTitle: "About AzubiSystem 🇩🇪", aboutDesc: "Specialized digital management platform for the dual vocational training system in Germany.",
+                helpTitle: "Help Center & Support", suppLabel: "Support Center"
             },
             fr: {
-                navDash: "📊 Tableau de bord", navUsers: "👥 Utilisateurs", navSkills: "⭐ Skill Matrix", navHw: "📚 Devoirs", navChat: "💬 Chat", navAzubi: "📓 Carnet & PDF", navAI: "🤖 Assistant IA", navCal: "📅 Calendrier", navAbout: "ℹ️ À propos", navHelp: "❓ Centre d'aide",
+                navDash: "📊 Tableau de bord", navUsers: "👥 Utilisateurs", navSkills: "⭐ Skill Matrix", navHw: "📚 Devoirs", navChat: "💬 Chat & Messages", navAzubi: "📓 Carnet & PDF", navAI: "🤖 Assistant IA", navCal: "📅 Calendrier", navAbout: "ℹ️ À propos", navHelp: "❓ Centre d'aide",
                 hdrAdmin: "Centre de contrôle Super Admin", btnLogout: "Se déconnecter",
-                welcome: "Bienvenue dans le système, ", dashSub: "Véritable Enterprise AzubiSystem Actif.",
+                welcome: "Bienvenue dans le système, ", dashSub: "Enterprise AzubiSystem Actif.",
                 stat1Label: "Apprentis", stat2Label: "Total Utilisateurs", stat3Label: "Rapports", stat4Label: "État du Système",
-                aboutTitle: "À propos d'AzubiSystem 🇩🇪", aboutDesc: "Système de gestion d'entreprise avancé pour la formation.",
-                helpTitle: "Centre d'aide", helpSub: "Support: azubisystem.ha@gmail.com"
+                aboutTitle: "À propos d'AzubiSystem 🇩🇪", aboutDesc: "Plateforme de gestion numérique spécialisée pour la formation professionnelle en Allemagne.",
+                helpTitle: "Centre d'aide & Support", suppLabel: "Centre de Support"
             },
             es: {
-                navDash: "📊 Tablero", navUsers: "👥 Usuarios", navSkills: "⭐ Skill Matrix", navHw: "📚 Tareas", navChat: "💬 Chat", navAzubi: "📓 Informes y PDF", navAI: "🤖 Asistente IA", navCal: "📅 Calendario", navAbout: "ℹ️ Acerca de", navHelp: "❓ Ayuda",
+                navDash: "📊 Tablero", navUsers: "👥 Usuarios", navSkills: "⭐ Skill Matrix", navHw: "📚 Tareas", navChat: "💬 Chat y Mensajes", navAzubi: "📓 Informes y PDF", navAI: "🤖 Asistente IA", navCal: "📅 Calendario", navAbout: "ℹ️ Acerca de", navHelp: "❓ Ayuda",
                 hdrAdmin: "Centro de Super Admin", btnLogout: "Cerrar sesión",
-                welcome: "Bienvenido al sistema, ", dashSub: "AzubiSystem Enterprise real activo.",
+                welcome: "Bienvenido al sistema, ", dashSub: "AzubiSystem Enterprise activo.",
                 stat1Label: "Aprendices", stat2Label: "Total Usuarios", stat3Label: "Informes", stat4Label: "Estado",
-                aboutTitle: "Acerca de AzubiSystem 🇩🇪", aboutDesc: "Sistema de gestión avanzado para la formación dual.",
-                helpTitle: "Centro de ayuda", helpSub: "Soporte: azubisystem.ha@gmail.com"
+                aboutTitle: "Acerca de AzubiSystem 🇩🇪", aboutDesc: "Plataforma de gestión digital para el sistema de formación dual en Alemania.",
+                helpTitle: "Centro de ayuda y Soporte", suppLabel: "Centro de Soporte"
             },
             it: {
-                navDash: "📊 Dashboard", navUsers: "👥 Utenti", navSkills: "⭐ Skill Matrix", navHw: "📚 Compiti", navChat: "💬 Chat", navAzubi: "📓 Rapporti e PDF", navAI: "🤖 Assistente IA", navCal: "📅 Calendario", navAbout: "ℹ️ Chi siamo", navHelp: "❓ Aiuto",
+                navDash: "📊 Dashboard", navUsers: "👥 Utenti", navSkills: "⭐ Skill Matrix", navHw: "📚 Compiti", navChat: "💬 Chat e Messaggi", navAzubi: "📓 Rapporti e PDF", navAI: "🤖 Assistente IA", navCal: "📅 Calendario", navAbout: "ℹ️ Chi siamo", navHelp: "❓ Aiuto",
                 hdrAdmin: "Centro Super Admin", btnLogout: "Disconnetti",
-                welcome: "Benvenuto nel sistema, ", dashSub: "AzubiSystem Enterprise reale attivo.",
+                welcome: "Benvenuto nel sistema, ", dashSub: "AzubiSystem Enterprise attivo.",
                 stat1Label: "Apprendisti", stat2Label: "Utenti Totali", stat3Label: "Rapporti", stat4Label: "Stato",
-                aboutTitle: "Informazioni su AzubiSystem 🇩🇪", aboutDesc: "Sistema di gestione avanzato per la formazione duale.",
-                helpTitle: "Centro assistenza", helpSub: "Supporto: azubisystem.ha@gmail.com"
+                aboutTitle: "Informazioni su AzubiSystem 🇩🇪", aboutDesc: "Piattaforma di gestione digitale per il sistema di formazione duale in Germania.",
+                helpTitle: "Centro assistenza", suppLabel: "Centro Assistenza"
             },
             tr: {
-                navDash: "📊 Gösterge Paneli", navUsers: "👥 Kullanıcılar", navSkills: "⭐ Yetenek Matrisi", navHw: "📚 Ödevler", navChat: "💬 Sohbet", navAzubi: "📓 Rapor Defteri ve PDF", navAI: "🤖 Yapay Zeka Asistanı", navCal: "📅 Takvim", navAbout: "ℹ️ Hakkında", navHelp: "❓ Yardım",
+                navDash: "📊 Gösterge Paneli", navUsers: "👥 Kullanıcılar", navSkills: "⭐ Yetenek Matrisi", navHw: "📚 Ödevler", navChat: "💬 Sohbet ve Mesajlar", navAzubi: "📓 Rapor Defteri ve PDF", navAI: "🤖 Yapay Zeka Asistanı", navCal: "📅 Takvim", navAbout: "ℹ️ Hakkında", navHelp: "❓ Yardım",
                 hdrAdmin: "Süper Yönetici Paneli", btnLogout: "Çıkış Yap",
-                welcome: "Sisteme hoş geldiniz, ", dashSub: "Gerçek Kurumsal AzubiSystem Aktif.",
+                welcome: "Sisteme hoş geldiniz, ", dashSub: "Kurumsal AzubiSystem Aktif.",
                 stat1Label: "Çıraklar", stat2Label: "Toplam Kullanıcı", stat3Label: "Raporlar", stat4Label: "Sistem Durumu",
-                aboutTitle: "AzubiSystem Hakkında 🇩🇪", aboutDesc: "İkili mesleki eğitim için gelişmiş kurumsal yönetim sistemi.",
-                helpTitle: "Yardım Merkezi", helpSub: "Destek: azubisystem.ha@gmail.com"
+                aboutTitle: "AzubiSystem Hakkında 🇩🇪", aboutDesc: "Almanya ikili mesleki eğitim sistemi için dijital yönetim platformu.",
+                helpTitle: "Yardım Merkezi ve Destek", suppLabel: "Destek Merkezi"
             }
         };
 
@@ -352,6 +433,7 @@
             if(document.getElementById('navSkills')) document.getElementById('navSkills').innerText = t.navSkills;
             if(document.getElementById('navHw')) document.getElementById('navHw').innerText = t.navHw;
             if(document.getElementById('navChat')) document.getElementById('navChat').innerText = t.navChat;
+            if(document.getElementById('navAzubiChat')) document.getElementById('navAzubiChat').innerText = t.navChat;
             if(document.getElementById('navAzubi')) document.getElementById('navAzubi').innerText = t.navAzubi;
             if(document.getElementById('navAI')) document.getElementById('navAI').innerText = t.navAI;
             if(document.getElementById('navCal')) document.getElementById('navCal').innerText = t.navCal;
@@ -363,6 +445,10 @@
             if(document.getElementById('stat2Label')) document.getElementById('stat2Label').innerText = t.stat2Label;
             if(document.getElementById('stat3Label')) document.getElementById('stat3Label').innerText = t.stat3Label;
             if(document.getElementById('stat4Label')) document.getElementById('stat4Label').innerText = t.stat4Label;
+            if(document.getElementById('aboutTitle')) document.getElementById('aboutTitle').innerText = t.aboutTitle;
+            if(document.getElementById('aboutDesc')) document.getElementById('aboutDesc').innerText = t.aboutDesc;
+            if(document.getElementById('helpTitle')) document.getElementById('helpTitle').innerText = t.helpTitle;
+            if(document.getElementById('suppLabel')) document.getElementById('suppLabel').innerText = t.suppLabel;
 
             updateWelcomeMessage();
         }
@@ -393,6 +479,8 @@
                     loadUsers();
                     loadReports();
                     loadStats();
+                    loadCalendarDays();
+                    loadMessages();
                 } else { alert(data.message); }
             } catch (err) { alert("Verbindungsfehler zum Server."); }
         }
@@ -491,7 +579,35 @@
             if(!text) return;
             const out = document.getElementById('aiOutput');
             out.classList.remove('hidden');
-            out.innerHTML = `<strong>✨ التحسين الاحترافي (Optimiert):</strong><br>Im Rahmen der Ausbildung wurden folgende Tätigkeiten erfolgreich durchgeführt: ${text}. Alle Vorgänge wurden nach DSGVO-Richtlinien dokumentiert.`;
+            out.innerHTML = `<strong>✨ Optimierte Fassung (تحسين احترافي):</strong><br>Im Rahmen der Ausbildung wurden folgende Tätigkeiten fachgerecht durchgeführt: ${text}. Alle Vorgänge wurden gemäß den BBiG- und DSGVO-Richtlinien präzise ausgeführt und dokumentiert.`;
+        }
+
+        function toggleCalendarEdit() {
+            document.getElementById('calendarEditBox').classList.toggle('hidden');
+        }
+
+        async function loadCalendarDays() {
+            try {
+                const res = await fetch('/api/calendar');
+                const data = await res.json();
+                document.getElementById('dispSchoolDays').innerText = data.schoolDays;
+                document.getElementById('dispCompDays').innerText = data.companyDays;
+                document.getElementById('editSchoolDays').value = data.schoolDays;
+                document.getElementById('editCompDays').value = data.companyDays;
+            } catch(e) { console.error(e); }
+        }
+
+        async function saveCalendarDays() {
+            const schoolDays = document.getElementById('editSchoolDays').value;
+            const companyDays = document.getElementById('editCompDays').value;
+            await fetch('/api/calendar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ schoolDays, companyDays })
+            });
+            loadCalendarDays();
+            toggleCalendarEdit();
+            alert('Kalender aktualisiert!');
         }
 
         async function addUser() {
@@ -542,13 +658,42 @@
             alert('Veröffentlicht!');
         }
 
-        function sendMessage() {
+        async function sendMessage() {
             const input = document.getElementById('chatInput');
+            const type = document.getElementById('msgRecipientType').value;
+            const recipient = document.getElementById('msgRecipient').value;
+            
             if(!input.value) return;
-            const chat = document.getElementById('chatMessages');
-            if(chat.querySelector('p')) chat.innerHTML = '';
-            chat.innerHTML += `<div class="flex flex-col items-end"><div class="bg-blue-600 text-white p-3 rounded-2xl max-w-lg">${input.value}</div><span class="text-[10px] text-slate-400">Gerade</span></div>`;
+
+            await fetch('/api/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    sender: currentUser ? currentUser.name : 'Anonym',
+                    recipient: recipient ? `${type} (${recipient})` : type,
+                    text: input.value
+                })
+            });
+
             input.value = "";
+            loadMessages();
+        }
+
+        async function loadMessages() {
+            const res = await fetch('/api/messages');
+            const msgs = await res.json();
+            const chat = document.getElementById('chatMessages');
+            if(msgs.length === 0) return;
+            
+            chat.innerHTML = msgs.map(m => `
+                <div class="p-3 bg-white border border-slate-200 rounded-xl shadow-sm space-y-1">
+                    <div class="flex justify-between items-center text-[11px] font-bold">
+                        <span class="text-blue-600">${m.sender} ➔ ${m.recipient}</span>
+                        <span class="text-slate-400">${m.timestamp}</span>
+                    </div>
+                    <p class="text-xs text-slate-700">${m.text}</p>
+                </div>
+            `).join('');
             chat.scrollTop = chat.scrollHeight;
         }
     </script>
