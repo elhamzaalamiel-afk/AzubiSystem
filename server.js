@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
-// قاعدة البيانات المحدثة
+// قاعدة البيانات الرئيسية
 let usersDB = [
     {
         name: "Super Admin",
@@ -22,10 +22,19 @@ let usersDB = [
 let reportsDB = [];
 let homeworkDB = [];
 let messagesDB = [];
-let calendarSettingsDB = {
-    schoolDays: "Montag, Mittwoch",
-    companyDays: "Dienstag, Donnerstag, Freitag"
-};
+
+// تقويم سنوي تفاعلي للتغيير والجدولة
+let annualCalendarDB = [
+    { month: "Januar", schoolDays: "KW 1-4: Mo & Mi", workDays: "KW 1-4: Di, Do, Fr", note: "Start Orientierungsphase" },
+    { month: "Februar", schoolDays: "KW 5-8: Mo & Mi", workDays: "KW 5-8: Di, Do, Fr", note: "Zwischenprojekt" }
+];
+
+// خريطة المهارات بالدرجات الألمانية من 1 إلى 6
+let skillMatrixDB = [
+    { week: "Woche 1", skill: "HTML & Webstandards", grade: 2, remark: "Gut / جيد جداً" },
+    { week: "Woche 2", skill: "JavaScript Basics", grade: 1, remark: "Sehr gut / ممتاز" },
+    { week: "Woche 3", skill: "Datenschutz (DSGVO)", grade: 3, remark: "Befriedigend / جيد" }
+];
 
 // تسجيل الدخول
 app.post('/api/login', (req, res) => {
@@ -33,7 +42,7 @@ app.post('/api/login', (req, res) => {
     const user = usersDB.find(u => u.email.toLowerCase().trim() === email.toLowerCase().trim());
 
     if (!user) {
-        return res.json({ success: false, message: "E-Mail ist nicht im System registriert / البريد غير مسجل بالنظام." });
+        return res.json({ success: false, message: "E-Mail ist nicht im System registriert / البريد غير مسجل." });
     }
     if (user.password !== password) {
         return res.json({ success: false, message: "Falsches Passwort / كلمة المرور غير صحيحة." });
@@ -45,9 +54,7 @@ app.post('/api/login', (req, res) => {
     res.json({ success: true, user: { name: user.name, email: user.email, role: user.role, org: user.org } });
 });
 
-app.get('/api/users', (req, res) => {
-    res.json(usersDB);
-});
+app.get('/api/users', (req, res) => res.json(usersDB));
 
 app.post('/api/users', (req, res) => {
     const { name, email, password, org, role } = req.body;
@@ -68,7 +75,6 @@ app.post('/api/users', (req, res) => {
     res.json({ success: true, user: newUser });
 });
 
-// إحصائيات النظام
 app.get('/api/stats', (req, res) => {
     const azubiCount = usersDB.filter(u => u.role === 'azubi').length;
     res.json({
@@ -77,6 +83,30 @@ app.get('/api/stats', (req, res) => {
         totalReports: reportsDB.length,
         totalHomework: homeworkDB.length
     });
+});
+
+// إدارة المهارات والتنقيط الألماني
+app.get('/api/skills', (req, res) => res.json(skillMatrixDB));
+app.post('/api/skills', (req, res) => {
+    const { week, skill, grade, remark } = req.body;
+    const newEntry = { week, skill, grade: parseInt(grade), remark };
+    skillMatrixDB.push(newEntry);
+    res.json({ success: true, skills: skillMatrixDB });
+});
+
+// إدارة التقويم السنوي
+app.get('/api/calendar/annual', (req, res) => res.json(annualCalendarDB));
+app.post('/api/calendar/annual', (req, res) => {
+    const { month, schoolDays, workDays, note } = req.body;
+    const existing = annualCalendarDB.find(c => c.month === month);
+    if (existing) {
+        existing.schoolDays = schoolDays;
+        existing.workDays = workDays;
+        existing.note = note;
+    } else {
+        annualCalendarDB.push({ month, schoolDays, workDays, note });
+    }
+    res.json({ success: true, calendar: annualCalendarDB });
 });
 
 // التقارير
@@ -96,9 +126,7 @@ app.post('/api/reports', (req, res) => {
     res.json({ success: true, report: newReport });
 });
 
-app.get('/api/reports', (req, res) => {
-    res.json(reportsDB);
-});
+app.get('/api/reports', (req, res) => res.json(reportsDB));
 
 app.post('/api/reports/approve', (req, res) => {
     const { reportId, adminName } = req.body;
@@ -111,23 +139,8 @@ app.post('/api/reports/approve', (req, res) => {
     res.json({ success: false, message: "Fehler." });
 });
 
-// إعدادات التقويم
-app.get('/api/calendar', (req, res) => {
-    res.json(calendarSettingsDB);
-});
-
-app.post('/api/calendar', (req, res) => {
-    const { schoolDays, companyDays } = req.body;
-    if (schoolDays) calendarSettingsDB.schoolDays = schoolDays;
-    if (companyDays) calendarSettingsDB.companyDays = companyDays;
-    res.json({ success: true, settings: calendarSettingsDB });
-});
-
-// المراسلات والمحادثات الموجهة
-app.get('/api/messages', (req, res) => {
-    res.json(messagesDB);
-});
-
+// الرسائل
+app.get('/api/messages', (req, res) => res.json(messagesDB));
 app.post('/api/messages', (req, res) => {
     const { sender, recipient, text } = req.body;
     const newMsg = {
@@ -154,10 +167,6 @@ app.post('/api/homework', (req, res) => {
     res.json({ success: true, homework: newHw });
 });
 
-app.get('/api/homework', (req, res) => {
-    res.json(homeworkDB);
-});
+app.get('/api/homework', (req, res) => res.json(homeworkDB));
 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`AzubiSystem läuft auf Port ${PORT}`);
-});
+app.listen(PORT, '0.0.0.0', () => console.log(`AzubiSystem läuft auf Port ${PORT}`));
