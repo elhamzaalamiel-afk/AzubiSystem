@@ -5,9 +5,16 @@ const PORT = process.env.PORT || 10000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// منع تخزين الكاش القديم بالكامل
+app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    next();
+});
+
 app.use(express.static(path.join(__dirname)));
 
-// قاعدة البيانات الرئيسية
+// قاعدة بيانات المستخدمين
 let usersDB = [
     {
         name: "Super Admin",
@@ -23,18 +30,34 @@ let reportsDB = [];
 let homeworkDB = [];
 let messagesDB = [];
 
-// تقويم سنوي تفاعلي للتغيير والجدولة
-let annualCalendarDB = [
-    { month: "Januar", schoolDays: "KW 1-4: Mo & Mi", workDays: "KW 1-4: Di, Do, Fr", note: "Start Orientierungsphase" },
-    { month: "Februar", schoolDays: "KW 5-8: Mo & Mi", workDays: "KW 5-8: Di, Do, Fr", note: "Zwischenprojekt" }
+// إنشاء تقويم سنوي كامل لـ 12 شهراً
+const monthsList = [
+    "Januar", "Februar", "März", "April", "Mai", "Juni", 
+    "Juli", "August", "September", "Oktober", "November", "Dezember"
 ];
 
-// خريطة المهارات بالدرجات الألمانية من 1 إلى 6
-let skillMatrixDB = [
-    { week: "Woche 1", skill: "HTML & Webstandards", grade: 2, remark: "Gut / جيد جداً" },
-    { week: "Woche 2", skill: "JavaScript Basics", grade: 1, remark: "Sehr gut / ممتاز" },
-    { week: "Woche 3", skill: "Datenschutz (DSGVO)", grade: 3, remark: "Befriedigend / جيد" }
-];
+let annualCalendarDB = monthsList.map((m, idx) => ({
+    month: m,
+    schoolDays: `KW ${idx*4 + 1}-${idx*4 + 2}: Mo & Mi`,
+    workDays: `KW ${idx*4 + 3}-${idx*4 + 4}: Di, Do, Fr`,
+    note: idx === 0 ? "Start Orientierung" : idx === 5 ? "Zwischenprüfung" : "Regelbetrieb"
+}));
+
+// إنشاء خريطة مهارات تقويمية لـ 52 أسبوعاً مقسمة 4 أسابيع لكل شهر
+let skillMatrixDB = [];
+monthsList.forEach((month, mIdx) => {
+    for (let w = 1; w <= 4; w++) {
+        const weekNum = mIdx * 4 + w;
+        skillMatrixDB.push({
+            month: month,
+            week: `KW ${weekNum}`,
+            weekInMonth: `Woche ${w}`,
+            skill: weekNum === 1 ? "HTML & Webstandards" : weekNum === 2 ? "JavaScript Basics" : weekNum === 3 ? "DSGVO & Datenschutz" : "Grundlagen Fachinformatik",
+            grade: weekNum === 1 ? 2 : weekNum === 2 ? 1 : 3,
+            remark: weekNum === 1 ? "Gut / جيد جداً" : weekNum === 2 ? "Sehr gut / ممتاز" : "Befriedigend / جيد"
+        });
+    }
+});
 
 // تسجيل الدخول
 app.post('/api/login', (req, res) => {
@@ -85,16 +108,22 @@ app.get('/api/stats', (req, res) => {
     });
 });
 
-// إدارة المهارات والتنقيط الألماني
+// المهارات والأستبيان الألماني
 app.get('/api/skills', (req, res) => res.json(skillMatrixDB));
 app.post('/api/skills', (req, res) => {
     const { week, skill, grade, remark } = req.body;
-    const newEntry = { week, skill, grade: parseInt(grade), remark };
-    skillMatrixDB.push(newEntry);
+    const entry = skillMatrixDB.find(s => s.week === week);
+    if (entry) {
+        entry.skill = skill;
+        entry.grade = parseInt(grade);
+        entry.remark = remark;
+    } else {
+        skillMatrixDB.push({ month: "Zusätzlich", week, weekInMonth: "Extra", skill, grade: parseInt(grade), remark });
+    }
     res.json({ success: true, skills: skillMatrixDB });
 });
 
-// إدارة التقويم السنوي
+// التقويم السنوي الكامل
 app.get('/api/calendar/annual', (req, res) => res.json(annualCalendarDB));
 app.post('/api/calendar/annual', (req, res) => {
     const { month, schoolDays, workDays, note } = req.body;
@@ -103,8 +132,6 @@ app.post('/api/calendar/annual', (req, res) => {
         existing.schoolDays = schoolDays;
         existing.workDays = workDays;
         existing.note = note;
-    } else {
-        annualCalendarDB.push({ month, schoolDays, workDays, note });
     }
     res.json({ success: true, calendar: annualCalendarDB });
 });

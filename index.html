@@ -9,11 +9,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
-        /* خلفية باردة أنيقة تعبر عن بيئة التدريب المهني AzubiSystem */
         .azubi-cool-bg {
-            background-color: #f0f4f8;
-            background-image: radial-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(to right, #e2e8f0 1px, transparent 1px);
-            background-size: 20px 20px, 40px 40px;
+            background-color: #f1f5f9;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 24px 24px;
         }
         .phone-num {
             direction: ltr !important;
@@ -26,7 +25,7 @@
 <body class="azubi-cool-bg text-slate-800 h-screen flex flex-col overflow-hidden">
 
     <!-- شاشة تسجيل الدخول -->
-    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/90 no-print">
+    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 no-print">
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-200">
             <div class="text-center mb-6">
                 <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">AzubiSystem 🇩🇪</h2>
@@ -68,23 +67,24 @@
                     <div id="adminNav" class="space-y-1">
                         <a href="#" onclick="switchTab('dashboard')" class="block px-4 py-2.5 rounded-xl bg-blue-600 text-white font-medium" id="navDash">📊 Dashboard</a>
                         <a href="#" onclick="switchTab('users')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navUsers">👥 Benutzerverwaltung</a>
-                        <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navSkills">⭐ Skill Matrix (1-6)</a>
+                        <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navSkills">⭐ Skill Matrix (KW 1-52)</a>
+                        <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navAI">🤖 chat AzubiSystem</a>
                         <a href="#" onclick="switchTab('homework')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navHw">📚 Aufgaben</a>
                         <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navChat">💬 Chat & Nachrichten</a>
                     </div>
                     <div id="azubiNav" class="hidden space-y-1">
                         <a href="#" onclick="switchTab('azubi-portal')" class="block px-4 py-2.5 rounded-xl bg-blue-600 text-white font-medium" id="navAzubi">📓 Berichtsheft & PDF</a>
-                        <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navAI">🤖 chat AzubiSystem</a>
+                        <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navAzubiAI">🤖 chat AzubiSystem</a>
                         <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navAzubiSkills">⭐ Skill Matrix</a>
                         <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navAzubiChat">💬 Chat & Nachrichten</a>
                     </div>
-                    <a href="#" onclick="switchTab('calendar')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navCal">📅 Jahreskalender</a>
+                    <a href="#" onclick="switchTab('calendar')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navCal">📅 Jahreskalender (12 Monate)</a>
                     <a href="#" onclick="switchTab('about')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navAbout">ℹ️ Über uns</a>
                     <a href="#" onclick="switchTab('help')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navHelp">❓ Hilfe-Center</a>
                 </nav>
             </div>
 
-            <!-- مربع الدعم الفني -->
+            <!-- الدعم الفني -->
             <div class="p-4 m-4 bg-slate-800 rounded-xl border border-slate-700 text-xs text-slate-300 space-y-1">
                 <div class="font-bold text-white" id="suppLabel">Support Center</div>
                 <div class="font-mono text-blue-300 font-semibold phone-num">📞 +49 176 63160304</div>
@@ -113,7 +113,7 @@
 
             <div class="p-8 space-y-8">
                 
-                <!-- 1. لوحة التحكم -->
+                <!-- 1. Dashboard -->
                 <div id="tab-dashboard" class="space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <h3 class="text-lg font-black text-slate-900" id="welcomeMsg">Willkommen</h3>
@@ -142,21 +142,21 @@
                     </div>
                 </div>
 
-                <!-- 2. خريطة المهارات والجدول الأسبوعي بالتنقيط الألماني 1-6 -->
+                <!-- 2. خريطة المهارات السنوية المنظمة جداً 52 أسبوعاً (Notensystem 1 bis 6) -->
                 <div id="tab-skills" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h3 class="text-lg font-bold text-slate-800" id="skillTitle">⭐ Skill Matrix - Wochenübersicht (Bewertung 1 bis 6)</h3>
-                                <p class="text-xs text-slate-500 mt-0.5" id="skillSub">Deutsches Notensystem: 1 (Sehr gut) bis 6 (Ungenügend)</p>
+                                <h3 class="text-lg font-bold text-slate-800" id="skillTitle">⭐ Jahres-Skill-Matrix (KW 1 bis KW 52)</h3>
+                                <p class="text-xs text-slate-500 mt-0.5" id="skillSub">Deutsches Notensystem: 1 (Sehr gut) bis 6 (Ungenügend) - Strukturiert nach Monaten</p>
                             </div>
-                            <button onclick="toggleSkillForm()" class="text-xs bg-blue-600 text-white font-bold px-4 py-2 rounded-xl hover:bg-blue-700" id="btnNewSkill">+ Bewertung eintragen</button>
+                            <button onclick="toggleSkillForm()" class="text-xs bg-blue-600 text-white font-bold px-4 py-2 rounded-xl hover:bg-blue-700" id="btnNewSkill">+ Bewertung / Note eintragen</button>
                         </div>
 
-                        <!-- نموذج إضافة تنقيط مهارة جديدة -->
+                        <!-- نموذج إضافة تقييم لأسبوع معين -->
                         <div id="skillFormBox" class="hidden p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                                <input type="text" id="skWeek" placeholder="Woche (z.B. Woche 4)" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
+                                <input type="text" id="skWeek" placeholder="Woche (z.B. KW 1)" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
                                 <input type="text" id="skSkill" placeholder="Kompetenz / Thema" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
                                 <select id="skGrade" class="px-3 py-2 border rounded-lg text-xs border-slate-300 bg-white font-bold">
                                     <option value="1">Note 1 - Sehr gut (ممتاز)</option>
@@ -168,22 +168,23 @@
                                 </select>
                                 <input type="text" id="skRemark" placeholder="Bemerkung" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
                             </div>
-                            <button onclick="saveSkillGrade()" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-700">Bewertung Speichern</button>
+                            <button onclick="saveSkillGrade()" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-700">Speichern</button>
                         </div>
 
-                        <!-- جدول المهارات الأسبوعي -->
-                        <div class="overflow-x-auto">
+                        <!-- جدول المهارات السنوي المجمع شهرياً -->
+                        <div class="overflow-x-auto border border-slate-200 rounded-xl">
                             <table class="w-full text-left border-collapse text-xs">
                                 <thead>
-                                    <tr class="bg-slate-100 text-slate-600 border-b border-slate-200 uppercase font-bold">
-                                        <th class="py-3 px-4" id="thWeek">Ausbildungswoche</th>
+                                    <tr class="bg-slate-800 text-white border-b border-slate-700 uppercase font-bold">
+                                        <th class="py-3 px-4" id="thMonthGroup">Monat</th>
+                                        <th class="py-3 px-4" id="thWeek">Kalenderwoche</th>
                                         <th class="py-3 px-4" id="thSkill">Fachliche Kompetenz</th>
-                                        <th class="py-3 px-4" id="thGrade">Deutsche Note (1-6)</th>
-                                        <th class="py-3 px-4" id="thRemark">Einschätzung / Bemerkung</th>
+                                        <th class="py-3 px-4" id="thGrade">Note (1-6)</th>
+                                        <th class="py-3 px-4" id="thRemark">Bewertung / Bemerkung</th>
                                     </tr>
                                 </thead>
-                                <tbody id="skillTableBody" class="divide-y divide-slate-100">
-                                    <tr><td colspan="4" class="py-4 text-center text-slate-400">Lade Kompetenzen...</td></tr>
+                                <tbody id="skillTableBody" class="divide-y divide-slate-200 bg-white">
+                                    <tr><td colspan="5" class="py-6 text-center text-slate-400">Lade Jahres-Skill-Matrix...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -194,34 +195,34 @@
                 <div id="tab-ai-assistant" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                         <div class="flex items-center gap-3">
-                            <div class="p-3 bg-purple-100 text-purple-700 rounded-xl font-bold text-lg">🤖</div>
+                            <div class="p-3 bg-purple-600 text-white rounded-2xl font-bold text-xl shadow-md">🤖</div>
                             <div>
-                                <h3 class="text-lg font-bold text-slate-900">chat AzubiSystem</h3>
-                                <p class="text-xs text-slate-500" id="aiSub">Ihr KI-Assistent für Berichtshefte, Fachfragen und BBiG-Ausbildungsrecht.</p>
+                                <h3 class="text-xl font-bold text-slate-900">chat AzubiSystem</h3>
+                                <p class="text-xs text-slate-500" id="aiSub">Ihr KI-Assistent für Berichtshefte, IHK-Standards und Fragen zum BBiG.</p>
                             </div>
                         </div>
 
-                        <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50 space-y-3">
-                            <textarea id="aiInput" placeholder="Frage stellen oder Stichpunkte für Berichtsheft eingeben..." class="w-full px-4 py-3 border rounded-xl text-sm border-slate-300 h-28 focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"></textarea>
-                            <button onclick="runAIAssistant()" class="bg-purple-600 text-white text-xs font-bold px-6 py-2.5 rounded-xl hover:bg-purple-700 transition flex items-center gap-2">✨ chat AzubiSystem Antworten lassen</button>
+                        <div class="border border-purple-200 rounded-2xl p-5 bg-purple-50/50 space-y-3">
+                            <textarea id="aiInput" placeholder="Frage eingeben oder Tätigkeiten für den Wochenbericht beschreiben..." class="w-full px-4 py-3 border rounded-xl text-sm border-purple-200 h-32 focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white shadow-sm"></textarea>
+                            <button onclick="runAIAssistant()" class="bg-purple-600 text-white text-xs font-bold px-6 py-3 rounded-xl hover:bg-purple-700 transition flex items-center gap-2 shadow-md">✨ chat AzubiSystem Antworten lassen</button>
                         </div>
 
-                        <div id="aiOutput" class="hidden p-5 bg-purple-50 border border-purple-200 rounded-2xl text-xs text-purple-950 space-y-2 leading-relaxed"></div>
+                        <div id="aiOutput" class="hidden p-5 bg-white border border-purple-200 rounded-2xl text-xs text-slate-800 space-y-2 leading-relaxed shadow-sm"></div>
                     </div>
                 </div>
 
-                <!-- 4. التقويم السنوي الكامل للتعديل -->
+                <!-- 4. التقويم السنوي الشامل لـ 12 شهراً كاملة -->
                 <div id="tab-calendar" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h3 class="text-lg font-bold text-slate-800" id="calTitle">📅 Jahreskalender & Schichtplan</h3>
-                                <p class="text-xs text-slate-500" id="calSub">Jahresplanung für Berufsschule und Betriebstage</p>
+                                <h3 class="text-lg font-bold text-slate-800" id="calTitle">📅 Jahreskalender & Schichtplan (12 Monate)</h3>
+                                <p class="text-xs text-slate-500" id="calSub">Jahresübersicht für Betrieb, Berufsschule und Prüfungen</p>
                             </div>
-                            <button onclick="toggleAnnualCalForm()" class="text-xs bg-blue-600 text-white font-bold px-4 py-2 rounded-xl hover:bg-blue-700" id="btnEditCal">+ Monat / Dienstplan bearbeiten</button>
+                            <button onclick="toggleAnnualCalForm()" class="text-xs bg-blue-600 text-white font-bold px-4 py-2 rounded-xl hover:bg-blue-700" id="btnEditCal">+ Monat bearbeiten</button>
                         </div>
 
-                        <!-- نموذج إضافة/تعديل خطة شهرية -->
+                        <!-- نموذج التعديل -->
                         <div id="annualCalFormBox" class="hidden p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                                 <input type="text" id="calMonth" placeholder="Monat (z.B. März)" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
@@ -229,22 +230,22 @@
                                 <input type="text" id="calWork" placeholder="Betriebstage / Schicht" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
                                 <input type="text" id="calNote" placeholder="Notiz / Prüfungen" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
                             </div>
-                            <button onclick="saveAnnualCal()" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-700">Monat Speichern</button>
+                            <button onclick="saveAnnualCal()" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-700">Speichern</button>
                         </div>
 
-                        <!-- جدول التقويم السنوي -->
-                        <div class="overflow-x-auto">
+                        <!-- جدول الأشهر الـ 12 -->
+                        <div class="overflow-x-auto border border-slate-200 rounded-xl">
                             <table class="w-full text-left border-collapse text-xs">
                                 <thead>
-                                    <tr class="bg-slate-100 text-slate-600 border-b border-slate-200 uppercase font-bold">
+                                    <tr class="bg-slate-100 text-slate-700 border-b border-slate-200 uppercase font-bold">
                                         <th class="py-3 px-4" id="thMonth">Monat</th>
                                         <th class="py-3 px-4" id="thSchoolCal">🏫 Berufsschule</th>
                                         <th class="py-3 px-4" id="thWorkCal">🏢 Betrieb / Schichtplan</th>
-                                        <th class="py-3 px-4" id="thNoteCal">Bemerkung & Termine</th>
+                                        <th class="py-3 px-4" id="thNoteCal">Termine & Notizen</th>
                                     </tr>
                                 </thead>
-                                <tbody id="annualCalTableBody" class="divide-y divide-slate-100">
-                                    <tr><td colspan="4" class="py-4 text-center text-slate-400">Lade Jahreskalender...</td></tr>
+                                <tbody id="annualCalTableBody" class="divide-y divide-slate-100 bg-white">
+                                    <tr><td colspan="4" class="py-6 text-center text-slate-400">Lade 12-Monate-Kalender...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -256,7 +257,7 @@
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                         <h4 class="font-bold text-slate-800 text-sm" id="repHead">Wochenbericht eintragen:</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="reportWeek" placeholder="Woche (z.B. Woche 1)" class="px-4 py-2 border rounded-xl text-sm border-slate-300">
+                            <input type="text" id="reportWeek" placeholder="Woche (z.B. KW 1)" class="px-4 py-2 border rounded-xl text-sm border-slate-300">
                             <input type="text" id="reportDept" placeholder="Abteilung (z.B. IT)" class="px-4 py-2 border rounded-xl text-sm border-slate-300">
                         </div>
                         <textarea id="reportText" placeholder="Schreiben Sie hier Ihre Tätigkeiten..." class="w-full px-4 py-2 border rounded-xl text-sm border-slate-300 h-28"></textarea>
@@ -272,7 +273,7 @@
                     </div>
                 </div>
 
-                <!-- 6. إدارة المستخدمين -->
+                <!-- 6. المستخدمون -->
                 <div id="tab-users" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <h3 class="text-base font-bold text-slate-800 mb-2" id="uAddTitle">Neuen Benutzer anlegen</h3>
@@ -319,7 +320,7 @@
                     <div id="homeworkList" class="space-y-3"></div>
                 </div>
 
-                <!-- 8. الرسائل الموجهة -->
+                <!-- 8. المراسلات -->
                 <div id="tab-messages" class="hidden space-y-6">
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[580px]">
                         <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
@@ -353,7 +354,7 @@
                     </div>
                 </div>
 
-                <!-- 9. حول النظام - معلومات موسعة ومفصلة -->
+                <!-- 9. حول النظام والمعلومات القانونية الشاملة -->
                 <div id="tab-about" class="hidden space-y-6">
                     <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <h3 class="text-2xl font-bold text-slate-900" id="aboutTitle">Über AzubiSystem 🇩🇪</h3>
@@ -363,7 +364,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                             <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                                 <h4 class="font-bold text-slate-800 text-sm">📜 BBiG & IHK / HWK Richtlinien:</h4>
-                                <p class="text-slate-600 leading-relaxed">Das System gewährleistet die lückenlose Erstellung und Auswertung digitaler Ausbildungsnachweise gemäß § 13 BBiG. Alle Formulare und Exportfunktionen entsprechen den Vorgaben der Industrie- und Handelskammern (IHK) sowie Handwerkskammern (HWK).</p>
+                                <p class="text-slate-600 leading-relaxed">Das System gewährleistet die lückenlose Erstellung und Auswertung digitaler Ausbildungsnachweise gemäß § 13 BBiG. Alle Formulare und Exportfunktionen entsprechen den Vorgaben der IHK und HWK.</p>
                             </div>
                             <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                                 <h4 class="font-bold text-slate-800 text-sm">🔒 Datenschutz & DSGVO:</h4>
@@ -373,7 +374,7 @@
                     </div>
                 </div>
 
-                <!-- 10. مركز المساعدة والأسئلة الشائعة الموسعة -->
+                <!-- 10. مركز المساعدة والأسئلة الشائعة -->
                 <div id="tab-help" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <h3 class="text-xl font-bold text-slate-900" id="helpTitle">Hilfe-Center & FAQ</h3>
@@ -384,19 +385,15 @@
                                 
                                 <div class="space-y-1">
                                     <p class="font-bold text-slate-900">1. Wie trage ich meine Ausbildungsberichte ein?</p>
-                                    <p class="text-slate-600">Navigieren Sie zum Menüpunkt "Berichtsheft & PDF", wählen Sie die Ausbildungswoche und die Abteilung aus und tragen Sie Ihre wöchentlichen Tätigkeiten ein.</p>
+                                    <p class="text-slate-600">Navigieren Sie zum Menüpunkt "Berichtsheft & PDF", wählen Sie die Woche und tragen Sie Ihre Tätigkeiten ein.</p>
                                 </div>
                                 <div class="space-y-1 pt-2 border-t border-blue-200">
                                     <p class="font-bold text-slate-900">2. Wie funktioniert die digitale Signatur?</p>
-                                    <p class="text-slate-600">Nach dem Speichern des Berichts kann der zuständige Ausbilder den Bericht einsehen und mit einem Klick digital signieren ("Genehmigt 🗸").</p>
+                                    <p class="text-slate-600">Der Ausbilder prüft den Bericht und signiert ihn digital ("Genehmigt 🗸").</p>
                                 </div>
                                 <div class="space-y-1 pt-2 border-t border-blue-200">
-                                    <p class="font-bold text-slate-900">3. Wie wird die Skill Matrix mit Noten (1-6) ausgewertet?</p>
-                                    <p class="text-slate-600">Ausbilder tragen für jede Ausbildungswoche Fachkompetenzen und deutsche Noten von 1 (Sehr gut) bis 6 (Ungenügend) ein.</p>
-                                </div>
-                                <div class="space-y-1 pt-2 border-t border-blue-200">
-                                    <p class="font-bold text-slate-900">4. Wie nutze ich chat AzubiSystem?</p>
-                                    <p class="text-slate-600">Öffnen Sie den Reiter "chat AzubiSystem", geben Sie Stichpunkte oder Fragen ein und erhalten Sie professionelle Textvorschläge.</p>
+                                    <p class="font-bold text-slate-900">3. Wie nutze ich chat AzubiSystem?</p>
+                                    <p class="text-slate-600">Öffnen Sie "chat AzubiSystem", geben Sie Fragen ein und erhalten Sie professionelle Unterstützung.</p>
                                 </div>
                             </div>
 
@@ -413,98 +410,98 @@
         </main>
     </div>
 
-    <!-- البرمجة الشاملة وتغيير اللغات -->
+    <!-- برمجة الواجهة واللغات والعمليات -->
     <script>
         let currentUser = null;
 
         const translations = {
             de: {
-                navDash: "📊 Dashboard", navUsers: "👥 Benutzerverwaltung", navSkills: "⭐ Skill Matrix (1-6)", navHw: "📚 Aufgaben", navChat: "💬 Chat & Nachrichten", navAzubi: "📓 Berichtsheft & PDF", navAI: "🤖 chat AzubiSystem", navCal: "📅 Jahreskalender", navAbout: "ℹ️ Über uns", navHelp: "❓ Hilfe-Center",
+                navDash: "📊 Dashboard", navUsers: "👥 Benutzerverwaltung", navSkills: "⭐ Skill Matrix (KW 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Aufgaben", navChat: "💬 Chat & Nachrichten", navAzubi: "📓 Berichtsheft & PDF", navCal: "📅 Jahreskalender (12 Monate)", navAbout: "ℹ️ Über uns", navHelp: "❓ Hilfe-Center",
                 hdrAdmin: "Super Admin Kontrollzentrum", btnLogout: "Abmelden",
                 welcome: "Willkommen im System, ", dashSub: "Enterprise AzubiSystem Aktiv.",
                 stat1Label: "Azubis", stat2Label: "Gesamt Benutzer", stat3Label: "Berichte", stat4Label: "System Status",
-                skillTitle: "⭐ Skill Matrix - Wochenübersicht (Bewertung 1 bis 6)", skillSub: "Deutsches Notensystem: 1 (Sehr gut) bis 6 (Ungenügend)",
-                btnNewSkill: "+ Bewertung eintragen", thWeek: "Ausbildungswoche", thSkill: "Fachliche Kompetenz", thGrade: "Deutsche Note (1-6)", thRemark: "Einschätzung / Bemerkung",
-                calTitle: "📅 Jahreskalender & Schichtplan", calSub: "Jahresplanung für Berufsschule und Betriebstage", btnEditCal: "+ Monat / Dienstplan bearbeiten",
-                thMonth: "Monat", thSchoolCal: "🏫 Berufsschule", thWorkCal: "🏢 Betrieb / Schichtplan", thNoteCal: "Bemerkung & Termine",
+                skillTitle: "⭐ Jahres-Skill-Matrix (KW 1 bis KW 52)", skillSub: "Deutsches Notensystem: 1 (Sehr gut) bis 6 (Ungenügend) - Strukturiert nach Monaten",
+                btnNewSkill: "+ Bewertung / Note eintragen", thMonthGroup: "Monat", thWeek: "Kalenderwoche", thSkill: "Fachliche Kompetenz", thGrade: "Note (1-6)", thRemark: "Bewertung / Bemerkung",
+                calTitle: "📅 Jahreskalender & Schichtplan (12 Monate)", calSub: "Jahresübersicht für Betrieb, Berufsschule und Prüfungen", btnEditCal: "+ Monat bearbeiten",
+                thMonth: "Monat", thSchoolCal: "🏫 Berufsschule", thWorkCal: "🏢 Betrieb / Schichtplan", thNoteCal: "Termine & Notizen",
                 aboutTitle: "Über AzubiSystem 🇩🇪", aboutDesc: "AzubiSystem ist eine spezialisierte digitale Verwaltung für das duale Ausbildungssystem in Deutschland.",
                 helpTitle: "Hilfe-Center & FAQ", suppLabel: "Support Center",
                 loginSubtitle: "Duales Ausbildungssystem Portal", lblEmail: "E-Mail-Adresse", lblPass: "Passwort", lblRole: "Rolle", btnLogin: "Anmelden"
             },
             ar: {
-                navDash: "📊 لوحة التحكم", navUsers: "👥 إدارة المستخدمين", navSkills: "⭐ خريطة المهارات (1-6)", navHw: "📚 الواجبات", navChat: "💬 المحادثات والمراسلة", navAzubi: "📓 دفتر التقارير و PDF", navAI: "🤖 chat AzubiSystem", navCal: "📅 التقويم السنوي", navAbout: "ℹ️ حول النظام", navHelp: "❓ مركز المساعدة",
+                navDash: "📊 لوحة التحكم", navUsers: "👥 إدارة المستخدمين", navSkills: "⭐ خريطة المهارات (أسبوع 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 الواجبات", navChat: "💬 المحادثات والمراسلة", navAzubi: "📓 دفتر التقارير و PDF", navCal: "📅 التقويم السنوي (12 شهراً)", navAbout: "ℹ️ حول النظام", navHelp: "❓ مركز المساعدة",
                 hdrAdmin: "مركز تحكم المشرف العام", btnLogout: "تسجيل الخروج",
                 welcome: "مرحباً بك في النظام، ", dashSub: "نظام المتدربين المؤسسي مفعل.",
                 stat1Label: "المتدربون", stat2Label: "إجمالي المستخدمين", stat3Label: "التقارير", stat4Label: "حالة النظام",
-                skillTitle: "⭐ خريطة المهارات والأسبوعيات (التنقيط الألماني من 1 إلى 6)", skillSub: "نظام الدرجات الألماني: 1 (ممتاز) إلى 6 (راسب)",
-                btnNewSkill: "+ إضافة تقييم مهارة", thWeek: "أسبوع التدريب", thSkill: "المهارة والجاهزية", thGrade: "الدرجة (1-6)", thRemark: "التقييم والملاحظة",
-                calTitle: "📅 التقويم السنوي وجدول المناوبات", calSub: "التخطيط السنوي لأيام المدرسة المهنية والعمل", btnEditCal: "+ تعديل خطة الشهر",
+                skillTitle: "⭐ خريطة المهارات والأسابيع السنوية (من أسبوع 1 إلى 52)", skillSub: "نظام التقييم الألماني الرسمية من 1 (ممتاز) إلى 6 (راسب) - مقسمة ومجمعة بكل شهر",
+                btnNewSkill: "+ إضافة تقييم مهارة", thMonthGroup: "الشهر", thWeek: "الأسبوع التقويمي", thSkill: "المهارة والجاهزية", thGrade: "الدرجة (1-6)", thRemark: "التقييم والملاحظة",
+                calTitle: "📅 التقويم السنوي الشامل (12 شهراً)", calSub: "التخطيط السنوي لأيام المدرسة المهنية والعمل والمناوبات", btnEditCal: "+ تعديل خطة الشهر",
                 thMonth: "الشهر", thSchoolCal: "🏫 المدرسة المهنية", thWorkCal: "🏢 العمل والشركة", thNoteCal: "الملاحظات والامتحانات",
                 aboutTitle: "حول نظام المتدربين 🇩🇪", aboutDesc: "منصة رقمية متخصصة لإدارة نظام التدريب المهني المزدوج في ألمانيا وفق أعلى المعايير.",
                 helpTitle: "مركز المساعدة والأسئلة الشائعة", suppLabel: "مركز الدعم الفني",
                 loginSubtitle: "بوابة نظام التدريب المهني المزدوج", lblEmail: "البريد الإلكتروني", lblPass: "كلمة المرور", lblRole: "الصلاحية", btnLogin: "تسجيل الدخول"
             },
             en: {
-                navDash: "📊 Dashboard", navUsers: "👥 Users", navSkills: "⭐ Skill Matrix (1-6)", navHw: "📚 Homework", navChat: "💬 Chat & Messages", navAzubi: "📓 Report Book & PDF", navAI: "🤖 chat AzubiSystem", navCal: "📅 Annual Calendar", navAbout: "ℹ️ About", navHelp: "❓ Help Center",
+                navDash: "📊 Dashboard", navUsers: "👥 Users", navSkills: "⭐ Skill Matrix (KW 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Homework", navChat: "💬 Chat & Messages", navAzubi: "📓 Report Book & PDF", navCal: "📅 Annual Calendar (12 Months)", navAbout: "ℹ️ About", navHelp: "❓ Help Center",
                 hdrAdmin: "Super Admin Control Center", btnLogout: "Logout",
                 welcome: "Welcome to the system, ", dashSub: "Enterprise AzubiSystem Active.",
                 stat1Label: "Azubis", stat2Label: "Total Users", stat3Label: "Reports", stat4Label: "System Status",
-                skillTitle: "⭐ Skill Matrix - Weekly Overview (Grades 1 to 6)", skillSub: "German Grading System: 1 (Very Good) to 6 (Insufficient)",
-                btnNewSkill: "+ Add Rating", thWeek: "Training Week", thSkill: "Skill / Competence", thGrade: "German Grade (1-6)", thRemark: "Remark",
-                calTitle: "📅 Annual Calendar & Roster", calSub: "Annual planning for vocational school and work days", btnEditCal: "+ Edit Month Plan",
-                thMonth: "Month", thSchoolCal: "🏫 Vocational School", thWorkCal: "🏢 Company / Work Days", thNoteCal: "Notes & Exams",
+                skillTitle: "⭐ Annual Skill Matrix (KW 1 to KW 52)", skillSub: "German Grading System: 1 (Very Good) to 6 (Insufficient) - Structured by month",
+                btnNewSkill: "+ Add Grade", thMonthGroup: "Month", thWeek: "Calendar Week", thSkill: "Competence", thGrade: "Grade (1-6)", thRemark: "Remark",
+                calTitle: "📅 Annual Calendar & Roster (12 Months)", calSub: "Annual overview for company, school and exams", btnEditCal: "+ Edit Month",
+                thMonth: "Month", thSchoolCal: "🏫 Vocational School", thWorkCal: "🏢 Company / Shift", thNoteCal: "Notes & Exams",
                 aboutTitle: "About AzubiSystem 🇩🇪", aboutDesc: "Specialized digital management platform for the dual vocational training system in Germany.",
                 helpTitle: "Help Center & FAQ", suppLabel: "Support Center",
                 loginSubtitle: "Dual Vocational Training Portal", lblEmail: "E-Mail Address", lblPass: "Password", lblRole: "Role", btnLogin: "Login"
             },
             fr: {
-                navDash: "📊 Tableau de bord", navUsers: "👥 Utilisateurs", navSkills: "⭐ Skill Matrix (1-6)", navHw: "📚 Devoirs", navChat: "💬 Chat & Messages", navAzubi: "📓 Carnet & PDF", navAI: "🤖 chat AzubiSystem", navCal: "📅 Calendrier Annuel", navAbout: "ℹ️ À propos", navHelp: "❓ Centre d'aide",
+                navDash: "📊 Tableau de bord", navUsers: "👥 Utilisateurs", navSkills: "⭐ Skill Matrix (Sem 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Devoirs", navChat: "💬 Chat & Messages", navAzubi: "📓 Carnet & PDF", navCal: "📅 Calendrier Annuel (12 Mois)", navAbout: "ℹ️ À propos", navHelp: "❓ Centre d'aide",
                 hdrAdmin: "Centre de contrôle Super Admin", btnLogout: "Se déconnecter",
                 welcome: "Bienvenue dans le système, ", dashSub: "Enterprise AzubiSystem Actif.",
                 stat1Label: "Apprentis", stat2Label: "Total Utilisateurs", stat3Label: "Rapports", stat4Label: "État du Système",
-                skillTitle: "⭐ Matrix des compétences (Notes 1 à 6)", skillSub: "Système de notation allemand : 1 (Très bien) à 6 (Insuffisant)",
-                btnNewSkill: "+ Ajouter une note", thWeek: "Semaine", thSkill: "Compétence", thGrade: "Note Allemande (1-6)", thRemark: "Remarque",
-                calTitle: "📅 Calendrier Annuel", calSub: "Planification annuelle des cours et du travail", btnEditCal: "+ Modifier le mois",
-                thMonth: "Mois", thSchoolCal: "🏫 École professionnelle", thWorkCal: "🏢 Entreprise / Travail", thNoteCal: "Notes & Examens",
+                skillTitle: "⭐ Matrice des compétences (Semaine 1 à 52)", skillSub: "Notation allemande : 1 (Très bien) à 6 (Insuffisant) - Structuré par mois",
+                btnNewSkill: "+ Ajouter une note", thMonthGroup: "Mois", thWeek: "Semaine", thSkill: "Compétence", thGrade: "Note (1-6)", thRemark: "Remarque",
+                calTitle: "📅 Calendrier Annuel (12 Mois)", calSub: "Aperçu annuel des cours et du travail", btnEditCal: "+ Modifier le mois",
+                thMonth: "Mois", thSchoolCal: "🏫 École professionnelle", thWorkCal: "🏢 Entreprise", thNoteCal: "Notes & Examens",
                 aboutTitle: "À propos d'AzubiSystem 🇩🇪", aboutDesc: "Plateforme de gestion numérique spécialisée pour la formation professionnelle en Allemagne.",
                 helpTitle: "Centre d'aide & FAQ", suppLabel: "Centre de Support",
                 loginSubtitle: "Portail de Formation Professionnelle", lblEmail: "Adresse E-Mail", lblPass: "Mot de passe", lblRole: "Rôle", btnLogin: "Se connecter"
             },
             es: {
-                navDash: "📊 Tablero", navUsers: "👥 Usuarios", navSkills: "⭐ Skill Matrix (1-6)", navHw: "📚 Tareas", navChat: "💬 Chat y Mensajes", navAzubi: "📓 Informes y PDF", navAI: "🤖 chat AzubiSystem", navCal: "📅 Calendario Anual", navAbout: "ℹ️ Acerca de", navHelp: "❓ Ayuda",
+                navDash: "📊 Tablero", navUsers: "👥 Usuarios", navSkills: "⭐ Skill Matrix (KW 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Tareas", navChat: "💬 Chat y Mensajes", navAzubi: "📓 Informes y PDF", navCal: "📅 Calendario Anual (12 Meses)", navAbout: "ℹ️ Acerca de", navHelp: "❓ Ayuda",
                 hdrAdmin: "Centro de Super Admin", btnLogout: "Cerrar sesión",
                 welcome: "Bienvenido al sistema, ", dashSub: "AzubiSystem Enterprise activo.",
                 stat1Label: "Aprendices", stat2Label: "Total Usuarios", stat3Label: "Informes", stat4Label: "Estado",
-                skillTitle: "⭐ Matriz de Habilidades (Notas 1 a 6)", skillSub: "Sistema alemán: 1 (Excelente) a 6 (Insuficiente)",
-                btnNewSkill: "+ Agregar Nota", thWeek: "Semana", thSkill: "Competencia", thGrade: "Nota Alemana (1-6)", thRemark: "Nota",
-                calTitle: "📅 Calendario Anual", calSub: "Planificación anual de clases y trabajo", btnEditCal: "+ Editar Mes",
-                thMonth: "Mes", thSchoolCal: "🏫 Escuela Profesional", thWorkCal: "🏢 Empresa / Trabajo", thNoteCal: "Notas y Exámenes",
+                skillTitle: "⭐ Matriz de Habilidades (Semana 1 a 52)", skillSub: "Sistema alemán: 1 (Excelente) a 6 (Insuficiente) - Estructurado por meses",
+                btnNewSkill: "+ Agregar Nota", thMonthGroup: "Mes", thWeek: "Semana", thSkill: "Competencia", thGrade: "Nota (1-6)", thRemark: "Nota",
+                calTitle: "📅 Calendario Anual (12 Meses)", calSub: "Planificación anual de clases y trabajo", btnEditCal: "+ Editar Mes",
+                thMonth: "Mes", thSchoolCal: "🏫 Escuela Profesional", thWorkCal: "🏢 Empresa", thNoteCal: "Notas y Exámenes",
                 aboutTitle: "Acerca de AzubiSystem 🇩🇪", aboutDesc: "Plataforma de gestión digital para el sistema de formación dual en Alemania.",
                 helpTitle: "Centro de ayuda y FAQ", suppLabel: "Centro de Soporte",
                 loginSubtitle: "Portal de Formación Dual", lblEmail: "Correo electrónico", lblPass: "Contraseña", lblRole: "Rol", btnLogin: "Iniciar sesión"
             },
             it: {
-                navDash: "📊 Dashboard", navUsers: "👥 Utenti", navSkills: "⭐ Skill Matrix (1-6)", navHw: "📚 Compiti", navChat: "💬 Chat e Messaggi", navAzubi: "📓 Rapporti e PDF", navAI: "🤖 chat AzubiSystem", navCal: "📅 Calendario Annuale", navAbout: "ℹ️ Chi siamo", navHelp: "❓ Aiuto",
+                navDash: "📊 Dashboard", navUsers: "👥 Utenti", navSkills: "⭐ Skill Matrix (Sett 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Compiti", navChat: "💬 Chat e Messaggi", navAzubi: "📓 Rapporti e PDF", navCal: "📅 Calendario Annuale (12 Mesi)", navAbout: "ℹ️ Chi siamo", navHelp: "❓ Aiuto",
                 hdrAdmin: "Centro Super Admin", btnLogout: "Disconnetti",
                 welcome: "Benvenuto nel sistema, ", dashSub: "AzubiSystem Enterprise attivo.",
                 stat1Label: "Apprendisti", stat2Label: "Utenti Totali", stat3Label: "Rapporti", stat4Label: "Stato",
-                skillTitle: "⭐ Matrice delle Competenze (Voti 1 a 6)", skillSub: "Sistema di valutazione tedesco: 1 (Ottimo) a 6 (Insufficiente)",
-                btnNewSkill: "+ Aggiungi Voto", thWeek: "Settimana", thSkill: "Competenza", thGrade: "Voto Tedesco (1-6)", thRemark: "Note",
-                calTitle: "📅 Calendario Annuale", calSub: "Pianificazione annuale della scuola e del lavoro", btnEditCal: "+ Modifica Mese",
-                thMonth: "Mese", thSchoolCal: "🏫 Scuola Professionale", thWorkCal: "🏢 Azienda / Lavoro", thNoteCal: "Note e Esami",
+                skillTitle: "⭐ Matrice Competenze (Settimana 1 a 52)", skillSub: "Sistema tedesco: 1 (Ottimo) a 6 (Insufficiente) - Strutturato per mese",
+                btnNewSkill: "+ Aggiungi Voto", thMonthGroup: "Mese", thWeek: "Settimana", thSkill: "Competenza", thGrade: "Voto (1-6)", thRemark: "Note",
+                calTitle: "📅 Calendario Annuale (12 Mesi)", calSub: "Pianificazione annuale della scuola e del lavoro", btnEditCal: "+ Modifica Mese",
+                thMonth: "Mese", thSchoolCal: "🏫 Scuola Professionale", thWorkCal: "🏢 Azienda", thNoteCal: "Note e Esami",
                 aboutTitle: "Informazioni su AzubiSystem 🇩🇪", aboutDesc: "Piattaforma di gestione digitale per il sistema di formazione duale in Germania.",
                 helpTitle: "Centro assistenza e FAQ", suppLabel: "Centro Assistenza",
                 loginSubtitle: "Portale di Formazione Duale", lblEmail: "Indirizzo E-Mail", lblPass: "Password", lblRole: "Ruolo", btnLogin: "Accedi"
             },
             tr: {
-                navDash: "📊 Gösterge Paneli", navUsers: "👥 Kullanıcılar", navSkills: "⭐ Yetenek Matrisi (1-6)", navHw: "📚 Ödevler", navChat: "💬 Sohbet ve Mesajlar", navAzubi: "📓 Rapor Defteri ve PDF", navAI: "🤖 chat AzubiSystem", navCal: "📅 Yıllık Takvim", navAbout: "ℹ️ Hakkında", navHelp: "❓ Yardım",
+                navDash: "📊 Gösterge Paneli", navUsers: "👥 Kullanıcılar", navSkills: "⭐ Yetenek Matrisi (Hafta 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Ödevler", navChat: "💬 Sohbet ve Mesajlar", navAzubi: "📓 Rapor Defteri ve PDF", navCal: "📅 Yıllık Takvim (12 Ay)", navAbout: "ℹ️ Hakkında", navHelp: "❓ Yardım",
                 hdrAdmin: "Süper Yönetici Paneli", btnLogout: "Çıkış Yap",
                 welcome: "Sisteme hoş geldiniz, ", dashSub: "Kurumsal AzubiSystem Aktif.",
                 stat1Label: "Çıraklar", stat2Label: "Toplam Kullanıcı", stat3Label: "Raporlar", stat4Label: "Sistem Durumu",
-                skillTitle: "⭐ Yetenek Matrisi - Haftalık Genel Bakış (1-6 Not Sistemi)", skillSub: "Alman Not Sistemi: 1 (Pekiyi) ile 6 (Yetersiz)",
-                btnNewSkill: "+ Not Ekle", thWeek: "Eğitim Haftası", thSkill: "Beceriler", thGrade: "Alman Notu (1-6)", thRemark: "Değerlendirme",
-                calTitle: "📅 Yıllık Takvim ve Vardiya Planı", calSub: "Okul ve çalışma günleri yıllık planlaması", btnEditCal: "+ Ayı Düzenle",
-                thMonth: "Ay", thSchoolCal: "🏫 Meslek Okulu", thWorkCal: "🏢 Şirket / Çalışma Günleri", thNoteCal: "Notlar ve Sınavlar",
+                skillTitle: "⭐ Yıllık Beceriler Matrisi (Hafta 1 - 52)", skillSub: "Alman Not Sistemi: 1 (Pekiyi) ile 6 (Yetersiz) - Aylara göre gruplandırılmış",
+                btnNewSkill: "+ Not Ekle", thMonthGroup: "Ay", thWeek: "Hafta", thSkill: "Beceriler", thGrade: "Not (1-6)", thRemark: "Değerlendirme",
+                calTitle: "📅 Yıllık Takvim (12 Ay)", calSub: "Okul ve çalışma günleri yıllık planlaması", btnEditCal: "+ Ayı Düzenle",
+                thMonth: "Ay", thSchoolCal: "🏫 Meslek Okulu", thWorkCal: "🏢 Şirket", thNoteCal: "Notlar ve Sınavlar",
                 aboutTitle: "AzubiSystem Hakkında 🇩🇪", aboutDesc: "Almanya ikili mesleki eğitim sistemi için dijital yönetim platformu.",
                 helpTitle: "Yardım Merkezi ve SSS", suppLabel: "Destek Merkezi",
                 loginSubtitle: "İkili Mesleki Eğitim Portalı", lblEmail: "E-Posta Adresi", lblPass: "Şifre", lblRole: "Rol", btnLogin: "Giriş Yap"
@@ -594,22 +591,35 @@
 
         function logout() { currentUser = null; document.getElementById('loginScreen').classList.remove('hidden'); }
 
-        // المهارات بالدرجات الألمانية
+        // المهارات لـ 52 أسبوعاً مقسمة شهرياً
         function toggleSkillForm() { document.getElementById('skillFormBox').classList.toggle('hidden'); }
         async function loadSkills() {
             const res = await fetch('/api/skills');
             const data = await res.json();
             const tbody = document.getElementById('skillTableBody');
             if(data.length === 0) return;
-            tbody.innerHTML = data.map(s => `
-                <tr class="hover:bg-slate-50">
-                    <td class="py-3 px-4 font-bold text-slate-800">${s.week}</td>
-                    <td class="py-3 px-4 text-slate-700">${s.skill}</td>
-                    <td class="py-3 px-4"><span class="px-2.5 py-1 rounded-lg font-bold text-xs ${s.grade <= 2 ? 'bg-emerald-100 text-emerald-800' : s.grade <= 4 ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'}">Note ${s.grade}</span></td>
-                    <td class="py-3 px-4 text-slate-600">${s.remark || '-'}</td>
-                </tr>
-            `).join('');
+
+            let html = '';
+            let currentMonth = '';
+
+            data.forEach((s) => {
+                const isNewMonth = s.month !== currentMonth;
+                if (isNewMonth) currentMonth = s.month;
+
+                html += `
+                    <tr class="hover:bg-slate-50 border-b border-slate-100">
+                        <td class="py-3 px-4 font-extrabold text-blue-900 bg-slate-50/80">${isNewMonth ? s.month : ''}</td>
+                        <td class="py-3 px-4 font-bold text-slate-800">${s.week} (${s.weekInMonth || ''})</td>
+                        <td class="py-3 px-4 text-slate-700 font-medium">${s.skill}</td>
+                        <td class="py-3 px-4"><span class="px-2.5 py-1 rounded-lg font-bold text-xs ${s.grade <= 2 ? 'bg-emerald-100 text-emerald-800' : s.grade <= 4 ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'}">Note ${s.grade}</span></td>
+                        <td class="py-3 px-4 text-slate-600">${s.remark || '-'}</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
         }
+
         async function saveSkillGrade() {
             const week = document.getElementById('skWeek').value;
             const skill = document.getElementById('skSkill').value;
@@ -625,7 +635,7 @@
             toggleSkillForm();
         }
 
-        // التقويم السنوي
+        // التقويم السنوي الشامل لـ 12 شهراً
         function toggleAnnualCalForm() { document.getElementById('annualCalFormBox').classList.toggle('hidden'); }
         async function loadAnnualCalendar() {
             const res = await fetch('/api/calendar/annual');
@@ -633,14 +643,15 @@
             const tbody = document.getElementById('annualCalTableBody');
             if(data.length === 0) return;
             tbody.innerHTML = data.map(c => `
-                <tr class="hover:bg-slate-50">
-                    <td class="py-3 px-4 font-bold text-slate-900">${c.month}</td>
-                    <td class="py-3 px-4 text-blue-700 font-medium">${c.schoolDays}</td>
-                    <td class="py-3 px-4 text-emerald-700 font-medium">${c.workDays}</td>
+                <tr class="hover:bg-slate-50 border-b border-slate-100">
+                    <td class="py-3 px-4 font-extrabold text-slate-900">${c.month}</td>
+                    <td class="py-3 px-4 text-blue-700 font-bold">${c.schoolDays}</td>
+                    <td class="py-3 px-4 text-emerald-700 font-bold">${c.workDays}</td>
                     <td class="py-3 px-4 text-slate-600">${c.note || '-'}</td>
                 </tr>
             `).join('');
         }
+
         async function saveAnnualCal() {
             const month = document.getElementById('calMonth').value;
             const schoolDays = document.getElementById('calSchool').value;
