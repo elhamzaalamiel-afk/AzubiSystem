@@ -1,53 +1,110 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(express.urlencoded({ extended: true }));
 
-// حساب المسؤول الرئيسي (Super Admin) مرتبط بإيميلك الشخصي الصحيح
-let users = [
-    { email: 'azubisystem.ha@gmail.com', password: 'password123', role: 'Super Admin', name: 'Super Admin' }
+// خدمة الملفات الثابتة من المجلد الحالي
+app.use(express.static(path.join(__dirname)));
+
+// قاعدة بيانات وهمية مركزية آمنة (يمكن ربطها بقاعدة بيانات حقيقية لاحقاً)
+let usersDB = [
+    {
+        email: "azubisystem.ha@gmail.com",
+        password: "123456", // يمكن للمسؤول تغييرها
+        role: "admin",
+        name: "Super Admin",
+        org: "AzubiSystem Hauptverwaltung"
+    }
 ];
 
-// تخزين أكواد المتدربين المرتبطة بإيميلاتهم بشكل آمن
-let generatedCodes = {}; 
+let reportsDB = [];
+let homeworkDB = [];
+let chatDB = [];
 
-// نقطة نهاية تسجيل الدخول مع التحقق من الأدوار والبريد
+// مسار تسجيل الدخول والتحقق الصارم من البريد الإلكتروني
 app.post('/api/login', (req, res) => {
-    const { email, password, role, code } = req.body;
-
-    if (role === 'Super Admin') {
-        const admin = users.find(u => u.email === email && u.password === password && u.role === 'Super Admin');
-        if (admin) {
-            return res.json({ success: true, role: 'Super Admin', name: admin.name });
-        }
-        return res.status(401).json({ success: false, message: 'بيانات المسؤول غير صحيحة' });
-    } 
+    const { email, password, role } = req.body;
     
-    if (role === 'Azubi') {
-        if (code && generatedCodes[code] && generatedCodes[code].email === email) {
-            return res.json({ success: true, role: 'Azubi', name: generatedCodes[code].name });
-        }
-        return res.status(401).json({ success: false, message: 'كود المتدرب أو البريد الإلكتروني غير صحيح' });
+    // البحث عن المستخدم بالبريد الإلكتروني حصرياً
+    const user = usersDB.find(u => u.email.toLowerCase() === email.toLowerCase());
+
+    if (!user) {
+        return res.status(401).json({ success: false, message: "E-Mail nicht im System registriert. (البريد الإلكتروني غير مسجل في النظام)" });
     }
 
-    res.status(400).json({ success: false, message: 'دور غير معروف' });
+    // التحقق من كلمة المرور
+    if (user.password !== password) {
+        return res.status(401).json({ success: false, message: "Falsches Passwort. (كلمة المرور غير صحيحة)" });
+    }
+
+    // التحقق من تطابق الصلاحية
+    if (user.role !== role) {
+        return res.status(403).json({ success: false, message: "Unzulässige Rolle für diesen Benutzer. (صلاحية غير متطابقة مع هذا البريد)" });
+    }
+
+    res.json({ success: true, user: { name: user.name, email: user.email, role: user.role } });
 });
 
-// نقطة نهاية لتوليد كود للمتدرب بواسطة الـ Admin
-app.post('/api/generate-code', (req, res) => {
-    const { name, email } = req.body;
-    const code = 'AZUBI-' + Math.floor(1000 + Math.random() * 9000);
-    generatedCodes[code] = { name, email };
-    res.json({ success: true, code, name, email });
+// مسار إضافة مستخدم جديد وتوليد بياناته
+app.post('/api/users', (req, res) => {
+    const { name, email, org, role, password } = req.body;
+    
+    if (usersDB.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+        return res.status(400).json({ success: false, message: "E-Mail existiert bereits." });
+    }
+
+    const newUser = {
+        name,
+        email,
+        org,
+        role: role.toLowerCase().includes('azubi') ? 'azubi' : 'admin',
+        password: password || "123456" // كلمة سر افتراضية للمستخدم الجديد يمكنه تغييرها
+    };
+
+    usersDB.push(newUser);
+    res.json({ success: true, user: newUser });
 });
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+// مسار حفظ التقارير مع التاريخ والوقت تلقائياً (Timestamp)
+app.post('/api/reports', (req, res) => {
+    const { week, dept, text, author } = req.body;
+    const newReport = {
+        id: Date.now(),
+        week,
+        dept,
+        text,
+        author,
+        timestamp: new Date().toLocaleString('de-DE', { timeZone: 'Europe/Berlin' }) // التاريخ والوقت بتوقيت ألمانيا تلقائياً
+    };
+    reportsDB.push(newReport);
+    res.json({ success: true, report: newReport });
 });
 
+app.get('/api/reports', (req, res) => {
+    res.json(reportsDB);
+});
+
+// مسار الواجبات مع التاريخ والوقت
+app.post('/api/homework', (req, res) => {
+    const { title, desc } = req.body;
+    const newHw = {
+        id: Date.now(),
+        title,
+        desc,
+        timestamp: new Date().toLocaleString('de-DE', { timeZone: 'Europe/Berlin' })
+    };
+    homeworkDB.push(newHw);
+    res.json({ success: true, homework: newHw });
+});
+
+app.get('/api/homework', (req, res) => {
+    res.json(homeworkDB);
+});
+
+// تشغيل السيرفر
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`AzubiSystem läuft sicher auf Port ${PORT}`);
 });
