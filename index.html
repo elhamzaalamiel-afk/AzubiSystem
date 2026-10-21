@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AzubiSystem - Duales Ausbildungssystem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @media print { .no-print { display: none !important; } }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <!-- شاشة تسجيل الدخول (باللغة الألمانية افتراضياً) -->
+    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 bg-opacity-95 no-print">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-200">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">AzubiSystem 🇩🇪</h2>
+                <p id="txtLoginSub" class="text-sm text-slate-500 mt-2">Willkommen! Bitte melden Sie sich an.</p>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label id="lblEmail" class="block text-xs font-bold uppercase text-slate-600 mb-1">E-Mail / Benutzername</label>
+                    <input type="text" id="loginUser" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none text-sm" value="admin@azubisystem.de">
+                </div>
+                <div>
+                    <label id="lblPass" class="block text-xs font-bold uppercase text-slate-600 mb-1">Passwort</label>
+                    <input type="password" id="loginPass" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none text-sm" value="123456">
+                </div>
+
+                <div>
+                    <label id="lblRole" class="block text-xs font-bold uppercase text-slate-600 mb-1">Rolle / Berechtigung</label>
+                    <select id="roleSelector" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm bg-white font-semibold">
+                        <option value="admin" id="optAdminRole">Super Admin (Alle Bereiche)</option>
+                        <option value="azubi" id="optAzubiRole">Azubi (Nur Berichtsheft)</option>
+                    </select>
+                </div>
+                
+                <button type="button" onclick="doLogin()" id="btnLogin" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition text-sm shadow-md cursor-pointer mt-2">Anmelden</button>
+            </div>
+            
+            <div class="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-500 space-y-1">
+                <p id="txtSupQ" class="font-bold text-slate-700">Hilfe & Support benötigt?</p>
+                <p class="font-mono text-blue-600">📞 +49 176 63160304</p>
+                <p class="font-mono text-blue-600">✉️ azubisystem.ha@gmail.com</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تغيير كلمة السر -->
+    <div id="changePassModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900 bg-opacity-90 no-print">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
+            <h3 id="txtFirstTitle" class="text-xl font-bold text-slate-900 mb-2">Erste Anmeldung</h3>
+            <p id="txtFirstSub" class="text-xs text-amber-600 bg-amber-50 p-3 rounded-lg mb-4 border border-amber-200">Bitte erstellen Sie ein neues Passwort für Ihr Konto.</p>
+            <div class="space-y-4">
+                <div>
+                    <label id="lblNewPass" class="block text-xs font-bold text-slate-600 mb-1">Neues Passwort</label>
+                    <input type="password" id="newPasswordInput" class="w-full px-4 py-2 rounded-lg border border-slate-300 text-sm" placeholder="••••••••">
+                </div>
+                <button type="button" onclick="confirmPasswordSave()" id="btnSavePass" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg text-sm cursor-pointer">Passwort Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- الشاشة الرئيسية -->
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- القائمة الجانبية -->
+        <aside class="w-64 bg-slate-900 text-white flex flex-col justify-between no-print">
+            <div>
+                <div class="p-6 text-2xl font-black text-blue-400 tracking-wider border-b border-slate-800 flex items-center justify-between">
+                    <span>AzubiSystem</span>
+                    <span id="roleBadge" class="text-[10px] bg-blue-900 text-blue-200 px-2 py-0.5 rounded font-mono font-bold uppercase">SUPER ADMIN</span>
+                </div>
+                <nav class="mt-4 px-3 space-y-1.5 text-sm" id="sidebarNav">
+                    <div id="adminNav" class="space-y-1.5">
+                        <a href="#" onclick="switchTab('dashboard', this)" class="nav-item block px-4 py-2.5 rounded-xl bg-blue-600 text-white font-medium" id="navDash">Dashboard</a>
+                        <a href="#" onclick="switchTab('users', this)" class="nav-item block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navUsers">Benutzerverwaltung</a>
+                        <a href="#" onclick="switchTab('homework', this)" class="nav-item block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navHomework">📚 Aufgaben</a>
+                        <a href="#" onclick="switchTab('messages', this)" class="nav-item block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navMessages">💬 Schule-Betrieb Chat</a>
+                    </div>
+                    <div id="azubiNav" class="hidden space-y-1.5">
+                        <a href="#" onclick="switchTab('azubi-portal', this)" class="nav-item block px-4 py-2.5 rounded-xl bg-blue-600 text-white font-medium" id="navAzubiPortal">📓 Berichtsheft</a>
+                        <a href="#" onclick="switchTab('homework', this)" class="nav-item block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navAzubiHw">📚 Aufgaben</a>
+                    </div>
+                    <a href="#" onclick="switchTab('help', this)" class="nav-item block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navHelp">Hilfe-Center & Anleitung</a>
+                </nav>
+            </div>
+
+            <div class="p-4 m-4 bg-slate-800 rounded-xl border border-slate-700 text-xs text-slate-300 space-y-2">
+                <div class="font-bold text-white flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                    <span id="txtSupCenter">Support Center</span>
+                </div>
+                <p id="txtDirectContact" class="text-slate-400">Direkter Kontakt:</p>
+                <div class="font-mono text-blue-300 font-semibold">📞 +49 176 63160304</div>
+                <div class="font-mono text-blue-300 text-[11px] truncate">✉️ azubisystem.ha@gmail.com</div>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="flex-1 flex flex-col overflow-y-auto">
+            
+            <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-8 no-print">
+                <div class="font-bold text-slate-700 text-lg" id="hdrTitle">Super Admin Kontrollzentrum</div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-lg border border-slate-200">
+                        <span id="txtLangLabel" class="text-xs font-bold text-slate-500 pl-1">🌐 Sprache:</span>
+                        <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-white text-xs font-semibold px-2 py-1 rounded border border-slate-300 focus:outline-none cursor-pointer">
+                            <option value="de">Deutsch (DE)</option>
+                            <option value="en">English (EN)</option>
+                            <option value="ar">العربية (AR)</option>
+                            <option value="fr">Français (FR)</option>
+                            <option value="es">Español (ES)</option>
+                            <option value="tr">Türkçe (TR)</option>
+                        </select>
+                    </div>
+                    <button onclick="logout()" id="btnLogout" class="text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg font-semibold hover:bg-red-100 transition cursor-pointer">Abmelden</button>
+                </div>
+            </header>
+
+            <div class="p-8 space-y-8">
+                
+                <!-- 1. لوحة التحكم -->
+                <div id="tab-dashboard" class="space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
+                        <div>
+                            <h3 id="dashWelcome" class="text-base font-bold text-slate-800">Willkommen im AzubiSystem - Admin Center</h3>
+                            <p id="dashSub" class="text-xs text-slate-500 mt-1">DSGVO Konform • Volle Admin-Rechte für Schulen und Betriebe.</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="backupData()" id="btnBackup" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition cursor-pointer">📥 Backup</button>
+                            <button onclick="exportPDF()" id="btnPdf" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition cursor-pointer">📄 PDF Export</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. بوابة المتدرب -->
+                <div id="tab-azubi-portal" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
+                        <div>
+                            <h3 id="azubiPortalTitle" class="text-lg font-bold text-slate-800">📓 Berichtsheft & Azubi Portal</h3>
+                            <p id="azubiPortalSub" class="text-xs text-slate-500 mt-1">Ihr tägliches Ausbildungsprotokoll und offizielle Berichte.</p>
+                        </div>
+                        <button onclick="window.print()" id="btnPrintAzubi" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition cursor-pointer">🖨️ PDF Drucken</button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                        <h4 id="reportHeader" class="font-bold text-slate-800 text-sm">Wochenbericht eintragen:</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="reportWeek" placeholder="Woche (z.B. Woche 1)" class="px-4 py-2 border rounded-xl text-sm border-slate-300">
+                            <input type="text" id="reportDept" placeholder="Abteilung (z.B. IT)" class="px-4 py-2 border rounded-xl text-sm border-slate-300">
+                        </div>
+                        <textarea id="reportText" placeholder="Schreiben Sie hier Ihre Aufgaben..." class="w-full px-4 py-2 border rounded-xl text-sm border-slate-300 h-28"></textarea>
+                        <button onclick="saveReport()" id="btnSaveReport" class="bg-blue-600 text-white text-xs font-bold px-6 py-2.5 rounded-xl hover:bg-blue-700 transition">Bericht speichern</button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                        <h4 id="prevReports" class="font-bold text-slate-800 mb-4">Meine Berichte:</h4>
+                        <div id="reportList" class="space-y-3">
+                            <p id="noReports" class="text-xs text-slate-400">Keine Berichte vorhanden.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. إدارة المستخدمين والأكواد -->
+                <div id="tab-users" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 id="txtAddUserTitle" class="text-base font-bold text-slate-800 mb-2">Neuen Benutzer / Azubi anlegen</h3>
+                        <p id="txtAddUserSub" class="text-xs text-slate-500 mb-4">Schulen und Betriebe können hier neue Benutzer registrieren.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <input type="text" id="newUserName" placeholder="Vollständiger Name" class="px-4 py-2 border rounded-xl text-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="email" id="newUserEmail" placeholder="E-Mail-Adresse" class="px-4 py-2 border rounded-xl text-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="newUserOrg" placeholder="Schule / Betrieb Name" class="px-4 py-2 border rounded-xl text-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            
+                            <select id="newUserRole" class="px-4 py-2 border rounded-xl text-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 md:col-span-2">
+                                <option value="Azubi">Azubi (Auszubildender)</option>
+                                <option value="Schulleiter">Schulleiter</option>
+                                <option value="Lehrer">Lehrer</option>
+                                <option value="Geschäftsführer">Geschäftsführer</option>
+                                <option value="Praxisanleiter">Praxisanleiter</option>
+                            </select>
+                            
+                            <button type="button" onclick="addUser()" id="btnAddUserBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl text-sm transition cursor-pointer">+ Erstellen & Code Generieren</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-slate-100">
+                            <h3 id="txtUserTableTitle" class="font-bold text-slate-800">Registrierte Benutzer & Zugangsdaten</h3>
+                        </div>
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-200">
+                                    <th class="py-3 px-6" id="thName">Name</th>
+                                    <th class="py-3 px-6" id="thOrg">Organisation</th>
+                                    <th class="py-3 px-6" id="thRole">Rolle</th>
+                                    <th class="py-3 px-6" id="thCode">Allgemeiner Code</th>
+                                    <th class="py-3 px-6" id="thStatus">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody" class="divide-y divide-slate-100 text-sm">
+                                <tr id="emptyRow">
+                                    <td colspan="5" id="noUsersText" class="py-6 text-center text-slate-400 text-xs">Keine Benutzer registriert.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 4. الواجبات والمهام -->
+                <div id="tab-homework" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 id="hwSecTitle" class="text-lg font-bold text-slate-800 mb-2">📚 Aufgaben & Hausaufgaben</h3>
+                        <p id="hwSecSub" class="text-xs text-slate-500 mb-4">Lernaufgaben für Auszubildende verwalten.</p>
+                        <div class="space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <input type="text" id="hwTitle" placeholder="Aufgabentitel..." class="w-full px-4 py-2 border rounded-xl text-sm border-slate-300">
+                            <textarea id="hwDesc" placeholder="Beschreibung..." class="w-full px-4 py-2 border rounded-xl text-sm border-slate-300 h-24"></textarea>
+                            <button type="button" onclick="addHomework()" id="btnAddHw" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2 rounded-xl text-sm transition cursor-pointer">Aufgabe veröffentlichen</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                        <h4 id="activeHwTitle" class="font-bold text-slate-800 mb-4">Aktive Aufgaben:</h4>
+                        <div id="homeworkList" class="space-y-3">
+                            <p id="noHwText" class="text-xs text-slate-400">Keine aktiven Aufgaben.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. مراسلات الشركة والمدرسة -->
+                <div id="tab-messages" class="hidden space-y-6">
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[550px]">
+                        <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
+                            <div>
+                                <h3 id="chatHeaderTitle" class="font-bold text-sm">Schule ⟷ Betrieb Kommunikation</h3>
+                                <p id="chatHeaderSub" class="text-[11px] text-slate-400">Offizieller Kanal zwischen Institutionen.</p>
+                            </div>
+                        </div>
+                        
+                        <div id="chatMessages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 text-sm">
+                            <p id="noChatText" class="text-xs text-slate-400 text-center">Keine Nachrichten vorhanden.</p>
+                        </div>
+
+                        <div class="p-4 bg-white border-t border-slate-200 flex gap-3">
+                            <input type="text" id="chatInput" placeholder="Nachricht schreiben..." class="flex-1 px-4 py-2.5 border rounded-xl text-sm border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button type="button" onclick="sendMessage()" id="btnSendChat" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition cursor-pointer">Senden</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. مركز المساعدة ودليل الاستخدام وحول البرنامج -->
+                <div id="tab-help" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                        <div>
+                            <h3 id="helpMainTitle" class="text-xl font-bold text-slate-900 mb-1">Hilfe-Center & Anleitung</h3>
+                            <p id="helpMainSub" class="text-xs text-slate-500">Alles, was Sie über die Nutzung des AzubiSystems wissen müssen.</p>
+                        </div>
+
+                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl space-y-2">
+                            <h4 id="aboutTitle" class="font-bold text-blue-900 text-sm">ℹ️ Über das System</h4>
+                            <p id="aboutDesc" class="text-xs text-blue-800 leading-relaxed">
+                                Das <strong>AzubiSystem</strong> ist eine integrierte Plattform für das duale Ausbildungssystem in Deutschland. Es verbindet Berufsschulen, Betriebe und Auszubildende (Azubis) zur Verwaltung von Anwesenheit, Aufgaben, Berichtsheften und offizieller Kommunikation unter Einhaltung der DSGVO.
+                            </p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <h4 id="guideTitle" class="font-bold text-slate-800 text-sm">📖 Schnellanleitung:</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-600">
+                                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+                                    <span id="g1Title" class="font-bold text-slate-900 block">1. Super Admin:</span>
+                                    <p id="g1Desc">Erstellt Konten für Schulen und Betriebe und generiert Zugangscodes.</p>
+                                </div>
+                                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+                                    <span id="g2Title" class="font-bold text-slate-800 block">2. Azubi (Auszubildender):</span>
+                                    <p id="g2Desc">Loggt sich mit dem Code ein, führt das Berichtsheft und exportiert PDFs.</p>
+                                </div>
+                                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+                                    <span id="g3Title" class="font-bold text-slate-900 block">3. Aufgaben:</span>
+                                    <p id="g3Desc">Lehrer können Lernaufgaben für Schüler veröffentlichen.</p>
+                                </div>
+                                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+                                    <span id="g4Title" class="font-bold text-slate-900 block">4. Kommunikation:</span>
+                                    <p id="g4Desc">Sicherer Kanal zwischen Schulen und Ausbildungsbetrieben.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                                <h4 id="supTechTitle" class="font-bold text-slate-800 text-xs">📞 Technischer Support</h4>
+                                <p class="font-mono text-blue-600 font-bold text-xs">+49 176 63160304</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                                <h4 id="supEmailTitle" class="font-bold text-slate-800 text-xs">✉️ Offizielle E-Mail</h4>
+                                <p class="font-mono text-blue-600 font-bold text-xs">azubisystem.ha@gmail.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- المحرك البرمجي الشامل -->
+    <script>
+        let currentLang = 'de';
+        let userRole = 'admin';
+
+        const i18n = {
+            de: {
+                badgeAdmin: "SUPER ADMIN",
+                badgeAzubi: "AZUBI",
+                loginSub: "Willkommen! Bitte melden Sie sich an.",
+                lblEmail: "E-Mail / Benutzername",
+                lblPass: "Passwort",
+                lblRole: "Rolle / Berechtigung",
+                optAdminRole: "Super Admin (Alle Bereiche)",
+                optAzubiRole: "Azubi (Nur Berichtsheft)",
+                loginBtn: "Anmelden",
+                firstTitle: "Erste Anmeldung",
+                firstSub: "Bitte erstellen Sie ein neues Passwort für Ihr Konto.",
+                lblNewPass: "Neues Passwort",
+                btnSavePass: "Passwort Speichern",
+                navDash: "Dashboard",
+                navUsers: "Benutzerverwaltung",
+                navHomework: "📚 Aufgaben",
+                navMessages: "💬 Schule-Betrieb Chat",
+                navAzubiPortal: "📓 Berichtsheft",
+                navHelp: "Hilfe-Center & Anleitung",
+                supCenter: "Support Center",
+                dirContact: "Direkter Kontakt:",
+                hdrTitleAdmin: "Super Admin Kontrollzentrum",
+                hdrTitleAzubi: "Azubi Portal",
+                langLabel: "🌐 Sprache:",
+                logout: "Abmelden",
+                dashWelcome: "Willkommen im AzubiSystem - Admin Center",
+                dashSub: "DSGVO Konform • Volle Admin-Rechte für Schulen und Betriebe.",
+                btnBackup: "📥 Backup",
+                btnPdf: "📄 PDF Export",
+                azubiPortalTitle: "📓 Berichtsheft & Azubi Portal",
+                azubiPortalSub: "Ihr tägliches Ausbildungsprotokoll und offizielle Berichte.",
+                btnPrintAzubi: "🖨️ PDF Drucken",
+                reportHeader: "Wochenbericht eintragen:",
+                btnSaveReport: "Bericht speichern",
+                prevReports: "Meine Berichte:",
+                noReports: "Keine Berichte vorhanden.",
+                txtAddUserTitle: "Neuen Benutzer / Azubi anlegen",
+                txtAddUserSub: "Schulen und Betriebe können hier neue Benutzer registrieren.",
+                btnAddUserBtn: "+ Erstellen & Code Generieren",
+                txtUserTableTitle: "Registrierte Benutzer & Zugangsdaten",
+                thName: "Name",
+                thOrg: "Organisation",
+                thRole: "Rolle",
+                thCode: "Allgemeiner Code",
+                thStatus: "Status",
+                noUsersText: "Keine Benutzer registriert.",
+                hwSecTitle: "📚 Aufgaben & Hausaufgaben",
+                hwSecSub: "Lernaufgaben für Auszubildende verwalten.",
+                btnAddHw: "Aufgabe veröffentlichen",
+                activeHwTitle: "Aktive Aufgaben:",
+                noHwText: "Keine aktiven Aufgaben.",
+                chatHeaderTitle: "Schule ⟷ Betrieb Kommunikation",
+                chatHeaderSub: "Offizieller Kanal zwischen Institutionen.",
+                noChatText: "Keine Nachrichten vorhanden.",
+                btnSendChat: "Senden",
+                helpMainTitle: "Hilfe-Center & Anleitung",
+                helpMainSub: "Alles, was Sie über die Nutzung des AzubiSystems wissen müssen.",
+                aboutTitle: "ℹ️ Über das System",
+                aboutDesc: "Das AzubiSystem ist eine integrierte Plattform für das duale Ausbildungssystem in Deutschland.",
+                guideTitle: "📖 Schnellanleitung:",
+                g1Title: "1. Super Admin:",
+                g1Desc: "Erstellt Konten für Schulen und Betriebe und generiert Zugangscodes.",
+                g2Title: "2. Azubi (Auszubildender):",
+                g2Desc: "Loggt sich mit dem Code ein, führt das Berichtsheft und exportiert PDFs.",
+                g3Title: "3. Aufgaben:",
+                g3Desc: "Lehrer können Lernaufgaben für Schüler veröffentlichen.",
+                g4Title: "4. Kommunikation:",
+                g4Desc: "Sicherer Kanal zwischen Schulen und Ausbildungsbetrieben.",
+                supTechTitle: "📞 Technischer Support",
+                supEmailTitle: "✉️ Offizielle E-Mail",
+                statusNotChanged: "Code Nicht Geändert"
+            },
+            en: {
+                badgeAdmin: "SUPER ADMIN",
+                badgeAzubi: "APPRENTICE",
+                loginSub: "Welcome! Please log in.",
+                lblEmail: "Email / Username",
+                lblPass: "Password",
+                lblRole: "Role / Permission",
+                optAdminRole: "Super Admin (All Areas)",
+                optAzubiRole: "Apprentice (Report Book Only)",
+                loginBtn: "Log In",
+                firstTitle: "First Login",
+                firstSub: "Please create a new password.",
+                lblNewPass: "New Password",
+                btnSavePass: "Save Password",
+                navDash: "Dashboard",
+                navUsers: "User Management",
+                navHomework: "📚 Homework",
+                navMessages: "💬 School-Company Chat",
+                navAzubiPortal: "📓 Report Book",
+                navHelp: "Help Center & Guide",
+                supCenter: "Support Center",
+                dirContact: "Direct contact:",
+                hdrTitleAdmin: "Super Admin Control Center",
+                hdrTitleAzubi: "Apprentice Portal",
+                langLabel: "🌐 Language:",
+                logout: "Log Out",
+                dashWelcome: "Welcome to AzubiSystem - Admin Center",
+                dashSub: "GDPR Compliant • Full administrator control.",
+                btnBackup: "📥 Backup",
+                btnPdf: "📄 PDF Export",
+                azubiPortalTitle: "📓 Report Book & Azubi Portal",
+                azubiPortalSub: "Your daily training log and official reports.",
+                btnPrintAzubi: "🖨️ Print PDF",
+                reportHeader: "Add Weekly Report:",
+                btnSaveReport: "Save Report",
+                prevReports: "My Reports:",
+                noReports: "No reports available.",
+                txtAddUserTitle: "Add New User / Azubi",
+                txtAddUserSub: "Schools and companies can register new users here.",
+                btnAddUserBtn: "+ Create & Generate Code",
+                txtUserTableTitle: "Registered Users & Access Codes",
+                thName: "Name",
+                thOrg: "Organization",
+                thRole: "Role",
+                thCode: "General Code",
+                thStatus: "Status",
+                noUsersText: "No users registered.",
+                hwSecTitle: "📚 Homework & Tasks",
+                hwSecSub: "Manage learning tasks for apprentices.",
+                btnAddHw: "Publish Task",
+                activeHwTitle: "Active Tasks:",
+                noHwText: "No active tasks.",
+                chatHeaderTitle: "School ⟷ Company Communication",
+                chatHeaderSub: "Official channel between institutions.",
+                noChatText: "No messages available.",
+                btnSendChat: "Send",
+                helpMainTitle: "Help Center & Guide",
+                helpMainSub: "Everything you need to know about using AzubiSystem.",
+                aboutTitle: "ℹ️ About the System",
+                aboutDesc: "AzubiSystem is an integrated platform for the dual vocational training system in Germany.",
+                guideTitle: "📖 Quick Guide:",
+                g1Title: "1. Super Admin:",
+                g1Desc: "Creates accounts for schools and companies and generates access codes.",
+                g2Title: "2. Azubi (Apprentice):",
+                g2Desc: "Logs in with code, maintains report book, and exports PDFs.",
+                g3Title: "3. Tasks:",
+                g3Desc: "Teachers can publish learning tasks for students.",
+                g4Title: "4. Communication:",
+                g4Desc: "Secure channel between schools and training companies.",
+                supTechTitle: "📞 Technical Support",
+                supEmailTitle: "✉️ Official Email",
+                statusNotChanged: "Code Not Changed"
+            },
+            ar: {
+                badgeAdmin: "مسؤول رئيسي",
+                badgeAzubi: "متدرب",
+                loginSub: "مرحباً بك! يرجى تسجيل الدخول.",
+                lblEmail: "البريد الإلكتروني / اسم المستخدم",
+                lblPass: "كلمة السر",
+                lblRole: "الصلاحية / الدور",
+                optAdminRole: "مسؤول رئيسي (كافة الأقسام)",
+                optAzubiRole: "متدرب (بوابة المتدرب فقط)",
+                loginBtn: "تسجيل الدخول",
+                firstTitle: "تسجيل الدخول الأول",
+                firstSub: "يرجى إنشاء كلمة سر جديدة.",
+                lblNewPass: "كلمة السر الجديدة",
+                btnSavePass: "حفظ كلمة السر",
+                navDash: "لوحة التحكم",
+                navUsers: "إدارة المستخدمين والأكواد",
+                navHomework: "📚 الواجبات والمهام",
+                navMessages: "💬 مراسلات الشركة والمدرسة",
+                navAzubiPortal: "📓 بوابة المتدرب",
+                navHelp: "مركز المساعدة ودليل الاستخدام",
+                supCenter: "الدعم الفني",
+                dirContact: "التواصل المباشر:",
+                hdrTitleAdmin: "مركز تحكم المسؤول الرئيسي",
+                hdrTitleAzubi: "بوابة المتدرب",
+                langLabel: "🌐 اللغة:",
+                logout: "تسجيل الخروج",
+                dashWelcome: "مرحباً بك في لوحة تحكم المسؤول (AzubiSystem)",
+                dashSub: "متوافق مع حماية البيانات DSGVO • لك صلاحية مطلقة لإدارة المدارس والشركات والمتدربين.",
+                btnBackup: "📥 نسخة احتياطية",
+                btnPdf: "📄 تصدير تقرير PDF",
+                azubiPortalTitle: "📓 بوابة المتدرب الشخصية (Berichtsheft)",
+                azubiPortalSub: "سجل التدريب اليومي الخاص بك وتقاريرك الرسمية.",
+                btnPrintAzubi: "🖨️ طباعة PDF",
+                reportHeader: "تسجيل تقرير الأسبوع:",
+                btnSaveReport: "حفظ التقرير",
+                prevReports: "تقاريري السابقة:",
+                noReports: "لا توجد تقارير مسجلة.",
+                txtAddUserTitle: "إضافة مستخدم أو متدرب جديد (Azubi)",
+                txtAddUserSub: "يمكن للمدارس والشركات تسجيل المستخدمين الجدد وتوليد كود الدخول الخاص بهم.",
+                btnAddUserBtn: "+ إنشاء وتوليد الكود",
+                txtUserTableTitle: "المستخدمون المسجلون وبيانات الدخول",
+                thName: "الاسم",
+                thOrg: "المؤسسة",
+                thRole: "الدور",
+                thCode: "الكود العام",
+                thStatus: "الحالة",
+                noUsersText: "لا توجد سجلات حالياً.",
+                hwSecTitle: "📚 الواجبات والمهام المدرسية",
+                hwSecSub: "إدارة المهام التعليمية للمتدربين.",
+                btnAddHw: "نشر الواجب",
+                activeHwTitle: "الواجبات النشطة:",
+                noHwText: "لا توجد واجبات نشطة.",
+                chatHeaderTitle: "مراسلات المدرسة والشركة الرسمية",
+                chatHeaderSub: "قناة تواصل رسمية بين الإدارات.",
+                noChatText: "لا توجد رسائل سابقة. ابدأ المحادثة أدناه.",
+                btnSendChat: "إرسال",
+                helpMainTitle: "مركز المساعدة ودليل الاستخدام",
+                helpMainSub: "كل ما تحتاج معرفته لاستخدام نظام AzubiSystem باحترافية.",
+                aboutTitle: "ℹ️ حول البرنامج",
+                aboutDesc: "نظام AzubiSystem هو منصة متكاملة مخصصة لأنظمة التدريب المزدوج في ألمانيا. يربط النظام بين المدارس المهنية، الشركات المضيفة، والمتدربين لإدارة الحضور، الواجبات، تقارير التدريب اليومية (Berichtsheft)، والمراسلات الرسمية مع الالتزام التام بقوانين حماية البيانات الأوروبية (DSGVO).",
+                guideTitle: "📖 دليل الاستخدام السريع:",
+                g1Title: "1. المسؤول الرئيسي (Super Admin):",
+                g1Desc: "يقوم بإنشاء حسابات للمدارس والشركات والمتدربين، وتوليد الأكواد الخاصة بكل مستخدم ويرى كافة الأقسام.",
+                g2Title: "2. المتدرب (Azubi):",
+                g2Desc: "يسجل الدخول بكوده الخاص، يدخل إلى بوابة المتدرب لتعبئة دفتر اليومية (Berichtsheft)، وطباعة التقارير كملف PDF.",
+                g3Title: "3. الواجبات والمهام:",
+                g3Desc: "يستطيع المعلمون نشر المهام الدراسية للطلاب ومتابعة حالة تسليمها بشكل مباشر.",
+                g4Title: "4. مراسلات المؤسسات:",
+                g4Desc: "قناة تواصل رسمية ومشفرة ومخصصة حصرياً بين إدارات المدارس والشركات للتنسيق بشأن المتدربين.",
+                supTechTitle: "📞 دعم المسؤول التقني",
+                supEmailTitle: "✉️ البريد الإلكتروني الرسمي",
+                statusNotChanged: "لم يتم تغيير الكود"
+            }
+        };
+
+        function doLogin() {
+            userRole = document.getElementById('roleSelector').value;
+            document.getElementById('changePassModal').classList.remove('hidden');
+        }
+
+        function confirmPasswordSave() {
+            alert(currentLang === 'ar' ? 'تم حفظ كلمة السر بنجاح!' : 'Passwort erfolgreich gespeichert!');
+            document.getElementById('changePassModal').classList.add('hidden');
+            document.getElementById('loginScreen').classList.add('hidden');
+            updateRoleUI();
+        }
+
+        function updateRoleUI() {
+            const t = i18n[currentLang] || i18n.de;
+            const badge = document.getElementById('roleBadge');
+            const hdr = document.getElementById('hdrTitle');
+
+            if (userRole === 'azubi') {
+                badge.innerText = t.badgeAzubi;
+                badge.className = "text-[10px] bg-emerald-900 text-emerald-200 px-2 py-0.5 rounded font-mono font-bold uppercase";
+                hdr.innerText = t.hdrTitleAzubi;
+
+                document.getElementById('adminNav').classList.add('hidden');
+                document.getElementById('azubiNav').classList.remove('hidden');
+                switchTab('azubi-portal');
+            } else {
+                badge.innerText = t.badgeAdmin;
+                badge.className = "text-[10px] bg-blue-900 text-blue-200 px-2 py-0.5 rounded font-mono font-bold uppercase";
+                hdr.innerText = t.hdrTitleAdmin;
+
+                document.getElementById('adminNav').classList.remove('hidden');
+                document.getElementById('azubiNav').classList.add('hidden');
+                switchTab('dashboard');
+            }
+        }
+
+        function switchTab(tabId, element) {
+            document.getElementById('tab-dashboard').classList.add('hidden');
+            document.getElementById('tab-azubi-portal').classList.add('hidden');
+            document.getElementById('tab-users').classList.add('hidden');
+            document.getElementById('tab-homework').classList.add('hidden');
+            document.getElementById('tab-messages').classList.add('hidden');
+            document.getElementById('tab-help').classList.add('hidden');
+
+            const targetTab = document.getElementById('tab-' + tabId);
+            if (targetTab) targetTab.classList.remove('hidden');
+
+            if(element) {
+                document.querySelectorAll('.nav-item').forEach(el => {
+                    el.classList.remove('bg-blue-600', 'text-white', 'font-medium');
+                    el.classList.add('text-slate-300', 'hover:bg-slate-800');
+                });
+                element.classList.remove('text-slate-300', 'hover:bg-slate-800');
+                element.classList.add('bg-blue-600', 'text-white', 'font-medium');
+            }
+        }
+
+        function logout() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+        }
+
+        function saveReport() {
+            const week = document.getElementById('reportWeek').value;
+            const text = document.getElementById('reportText').value;
+            if(!week || !text) { alert(currentLang === 'ar' ? 'يرجى تعبئة الحقول' : 'Bitte Felder ausfüllen'); return; }
+
+            const list = document.getElementById('reportList');
+            if(list.querySelector('p')) list.innerHTML = '';
+            
+            list.innerHTML += `<div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex justify-between items-center">
+                <div>
+                    <h5 class="font-bold text-slate-900 text-sm">${week}</h5>
+                    <p class="text-xs text-slate-600 mt-1">${text}</p>
+                </div>
+                <span class="bg-amber-100 text-amber-800 text-xs px-3 py-1 rounded-lg font-medium">${currentLang === 'ar' ? 'قيد المراجعة' : 'In Prüfung'}</span>
+            </div>`;
+            document.getElementById('reportWeek').value = "";
+            document.getElementById('reportText').value = "";
+            alert(currentLang === 'ar' ? 'تم حفظ التقرير بنجاح!' : 'Bericht erfolgreich gespeichert!');
+        }
+
+        function backupData() {
+            alert(currentLang === 'ar' ? 'تم إنشاء نسخة احتياطية محلية بنجاح.' : 'Lokales Backup erfolgreich erstellt.');
+        }
+
+        function exportPDF() {
+            window.print();
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const t = i18n[lang] || i18n.de;
+
+            if(lang === 'ar') {
+                document.documentElement.dir = "rtl";
+            } else {
+                document.documentElement.dir = "ltr";
+            }
+
+            updateRoleUI();
+
+            document.getElementById('txtLoginSub').innerText = t.loginSub;
+            document.getElementById('lblEmail').innerText = t.lblEmail;
+            document.getElementById('lblPass').innerText = t.lblPass;
+            document.getElementById('lblRole').innerText = t.lblRole;
+            document.getElementById('optAdminRole').innerText = t.optAdminRole;
+            document.getElementById('optAzubiRole').innerText = t.optAzubiRole;
+            document.getElementById('btnLogin').innerText = t.loginBtn;
+            document.getElementById('txtSupQ').innerText = t.supCenter;
+            document.getElementById('txtFirstTitle').innerText = t.firstTitle;
+            document.getElementById('txtFirstSub').innerText = t.firstSub;
+            document.getElementById('lblNewPass').innerText = t.lblNewPass;
+            document.getElementById('btnSavePass').innerText = t.btnSavePass;
+
+            document.getElementById('navDash').innerText = t.navDash;
+            document.getElementById('navUsers').innerText = t.navUsers;
+            document.getElementById('navHomework').innerText = t.navHomework;
+            document.getElementById('navMessages').innerText = t.navMessages;
+            document.getElementById('navAzubiPortal').innerText = t.navAzubiPortal;
+            document.getElementById('navAzubiHw').innerText = t.navHomework;
+            document.getElementById('navHelp').innerText = t.navHelp;
+            document.getElementById('txtSupCenter').innerText = t.supCenter;
+            document.getElementById('txtDirectContact').innerText = t.dirContact;
+
+            document.getElementById('txtLangLabel').innerText = t.langLabel;
+            document.getElementById('btnLogout').innerText = t.logout;
+
+            document.getElementById('dashWelcome').innerText = t.dashWelcome;
+            document.getElementById('dashSub').innerText = t.dashSub;
+            document.getElementById('btnBackup').innerText = t.btnBackup;
+            document.getElementById('btnPdf').innerText = t.btnPdf;
+
+            document.getElementById('azubiPortalTitle').innerText = t.azubiPortalTitle;
+            document.getElementById('azubiPortalSub').innerText = t.azubiPortalSub;
+            document.getElementById('btnPrintAzubi').innerText = t.btnPrintAzubi;
+            document.getElementById('reportHeader').innerText = t.reportHeader;
+            document.getElementById('btnSaveReport').innerText = t.btnSaveReport;
+            document.getElementById('prevReports').innerText = t.prevReports;
+            document.getElementById('noReports').innerText = t.noReports;
+
+            document.getElementById('txtAddUserTitle').innerText = t.txtAddUserTitle;
+            document.getElementById('txtAddUserSub').innerText = t.txtAddUserSub;
+            document.getElementById('btnAddUserBtn').innerText = t.btnAddUserBtn;
+            document.getElementById('txtUserTableTitle').innerText = t.txtUserTableTitle;
+            document.getElementById('thName').innerText = t.thName;
+            document.getElementById('thOrg').innerText = t.thOrg;
+            document.getElementById('thRole').innerText = t.thRole;
+            document.getElementById('thCode').innerText = t.thCode;
+            document.getElementById('thStatus').innerText = t.thStatus;
+            document.getElementById('noUsersText').innerText = t.noUsersText;
+
+            document.getElementById('hwSecTitle').innerText = t.hwSecTitle;
+            document.getElementById('hwSecSub').innerText = t.hwSecSub;
+            document.getElementById('btnAddHw').innerText = t.btnAddHw;
+            document.getElementById('activeHwTitle').innerText = t.activeHwTitle;
+            document.getElementById('noHwText').innerText = t.noHwText;
+
+            document.getElementById('chatHeaderTitle').innerText = t.chatHeaderTitle;
+            document.getElementById('chatHeaderSub').innerText = t.chatHeaderSub;
+            document.getElementById('noChatText').innerText = t.noChatText;
+            document.getElementById('btnSendChat').innerText = t.btnSendChat;
+
+            document.getElementById('helpMainTitle').innerText = t.helpMainTitle;
+            document.getElementById('helpMainSub').innerText = t.helpMainSub;
+            document.getElementById('aboutTitle').innerText = t.aboutTitle;
+            document.getElementById('aboutDesc').innerText = t.aboutDesc;
+            document.getElementById('guideTitle').innerText = t.guideTitle;
+            document.getElementById('g1Title').innerText = t.g1Title;
+            document.getElementById('g1Desc').innerText = t.g1Desc;
+            document.getElementById('g2Title').innerText = t.g2Title;
+            document.getElementById('g2Desc').innerText = t.g2Desc;
+            document.getElementById('g3Title').innerText = t.g3Title;
+            document.getElementById('g3Desc').innerText = t.g3Desc;
+            document.getElementById('g4Title').innerText = t.g4Title;
+            document.getElementById('g4Desc').innerText = t.g4Desc;
+            document.getElementById('supTechTitle').innerText = t.supTechTitle;
+            document.getElementById('supEmailTitle').innerText = t.supEmailTitle;
+        }
+
+        function addUser() {
+            const name = document.getElementById('newUserName').value;
+            const org = document.getElementById('newUserOrg').value;
+            const role = document.getElementById('newUserRole').value;
+            if(!name || !org) { alert(currentLang === 'ar' ? 'يرجى كتابة الاسم والمؤسسة' : 'Bitte Name und Organisation eingeben'); return; }
+
+            const code = "AZUBI-" + Math.floor(1000 + Math.random() * 9000);
+            const emptyRow = document.getElementById('emptyRow');
+            if(emptyRow) emptyRow.remove();
+
+            const t = i18n[currentLang] || i18n.de;
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML += `<tr>
+                <td class="py-4 px-6 font-semibold text-slate-900">${name}</td>
+                <td class="py-4 px-6 text-slate-500">${org}</td>
+                <td class="py-4 px-6 text-slate-600">${role}</td>
+                <td class="py-4 px-6 font-mono text-blue-600 font-bold">${code}</td>
+                <td class="py-4 px-6"><span class="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-md text-xs font-medium">${t.statusNotChanged}</span></td>
+            </tr>`;
+            
+            alert((currentLang === 'ar' ? 'تم إنشاء الحساب بنجاح!\nالكود العام: ' : 'Konto erfolgreich erstellt!\nAllgemeiner Code: ') + code);
+            document.getElementById('newUserName').value = "";
+            document.getElementById('newUserEmail').value = "";
+            document.getElementById('newUserOrg').value = "";
+        }
+
+        function addHomework() {
+            const title = document.getElementById('hwTitle').value;
+            const desc = document.getElementById('hwDesc').value;
+            if(!title) return;
+
+            const list = document.getElementById('homeworkList');
+            if(list.querySelector('p')) list.innerHTML = '';
+
+            list.innerHTML += `<div class="p-4 rounded-xl border border-blue-100 bg-blue-50/50 flex justify-between items-center">
+                <div>
+                    <h5 class="font-bold text-slate-900 text-sm">${title}</h5>
+                    <p class="text-xs text-slate-600 mt-1">${desc}</p>
+                </div>
+                <span class="bg-blue-600 text-white text-xs px-3 py-1 rounded-lg font-medium">${currentLang === 'ar' ? 'نشط' : 'Aktiv'}</span>
+            </div>`;
+            document.getElementById('hwTitle').value = "";
+            document.getElementById('hwDesc').value = "";
+            alert(currentLang === 'ar' ? 'تم نشر الواجب بنجاح!' : 'Aufgabe erfolgreich veröffentlicht!');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            if(!input.value) return;
+
+            const chat = document.getElementById('chatMessages');
+            if(chat.querySelector('p')) chat.innerHTML = '';
+
+            chat.innerHTML += `<div class="flex flex-col items-end">
+                <div class="bg-blue-600 text-white p-3 rounded-2xl max-w-lg shadow-sm">
+                    ${input.value}
+                </div>
+                <span class="text-[10px] text-slate-400 mt-1">${currentLang === 'ar' ? 'الآن' : 'Gerade eben'}</span>
+            </div>`;
+            input.value = "";
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // جعل اللغة الألمانية هي الافتراضية عند الفتح
+        window.onload = function() {
+            changeLanguage('de');
+        }
+    </script>
+</body>
+</html>
