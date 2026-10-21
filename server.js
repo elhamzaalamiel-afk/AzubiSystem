@@ -18,20 +18,24 @@ let messagesDB = [];
 
 const monthsList = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 
+// تقويم سنوي قابل للتعديل بالكامل من قبل المسؤولين
 let annualCalendarDB = monthsList.map((m, idx) => ({
     month: m,
-    schoolDays: `KW ${idx*4 + 1}-${idx*4 + 2}: Mo & Mi`,
-    workDays: `KW ${idx*4 + 3}-${idx*4 + 4}: Di, Do, Fr`,
-    note: idx === 0 ? "Start Orientierung" : idx === 5 ? "Zwischenprüfung" : "Regelbetrieb"
+    periodType: idx === 0 ? "Orientierung" : idx === 5 ? "Zwischenprüfung" : "Betrieb / Praxis",
+    schoolDays: `KW ${idx*4 + 1}-${idx*4 + 2}: Berufsschule`,
+    workDays: `KW ${idx*4 + 3}-${idx*4 + 4}: Betrieb`,
+    note: "Regulärer Ausbildungsbetrieb"
 }));
 
-// الجداول المستقلة للمهارات (فارغة تماماً من 1 إلى 6 ليملأها المسؤول)
+// الجداول المستقلة للمهارات (لكل مهارة جدول مصغر مستقل بخانات فارغة 1 إلى 6)
 const skillCategories = [
-    { id: "understanding", name: "1. التفاهم والاندماج / Verständnis & Integration" },
-    { id: "communication", name: "2. التواصل / Kommunikation" },
-    { id: "listening", name: "3. الاستماع والتعلم / Zuhören & Lernen" },
-    { id: "participation", name: "4. المشاركة والتفاعل / Mitarbeit" },
-    { id: "german", name: "5. اللغة الألمانية للأجانب / Deutsch als Zweitsprache" }
+    { id: "verstaendnis", name: "1. التفاهم (Verständnis)" },
+    { id: "integration", name: "2. الاندماج (Integration)" },
+    { id: "kommunikation", name: "3. التواصل (Kommunikation)" },
+    { id: "zuhoeren", name: "4. الاستماع (Zuhören)" },
+    { id: "lernen", name: "5. التعلم (Lernen)" },
+    { id: "mitarbeit", name: "6. المشاركة (Mitarbeit)" },
+    { id: "deutsch", name: "7. اللغة الألمانية (Deutsch als Zweitsprache)" }
 ];
 
 let customGradesDB = [];
@@ -62,25 +66,25 @@ app.get('/api/skills/grades', (req, res) => res.json(customGradesDB));
 app.post('/api/skills/grades', (req, res) => {
     const { categoryId, week, grade } = req.body;
     const existing = customGradesDB.find(g => g.categoryId === categoryId && g.week === week);
-    if (existing) {
-        existing.grade = grade;
-    } else {
-        customGradesDB.push({ categoryId, week, grade });
-    }
+    if (existing) { existing.grade = grade; } else { customGradesDB.push({ categoryId, week, grade }); }
     res.json({ success: true, customGradesDB });
 });
 
 app.get('/api/calendar/annual', (req, res) => res.json(annualCalendarDB));
 app.post('/api/calendar/annual', (req, res) => {
-    const { month, schoolDays, workDays, note } = req.body;
+    const { month, periodType, schoolDays, workDays, note } = req.body;
     const existing = annualCalendarDB.find(c => c.month === month);
-    if (existing) { existing.schoolDays = schoolDays; existing.workDays = workDays; existing.note = note; }
+    if (existing) {
+        existing.periodType = periodType || existing.periodType;
+        existing.schoolDays = schoolDays || existing.schoolDays;
+        existing.workDays = workDays || existing.workDays;
+        existing.note = note || existing.note;
+    }
     res.json({ success: true, calendar: annualCalendarDB });
 });
 
 app.post('/api/reports', (req, res) => {
-    const { week, dept, text, author } = req.body;
-    reportsDB.push({ id: Date.now(), week, dept, text, author, status: "Ausstehend", signedBy: null, timestamp: new Date().toLocaleString('de-DE') });
+    reportsDB.push({ id: Date.now(), week: req.body.week, dept: req.body.dept, text: req.body.text, author: req.body.author, status: "Ausstehend", signedBy: null, timestamp: new Date().toLocaleString('de-DE') });
     res.json({ success: true });
 });
 app.get('/api/reports', (req, res) => res.json(reportsDB));
