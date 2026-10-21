@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
-// قاعدة البيانات المعتمدة في النظام
+// قاعدة البيانات الحقيقية للمستخدمين
 let usersDB = [
     {
         name: "Super Admin",
@@ -22,45 +22,32 @@ let usersDB = [
 let reportsDB = [];
 let homeworkDB = [];
 
-// تأكيد الدخول الصارم: يتيح الدخول فقط للإيميلات المدرجة في النظام
+// التحقق الصارم من البريد الإلكتروني
 app.post('/api/login', (req, res) => {
     const { email, password, role } = req.body;
-    
-    // البحث عن الإيميل في قاعدة البيانات
     const user = usersDB.find(u => u.email.toLowerCase().trim() === email.toLowerCase().trim());
 
     if (!user) {
-        return res.json({ 
-            success: false, 
-            message: "البريد الإلكتروني غير مدرج في النظام! يرجى التواصل مع Admin للترخيص." 
-        });
+        return res.json({ success: false, message: "E-Mail ist nicht im System registriert / البريد غير مسجل." });
     }
-
     if (user.password !== password) {
-        return res.json({ success: false, message: "كلمة المرور غير صحيحة!" });
+        return res.json({ success: false, message: "Falsches Passwort / كلمة المرور غير صحيحة." });
     }
-
     if (user.role !== role) {
-        return res.json({ success: false, message: "الصلاحية المحددة لا تتوافق مع نوع حسابك." });
+        return res.json({ success: false, message: "Unzulässige Rolle / الصلاحية غير متطابقة." });
     }
 
-    res.json({ 
-        success: true, 
-        user: { name: user.name, email: user.email, role: user.role, org: user.org } 
-    });
+    res.json({ success: true, user: { name: user.name, email: user.email, role: user.role, org: user.org } });
 });
 
-// جلب وتنسيق المستخدمين
 app.get('/api/users', (req, res) => {
     res.json(usersDB);
 });
 
-// تسجيل مستخدم جديد مع توليد كود دخول تلقائي
 app.post('/api/users', (req, res) => {
     const { name, email, password, org, role } = req.body;
-    
     if (usersDB.some(u => u.email.toLowerCase().trim() === email.toLowerCase().trim())) {
-        return res.json({ success: false, message: "البريد الإلكتروني مسجل بالفعل!" });
+        return res.json({ success: false, message: "E-Mail existiert bereits." });
     }
 
     const newUser = {
@@ -76,7 +63,18 @@ app.post('/api/users', (req, res) => {
     res.json({ success: true, user: newUser });
 });
 
-// التقارير والتاريخ التلقائي (Europe/Berlin)
+// إحصائيات النظام الحقيقية
+app.get('/api/stats', (req, res) => {
+    const azubiCount = usersDB.filter(u => u.role === 'azubi').length;
+    res.json({
+        totalUsers: usersDB.length,
+        totalAzubis: azubiCount,
+        totalReports: reportsDB.length,
+        totalHomework: homeworkDB.length
+    });
+});
+
+// التقارير والتوقيع الرقمي
 app.post('/api/reports', (req, res) => {
     const { week, dept, text, author } = req.body;
     const newReport = {
@@ -85,6 +83,8 @@ app.post('/api/reports', (req, res) => {
         dept,
         text,
         author,
+        status: "Ausstehend",
+        signedBy: null,
         timestamp: new Date().toLocaleString('de-DE', { timeZone: 'Europe/Berlin' })
     };
     reportsDB.push(newReport);
@@ -93,6 +93,17 @@ app.post('/api/reports', (req, res) => {
 
 app.get('/api/reports', (req, res) => {
     res.json(reportsDB);
+});
+
+app.post('/api/reports/approve', (req, res) => {
+    const { reportId, adminName } = req.body;
+    const report = reportsDB.find(r => r.id === reportId);
+    if (report) {
+        report.status = "Genehmigt 🗸";
+        report.signedBy = adminName;
+        return res.json({ success: true, report });
+    }
+    res.json({ success: false, message: "Fehler." });
 });
 
 // الواجبات
@@ -112,7 +123,6 @@ app.get('/api/homework', (req, res) => {
     res.json(homeworkDB);
 });
 
-// تشغيل السيرفر التوافقي مع Render
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`AzubiSystem läuft auf Port ${PORT}`);
 });
