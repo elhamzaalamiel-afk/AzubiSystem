@@ -5,18 +5,16 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// خدمة الملفات الثابتة من المجلد الحالي
 app.use(express.static(path.join(__dirname)));
 
-// قاعدة بيانات وهمية مركزية آمنة (يمكن ربطها بقاعدة بيانات حقيقية لاحقاً)
+// قاعدة البيانات المركزية الآمنة
 let usersDB = [
     {
-        email: "azubisystem.ha@gmail.com",
-        password: "123456", // يمكن للمسؤول تغييرها
-        role: "admin",
         name: "Super Admin",
-        org: "AzubiSystem Hauptverwaltung"
+        email: "azubisystem.ha@gmail.com",
+        password: "123456",
+        org: "AzubiSystem Hauptverwaltung",
+        role: "admin"
     }
 ];
 
@@ -24,51 +22,51 @@ let reportsDB = [];
 let homeworkDB = [];
 let chatDB = [];
 
-// مسار تسجيل الدخول والتحقق الصارم من البريد الإلكتروني
+// تسجيل الدخول الآمن والتحقق الصارم من البريد
 app.post('/api/login', (req, res) => {
     const { email, password, role } = req.body;
-    
-    // البحث عن المستخدم بالبريد الإلكتروني حصرياً
     const user = usersDB.find(u => u.email.toLowerCase() === email.toLowerCase());
 
     if (!user) {
-        return res.status(401).json({ success: false, message: "E-Mail nicht im System registriert. (البريد الإلكتروني غير مسجل في النظام)" });
+        return.json({ success: false, message: "E-Mail nicht im System registriert." });
     }
-
-    // التحقق من كلمة المرور
     if (user.password !== password) {
-        return res.status(401).json({ success: false, message: "Falsches Passwort. (كلمة المرور غير صحيحة)" });
+        return.json({ success: false, message: "Falsches Passwort." });
     }
-
-    // التحقق من تطابق الصلاحية
     if (user.role !== role) {
-        return res.status(403).json({ success: false, message: "Unzulässige Rolle für diesen Benutzer. (صلاحية غير متطابقة مع هذا البريد)" });
+        return.json({ success: false, message: "Unzulässige Rolle für diesen Benutzer." });
     }
 
     res.json({ success: true, user: { name: user.name, email: user.email, role: user.role } });
 });
 
-// مسار إضافة مستخدم جديد وتوليد بياناته
+// جلب المستخدمين
+app.get('/api/users', (req, res) => {
+    res.json(usersDB);
+});
+
+// إضافة مستخدم جديد
 app.post('/api/users', (req, res) => {
-    const { name, email, org, role, password } = req.body;
-    
+    const { name, email, password, org, role } = req.body;
     if (usersDB.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-        return res.status(400).json({ success: false, message: "E-Mail existiert bereits." });
+        return.json({ success: false, message: "E-Mail existiert bereits." });
     }
 
     const newUser = {
         name,
         email,
-        org,
+        password: password || "123456",
+        org: org || "Betrieb / Schule",
         role: role.toLowerCase().includes('azubi') ? 'azubi' : 'admin',
-        password: password || "123456" // كلمة سر افتراضية للمستخدم الجديد يمكنه تغييرها
+        code: "AZUBI-" + Math.floor(1000 + Math.random() * 9000),
+        status: "Code Nicht Geändert"
     };
 
     usersDB.push(newUser);
     res.json({ success: true, user: newUser });
 });
 
-// مسار حفظ التقارير مع التاريخ والوقت تلقائياً (Timestamp)
+// التقارير مع التاريخ والوقت التلقائي
 app.post('/api/reports', (req, res) => {
     const { week, dept, text, author } = req.body;
     const newReport = {
@@ -77,7 +75,7 @@ app.post('/api/reports', (req, res) => {
         dept,
         text,
         author,
-        timestamp: new Date().toLocaleString('de-DE', { timeZone: 'Europe/Berlin' }) // التاريخ والوقت بتوقيت ألمانيا تلقائياً
+        timestamp: new Date().toLocaleString('de-DE', { timeZone: 'Europe/Berlin' })
     };
     reportsDB.push(newReport);
     res.json({ success: true, report: newReport });
@@ -87,7 +85,7 @@ app.get('/api/reports', (req, res) => {
     res.json(reportsDB);
 });
 
-// مسار الواجبات مع التاريخ والوقت
+// الواجبات
 app.post('/api/homework', (req, res) => {
     const { title, desc } = req.body;
     const newHw = {
@@ -104,7 +102,6 @@ app.get('/api/homework', (req, res) => {
     res.json(homeworkDB);
 });
 
-// تشغيل السيرفر
 app.listen(PORT, () => {
-    console.log(`AzubiSystem läuft sicher auf Port ${PORT}`);
+    console.log(`AzubiSystem läuft auf Port ${PORT}`);
 });
