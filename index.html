@@ -9,20 +9,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .azubi-cool-bg {
-            background-color: #f1f5f9;
-            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-            background-size: 24px 24px;
+        /* واجهة خلفية باردة تعبر عن بيئة Azubi / AzubiSystem */
+        .azubi-cool-theme {
+            background-color: #e2e8f0;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.12) 0px, transparent 50%);
         }
-        .phone-num {
-            direction: ltr !important;
-            unicode-bidi: isolate;
-            display: inline-block;
-        }
+        .phone-num { direction: ltr !important; unicode-bidi: isolate; display: inline-block; }
         @media print { .no-print { display: none !important; } }
     </style>
 </head>
-<body class="azubi-cool-bg text-slate-800 h-screen flex flex-col overflow-hidden">
+<body class="azubi-cool-theme text-slate-800 h-screen flex flex-col overflow-hidden">
 
     <!-- شاشة تسجيل الدخول -->
     <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 no-print">
@@ -31,7 +29,6 @@
                 <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">AzubiSystem 🇩🇪</h2>
                 <p class="text-sm text-slate-500 mt-2" id="loginSubtitle">Duales Ausbildungssystem Portal</p>
             </div>
-            
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1" id="lblEmail">E-Mail-Adresse</label>
@@ -67,7 +64,7 @@
                     <div id="adminNav" class="space-y-1">
                         <a href="#" onclick="switchTab('dashboard')" class="block px-4 py-2.5 rounded-xl bg-blue-600 text-white font-medium" id="navDash">📊 Dashboard</a>
                         <a href="#" onclick="switchTab('users')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navUsers">👥 Benutzerverwaltung</a>
-                        <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navSkills">⭐ Skill Matrix (KW 1-52)</a>
+                        <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navSkills">⭐ Skill Matrix (1-6 Tabellen)</a>
                         <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navAI">🤖 chat AzubiSystem</a>
                         <a href="#" onclick="switchTab('homework')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navHw">📚 Aufgaben</a>
                         <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navChat">💬 Chat & Nachrichten</a>
@@ -83,8 +80,6 @@
                     <a href="#" onclick="switchTab('help')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800" id="navHelp">❓ Hilfe-Center</a>
                 </nav>
             </div>
-
-            <!-- الدعم الفني -->
             <div class="p-4 m-4 bg-slate-800 rounded-xl border border-slate-700 text-xs text-slate-300 space-y-1">
                 <div class="font-bold text-white" id="suppLabel">Support Center</div>
                 <div class="font-mono text-blue-300 font-semibold phone-num">📞 +49 176 63160304</div>
@@ -93,10 +88,8 @@
 
         <!-- المحتوى الرئيسي -->
         <main class="flex-1 flex flex-col overflow-y-auto">
-            
             <header class="bg-white/90 backdrop-blur border-b border-slate-200 h-16 flex items-center justify-between px-8 no-print shadow-sm">
                 <div class="font-bold text-slate-700 text-lg" id="hdrTitle">Super Admin Kontrollzentrum</div>
-                
                 <div class="flex items-center gap-3">
                     <select id="langSwitcher" onchange="changeLanguage(this.value)" class="text-xs bg-slate-100 border border-slate-300 px-3 py-1.5 rounded-lg font-semibold text-slate-700 cursor-pointer focus:outline-none">
                         <option value="de">🇩🇪 Deutsch</option>
@@ -113,196 +106,105 @@
 
             <div class="p-8 space-y-8">
                 
-                <!-- 1. Dashboard -->
+                <!-- 1. لوحة التحكم -->
                 <div id="tab-dashboard" class="space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <h3 class="text-lg font-black text-slate-900" id="welcomeMsg">Willkommen</h3>
                         <p class="text-xs text-slate-500 mt-1" id="dashSub">Enterprise AzubiSystem Aktiv.</p>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                            <span class="text-xs font-bold text-slate-400 uppercase" id="stat1Label">Azubis</span>
-                            <div class="text-2xl font-black text-slate-800 mt-1" id="statAzubis">0</div>
-                        </div>
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                            <span class="text-xs font-bold text-slate-400 uppercase" id="stat2Label">Gesamt Benutzer</span>
-                            <div class="text-2xl font-black text-slate-800 mt-1" id="statUsers">1</div>
-                        </div>
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                            <span class="text-xs font-bold text-slate-400 uppercase" id="stat3Label">Berichte</span>
-                            <div class="text-2xl font-black text-blue-600 mt-1" id="statReports">0</div>
-                        </div>
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                            <span class="text-xs font-bold text-slate-400 uppercase" id="stat4Label">System Status</span>
-                            <div class="text-xs font-bold text-emerald-600 mt-2 flex items-center gap-1">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live & Secure
-                            </div>
-                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" id="stat1Label">Azubis</span><div class="text-2xl font-black text-slate-800 mt-1" id="statAzubis">0</div></div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" id="stat2Label">Gesamt Benutzer</span><div class="text-2xl font-black text-slate-800 mt-1" id="statUsers">1</div></div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" id="stat3Label">Berichte</span><div class="text-2xl font-black text-blue-600 mt-1" id="statReports">0</div></div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" id="stat4Label">System Status</span><div class="text-xs font-bold text-emerald-600 mt-2 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live & Secure</div></div>
                     </div>
                 </div>
 
-                <!-- 2. خريطة المهارات السنوية المنظمة جداً 52 أسبوعاً (Notensystem 1 bis 6) -->
+                <!-- 2. خريطة المهارات المستقلة (كل مهارة جدول مستقل والدرجات من 1 إلى 6 فارغة للمسؤول) -->
                 <div id="tab-skills" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h3 class="text-lg font-bold text-slate-800" id="skillTitle">⭐ Jahres-Skill-Matrix (KW 1 bis KW 52)</h3>
-                                <p class="text-xs text-slate-500 mt-0.5" id="skillSub">Deutsches Notensystem: 1 (Sehr gut) bis 6 (Ungenügend) - Strukturiert nach Monaten</p>
-                            </div>
-                            <button onclick="toggleSkillForm()" class="text-xs bg-blue-600 text-white font-bold px-4 py-2 rounded-xl hover:bg-blue-700" id="btnNewSkill">+ Bewertung / Note eintragen</button>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900" id="skillTitle">⭐ Skill Matrix & Kompetenzbereiche (Deutsches Notensystem 1 bis 6)</h3>
+                            <p class="text-xs text-slate-500 mt-1" id="skillSub">Jede Kompetenz besitzt einen eigenen Kalenderwochen-Bereich (KW 1 - KW 52) mit leeren Notenfeldern zur manuellen Ausfüllung durch Ausbilder.</p>
                         </div>
-
-                        <!-- نموذج إضافة تقييم لأسبوع معين -->
-                        <div id="skillFormBox" class="hidden p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                                <input type="text" id="skWeek" placeholder="Woche (z.B. KW 1)" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
-                                <input type="text" id="skSkill" placeholder="Kompetenz / Thema" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
-                                <select id="skGrade" class="px-3 py-2 border rounded-lg text-xs border-slate-300 bg-white font-bold">
-                                    <option value="1">Note 1 - Sehr gut (ممتاز)</option>
-                                    <option value="2">Note 2 - Gut (جيد جداً)</option>
-                                    <option value="3">Note 3 - Befriedigend (جيد)</option>
-                                    <option value="4">Note 4 - Ausreichend (كافٍ)</option>
-                                    <option value="5">Note 5 - Mangelhaft (ضعيف)</option>
-                                    <option value="6">Note 6 - Ungenügend (راسب)</option>
-                                </select>
-                                <input type="text" id="skRemark" placeholder="Bemerkung" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
-                            </div>
-                            <button onclick="saveSkillGrade()" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-700">Speichern</button>
-                        </div>
-
-                        <!-- جدول المهارات السنوي المجمع شهرياً -->
-                        <div class="overflow-x-auto border border-slate-200 rounded-xl">
-                            <table class="w-full text-left border-collapse text-xs">
-                                <thead>
-                                    <tr class="bg-slate-800 text-white border-b border-slate-700 uppercase font-bold">
-                                        <th class="py-3 px-4" id="thMonthGroup">Monat</th>
-                                        <th class="py-3 px-4" id="thWeek">Kalenderwoche</th>
-                                        <th class="py-3 px-4" id="thSkill">Fachliche Kompetenz</th>
-                                        <th class="py-3 px-4" id="thGrade">Note (1-6)</th>
-                                        <th class="py-3 px-4" id="thRemark">Bewertung / Bemerkung</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="skillTableBody" class="divide-y divide-slate-200 bg-white">
-                                    <tr><td colspan="5" class="py-6 text-center text-slate-400">Lade Jahres-Skill-Matrix...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <div id="skillTablesContainer" class="space-y-8"></div>
                     </div>
                 </div>
 
-                <!-- 3. المساعد الذكي الاصطناعي (chat AzubiSystem) -->
+                <!-- 3. المساعد الذكي chat AzubiSystem -->
                 <div id="tab-ai-assistant" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 bg-purple-600 text-white rounded-2xl font-bold text-xl shadow-md">🤖</div>
-                            <div>
-                                <h3 class="text-xl font-bold text-slate-900">chat AzubiSystem</h3>
-                                <p class="text-xs text-slate-500" id="aiSub">Ihr KI-Assistent für Berichtshefte, IHK-Standards und Fragen zum BBiG.</p>
-                            </div>
+                            <div><h3 class="text-xl font-bold text-slate-900">chat AzubiSystem</h3><p class="text-xs text-slate-500">Ihr KI-Assistent für Berichtshefte und BBiG.</p></div>
                         </div>
-
                         <div class="border border-purple-200 rounded-2xl p-5 bg-purple-50/50 space-y-3">
-                            <textarea id="aiInput" placeholder="Frage eingeben oder Tätigkeiten für den Wochenbericht beschreiben..." class="w-full px-4 py-3 border rounded-xl text-sm border-purple-200 h-32 focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white shadow-sm"></textarea>
-                            <button onclick="runAIAssistant()" class="bg-purple-600 text-white text-xs font-bold px-6 py-3 rounded-xl hover:bg-purple-700 transition flex items-center gap-2 shadow-md">✨ chat AzubiSystem Antworten lassen</button>
+                            <textarea id="aiInput" placeholder="Frage eingeben..." class="w-full px-4 py-3 border rounded-xl text-sm border-purple-200 h-32 bg-white"></textarea>
+                            <button onclick="runAIAssistant()" class="bg-purple-600 text-white text-xs font-bold px-6 py-3 rounded-xl hover:bg-purple-700 shadow-md">✨ chat AzubiSystem Antworten lassen</button>
                         </div>
-
-                        <div id="aiOutput" class="hidden p-5 bg-white border border-purple-200 rounded-2xl text-xs text-slate-800 space-y-2 leading-relaxed shadow-sm"></div>
+                        <div id="aiOutput" class="hidden p-5 bg-white border border-purple-200 rounded-2xl text-xs text-slate-800 space-y-2 shadow-sm"></div>
                     </div>
                 </div>
 
-                <!-- 4. التقويم السنوي الشامل لـ 12 شهراً كاملة -->
+                <!-- 4. التقويم السنوي 12 شهراً -->
                 <div id="tab-calendar" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                         <div class="flex justify-between items-center">
-                            <div>
-                                <h3 class="text-lg font-bold text-slate-800" id="calTitle">📅 Jahreskalender & Schichtplan (12 Monate)</h3>
-                                <p class="text-xs text-slate-500" id="calSub">Jahresübersicht für Betrieb, Berufsschule und Prüfungen</p>
-                            </div>
-                            <button onclick="toggleAnnualCalForm()" class="text-xs bg-blue-600 text-white font-bold px-4 py-2 rounded-xl hover:bg-blue-700" id="btnEditCal">+ Monat bearbeiten</button>
+                            <div><h3 class="text-lg font-bold text-slate-800" id="calTitle">📅 Jahreskalender (12 Monate)</h3><p class="text-xs text-slate-500">Berufsschule und Betriebstage</p></div>
+                            <button onclick="toggleAnnualCalForm()" class="text-xs bg-blue-600 text-white font-bold px-4 py-2 rounded-xl">+ Monat bearbeiten</button>
                         </div>
-
-                        <!-- نموذج التعديل -->
                         <div id="annualCalFormBox" class="hidden p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                                <input type="text" id="calMonth" placeholder="Monat (z.B. März)" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
-                                <input type="text" id="calSchool" placeholder="Berufsschultage" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
-                                <input type="text" id="calWork" placeholder="Betriebstage / Schicht" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
-                                <input type="text" id="calNote" placeholder="Notiz / Prüfungen" class="px-3 py-2 border rounded-lg text-xs border-slate-300">
+                                <input type="text" id="calMonth" placeholder="Monat" class="px-3 py-2 border rounded-lg text-xs">
+                                <input type="text" id="calSchool" placeholder="Berufsschule" class="px-3 py-2 border rounded-lg text-xs">
+                                <input type="text" id="calWork" placeholder="Betrieb" class="px-3 py-2 border rounded-lg text-xs">
+                                <input type="text" id="calNote" placeholder="Notizen" class="px-3 py-2 border rounded-lg text-xs">
                             </div>
-                            <button onclick="saveAnnualCal()" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-700">Speichern</button>
+                            <button onclick="saveAnnualCal()" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-lg">Speichern</button>
                         </div>
-
-                        <!-- جدول الأشهر الـ 12 -->
                         <div class="overflow-x-auto border border-slate-200 rounded-xl">
                             <table class="w-full text-left border-collapse text-xs">
-                                <thead>
-                                    <tr class="bg-slate-100 text-slate-700 border-b border-slate-200 uppercase font-bold">
-                                        <th class="py-3 px-4" id="thMonth">Monat</th>
-                                        <th class="py-3 px-4" id="thSchoolCal">🏫 Berufsschule</th>
-                                        <th class="py-3 px-4" id="thWorkCal">🏢 Betrieb / Schichtplan</th>
-                                        <th class="py-3 px-4" id="thNoteCal">Termine & Notizen</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="annualCalTableBody" class="divide-y divide-slate-100 bg-white">
-                                    <tr><td colspan="4" class="py-6 text-center text-slate-400">Lade 12-Monate-Kalender...</td></tr>
-                                </tbody>
+                                <thead><tr class="bg-slate-100 text-slate-700 uppercase font-bold"><th class="py-3 px-4">Monat</th><th class="py-3 px-4">🏫 Berufsschule</th><th class="py-3 px-4">🏢 Betrieb</th><th class="py-3 px-4">Termine</th></tr></thead>
+                                <tbody id="annualCalTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- 5. بوابة المتدرب وتصدير PDF -->
+                <!-- 5. بوابة المتدرب و PDF -->
                 <div id="tab-azubi-portal" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                        <h4 class="font-bold text-slate-800 text-sm" id="repHead">Wochenbericht eintragen:</h4>
+                        <h4 class="font-bold text-slate-800 text-sm">Wochenbericht eintragen:</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="reportWeek" placeholder="Woche (z.B. KW 1)" class="px-4 py-2 border rounded-xl text-sm border-slate-300">
-                            <input type="text" id="reportDept" placeholder="Abteilung (z.B. IT)" class="px-4 py-2 border rounded-xl text-sm border-slate-300">
+                            <input type="text" id="reportWeek" placeholder="KW (z.B. KW 1)" class="px-4 py-2 border rounded-xl text-sm">
+                            <input type="text" id="reportDept" placeholder="Abteilung" class="px-4 py-2 border rounded-xl text-sm">
                         </div>
-                        <textarea id="reportText" placeholder="Schreiben Sie hier Ihre Tätigkeiten..." class="w-full px-4 py-2 border rounded-xl text-sm border-slate-300 h-28"></textarea>
-                        <button onclick="saveReport()" id="btnSaveRep" class="bg-blue-600 text-white text-xs font-bold px-6 py-2.5 rounded-xl hover:bg-blue-700 transition">Bericht speichern</button>
+                        <textarea id="reportText" placeholder="Tätigkeiten..." class="w-full px-4 py-2 border rounded-xl text-sm h-28"></textarea>
+                        <button onclick="saveReport()" class="bg-blue-600 text-white text-xs font-bold px-6 py-2.5 rounded-xl">Bericht speichern</button>
                     </div>
-
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6" id="pdfContainer">
-                        <div class="flex justify-between items-center mb-4">
-                            <h4 class="font-bold text-slate-800" id="pdfTitle">Meine Berichte (IHK / HWK Konform):</h4>
-                            <button onclick="exportToPDF()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition" id="btnExportPDF">📄 als PDF Exportieren</button>
-                        </div>
-                        <div id="reportList" class="space-y-4"><p class="text-xs text-slate-400">Keine Berichte vorhanden.</p></div>
+                        <div class="flex justify-between items-center mb-4"><h4 class="font-bold text-slate-800">Meine Berichte:</h4><button onclick="exportToPDF()" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl">📄 als PDF Exportieren</button></div>
+                        <div id="reportList" class="space-y-4"><p class="text-xs text-slate-400">Keine Berichte.</p></div>
                     </div>
                 </div>
 
                 <!-- 6. المستخدمون -->
                 <div id="tab-users" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <h3 class="text-base font-bold text-slate-800 mb-2" id="uAddTitle">Neuen Benutzer anlegen</h3>
+                        <h3 class="text-base font-bold text-slate-800 mb-2">Neuen Benutzer anlegen</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" id="newUserName" placeholder="Name" class="px-4 py-2 border rounded-xl text-sm border-slate-300">
-                            <input type="email" id="newUserEmail" placeholder="E-Mail" class="px-4 py-2 border rounded-xl text-sm border-slate-300">
-                            <input type="password" id="newUserPass" placeholder="Passwort" class="px-4 py-2 border rounded-xl text-sm border-slate-300">
-                            <input type="text" id="newUserOrg" placeholder="Organisation" class="px-4 py-2 border rounded-xl text-sm border-slate-300">
-                            <select id="newUserRole" class="px-4 py-2 border rounded-xl text-sm border-slate-300 md:col-span-2">
-                                <option value="Azubi">Azubi</option>
-                                <option value="Lehrer">Lehrer / Ausbilder</option>
-                            </select>
-                            <button type="button" onclick="addUser()" id="btnRegUser" class="bg-blue-600 text-white font-semibold py-2 rounded-xl text-sm">Registrieren</button>
+                            <input type="text" id="newUserName" placeholder="Name" class="px-4 py-2 border rounded-xl text-sm">
+                            <input type="email" id="newUserEmail" placeholder="E-Mail" class="px-4 py-2 border rounded-xl text-sm">
+                            <input type="password" id="newUserPass" placeholder="Passwort" class="px-4 py-2 border rounded-xl text-sm">
+                            <input type="text" id="newUserOrg" placeholder="Organisation" class="px-4 py-2 border rounded-xl text-sm">
+                            <select id="newUserRole" class="px-4 py-2 border rounded-xl text-sm md:col-span-2"><option value="Azubi">Azubi</option><option value="Lehrer">Lehrer / Ausbilder</option></select>
+                            <button type="button" onclick="addUser()" class="bg-blue-600 text-white font-semibold py-2 rounded-xl text-sm">Registrieren</button>
                         </div>
                     </div>
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                         <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-200">
-                                    <th class="py-3 px-6">Name</th>
-                                    <th class="py-3 px-6">E-Mail</th>
-                                    <th class="py-3 px-6">Organisation</th>
-                                    <th class="py-3 px-6">Rolle</th>
-                                    <th class="py-3 px-6">Code</th>
-                                </tr>
-                            </thead>
-                            <tbody id="userTableBody" class="divide-y divide-slate-100 text-sm">
-                                <tr><td colspan="5" class="py-6 text-center text-slate-400 text-xs">Keine Benutzer.</td></tr>
-                            </tbody>
+                            <thead><tr class="bg-slate-50 text-slate-500 text-xs uppercase border-b"><th class="py-3 px-6">Name</th><th class="py-3 px-6">E-Mail</th><th class="py-3 px-6">Organisation</th><th class="py-3 px-6">Rolle</th><th class="py-3 px-6">Code</th></tr></thead>
+                            <tbody id="userTableBody" class="divide-y text-sm"></tbody>
                         </table>
                     </div>
                 </div>
@@ -310,11 +212,11 @@
                 <!-- 7. الواجبات -->
                 <div id="tab-homework" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <h3 class="text-lg font-bold text-slate-800 mb-2" id="hwTitleLabel">Aufgaben</h3>
-                        <div class="space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                            <input type="text" id="hwTitle" placeholder="Titel..." class="w-full px-4 py-2 border rounded-xl text-sm border-slate-300">
-                            <textarea id="hwDesc" placeholder="Beschreibung..." class="w-full px-4 py-2 border rounded-xl text-sm border-slate-300 h-24"></textarea>
-                            <button type="button" onclick="addHomework()" id="btnPubHw" class="bg-emerald-600 text-white font-semibold px-6 py-2 rounded-xl text-sm">Veröffentlichen</button>
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">Aufgaben</h3>
+                        <div class="space-y-4 bg-slate-50 p-4 rounded-xl border">
+                            <input type="text" id="hwTitle" placeholder="Titel" class="w-full px-4 py-2 border rounded-xl text-sm">
+                            <textarea id="hwDesc" placeholder="Beschreibung" class="w-full px-4 py-2 border rounded-xl text-sm h-24"></textarea>
+                            <button type="button" onclick="addHomework()" class="bg-emerald-600 text-white font-semibold px-6 py-2 rounded-xl text-sm">Veröffentlichen</button>
                         </div>
                     </div>
                     <div id="homeworkList" class="space-y-3"></div>
@@ -323,85 +225,31 @@
                 <!-- 8. المراسلات -->
                 <div id="tab-messages" class="hidden space-y-6">
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[580px]">
-                        <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
-                            <h3 class="font-bold text-sm" id="chatHeader">💬 Chat & Vertrauliche Nachricht</h3>
-                            <span class="text-xs text-blue-300">Gesichert / Encrypted</span>
+                        <div class="p-4 bg-slate-900 text-white flex justify-between items-center"><h3 class="font-bold text-sm">💬 Chat & Vertrauliche Nachricht</h3><span class="text-xs text-blue-300">Gesichert</span></div>
+                        <div class="p-3 bg-slate-100 border-b grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                            <div><label class="font-bold text-slate-600 block mb-1">Empfänger-Typ:</label><select id="msgRecipientType" class="w-full px-3 py-1.5 border rounded-lg bg-white"><option value="Betrieb">🏢 Betrieb</option><option value="Berufsschule">🏫 Berufsschule</option><option value="Ausbilder">👤 Ausbilder</option></select></div>
+                            <div><label class="font-bold text-slate-600 block mb-1">E-Mail:</label><input type="text" id="msgRecipient" placeholder="ausbilder@firma.de" class="w-full px-3 py-1.5 border rounded-lg bg-white"></div>
                         </div>
-                        
-                        <div class="p-3 bg-slate-100 border-b border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                            <div>
-                                <label class="font-bold text-slate-600 block mb-1" id="lblRecType">Empfänger-Typ:</label>
-                                <select id="msgRecipientType" class="w-full px-3 py-1.5 border rounded-lg bg-white">
-                                    <option value="Betrieb (Firma)">🏢 Betrieb / Firma (الشركة)</option>
-                                    <option value="Berufsschule">🏫 Berufsschule (المدرسة المهنية)</option>
-                                    <option value="Ausbilder / Mentor">👤 Ausbilder / Mentor (المشرف الشخصي)</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="font-bold text-slate-600 block mb-1" id="lblRecEmail">Empfänger E-Mail / Name:</label>
-                                <input type="text" id="msgRecipient" placeholder="z.B. ausbilder@firma.de" class="w-full px-3 py-1.5 border rounded-lg bg-white">
-                            </div>
-                        </div>
-
-                        <div id="chatMessages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 text-sm">
-                            <p class="text-xs text-slate-400 text-center">Keine Nachrichten vorhanden.</p>
-                        </div>
-                        
-                        <div class="p-4 bg-white border-t border-slate-200 flex gap-3">
-                            <input type="text" id="chatInput" placeholder="Nachricht eingeben..." class="flex-1 px-4 py-2.5 border rounded-xl text-sm border-slate-300">
-                            <button type="button" onclick="sendMessage()" id="btnSendMsg" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm">Senden</button>
-                        </div>
+                        <div id="chatMessages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 text-sm"><p class="text-xs text-slate-400 text-center">Keine Nachrichten.</p></div>
+                        <div class="p-4 bg-white border-t flex gap-3"><input type="text" id="chatInput" placeholder="Nachricht..." class="flex-1 px-4 py-2.5 border rounded-xl text-sm"><button type="button" onclick="sendMessage()" class="bg-blue-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm">Senden</button></div>
                     </div>
                 </div>
 
-                <!-- 9. حول النظام والمعلومات القانونية الشاملة -->
+                <!-- 9. حول النظام -->
                 <div id="tab-about" class="hidden space-y-6">
                     <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                        <h3 class="text-2xl font-bold text-slate-900" id="aboutTitle">Über AzubiSystem 🇩🇪</h3>
-                        <p class="text-sm text-slate-600 leading-relaxed" id="aboutDesc">
-                            AzubiSystem ist eine spezialisierte digitale Verwaltung für das duale Ausbildungssystem in Deutschland.
-                        </p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                                <h4 class="font-bold text-slate-800 text-sm">📜 BBiG & IHK / HWK Richtlinien:</h4>
-                                <p class="text-slate-600 leading-relaxed">Das System gewährleistet die lückenlose Erstellung und Auswertung digitaler Ausbildungsnachweise gemäß § 13 BBiG. Alle Formulare und Exportfunktionen entsprechen den Vorgaben der IHK und HWK.</p>
-                            </div>
-                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                                <h4 class="font-bold text-slate-800 text-sm">🔒 Datenschutz & DSGVO:</h4>
-                                <p class="text-slate-600 leading-relaxed">Höchster Schutz sensibler Ausbildungsdaten. Serverstandort und Datenverarbeitung erfolgen streng nach europäischen DSGVO-Standards.</p>
-                            </div>
-                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900">Über AzubiSystem 🇩🇪</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Spezialisierte digitale Plattform für das duale Ausbildungssystem in Deutschland nach BBiG & DSGVO.</p>
                     </div>
                 </div>
 
-                <!-- 10. مركز المساعدة والأسئلة الشائعة -->
+                <!-- 10. مركز المساعدة -->
                 <div id="tab-help" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                        <h3 class="text-xl font-bold text-slate-900" id="helpTitle">Hilfe-Center & FAQ</h3>
-                        
-                        <div class="space-y-4 text-xs">
-                            <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl space-y-3">
-                                <h4 class="font-bold text-blue-900 text-sm">Häufig gestellte Fragen (الأسئلة الشائعة):</h4>
-                                
-                                <div class="space-y-1">
-                                    <p class="font-bold text-slate-900">1. Wie trage ich meine Ausbildungsberichte ein?</p>
-                                    <p class="text-slate-600">Navigieren Sie zum Menüpunkt "Berichtsheft & PDF", wählen Sie die Woche und tragen Sie Ihre Tätigkeiten ein.</p>
-                                </div>
-                                <div class="space-y-1 pt-2 border-t border-blue-200">
-                                    <p class="font-bold text-slate-900">2. Wie funktioniert die digitale Signatur?</p>
-                                    <p class="text-slate-600">Der Ausbilder prüft den Bericht und signiert ihn digital ("Genehmigt 🗸").</p>
-                                </div>
-                                <div class="space-y-1 pt-2 border-t border-blue-200">
-                                    <p class="font-bold text-slate-900">3. Wie nutze ich chat AzubiSystem?</p>
-                                    <p class="text-slate-600">Öffnen Sie "chat AzubiSystem", geben Sie Fragen ein und erhalten Sie professionelle Unterstützung.</p>
-                                </div>
-                            </div>
-
-                            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                                <h4 class="font-bold text-slate-800 text-sm">Support-Kontaktdaten:</h4>
-                                <p class="text-slate-600">E-Mail: <span class="font-mono text-blue-600 font-bold">azubisystem.ha@gmail.com</span></p>
-                                <p class="text-slate-600">Telefon: <span class="font-mono text-blue-600 font-bold phone-num">📞 +49 176 63160304</span></p>
-                            </div>
+                        <h3 class="text-xl font-bold text-slate-900">Hilfe-Center & FAQ</h3>
+                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl text-xs space-y-2">
+                            <p class="font-bold text-slate-900">Wie füllt der Ausbilder die Skill Matrix aus?</p>
+                            <p class="text-slate-600">Der Ausbilder wählt in jedem Kompetenzbereich für jede Kalenderwoche (KW 1 bis 52) die entsprechende Note von 1 bis 6 aus den Dropdown-Menüs aus.</p>
                         </div>
                     </div>
                 </div>
@@ -410,158 +258,53 @@
         </main>
     </div>
 
-    <!-- برمجة الواجهة واللغات والعمليات -->
     <script>
         let currentUser = null;
 
         const translations = {
-            de: {
-                navDash: "📊 Dashboard", navUsers: "👥 Benutzerverwaltung", navSkills: "⭐ Skill Matrix (KW 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Aufgaben", navChat: "💬 Chat & Nachrichten", navAzubi: "📓 Berichtsheft & PDF", navCal: "📅 Jahreskalender (12 Monate)", navAbout: "ℹ️ Über uns", navHelp: "❓ Hilfe-Center",
-                hdrAdmin: "Super Admin Kontrollzentrum", btnLogout: "Abmelden",
-                welcome: "Willkommen im System, ", dashSub: "Enterprise AzubiSystem Aktiv.",
-                stat1Label: "Azubis", stat2Label: "Gesamt Benutzer", stat3Label: "Berichte", stat4Label: "System Status",
-                skillTitle: "⭐ Jahres-Skill-Matrix (KW 1 bis KW 52)", skillSub: "Deutsches Notensystem: 1 (Sehr gut) bis 6 (Ungenügend) - Strukturiert nach Monaten",
-                btnNewSkill: "+ Bewertung / Note eintragen", thMonthGroup: "Monat", thWeek: "Kalenderwoche", thSkill: "Fachliche Kompetenz", thGrade: "Note (1-6)", thRemark: "Bewertung / Bemerkung",
-                calTitle: "📅 Jahreskalender & Schichtplan (12 Monate)", calSub: "Jahresübersicht für Betrieb, Berufsschule und Prüfungen", btnEditCal: "+ Monat bearbeiten",
-                thMonth: "Monat", thSchoolCal: "🏫 Berufsschule", thWorkCal: "🏢 Betrieb / Schichtplan", thNoteCal: "Termine & Notizen",
-                aboutTitle: "Über AzubiSystem 🇩🇪", aboutDesc: "AzubiSystem ist eine spezialisierte digitale Verwaltung für das duale Ausbildungssystem in Deutschland.",
-                helpTitle: "Hilfe-Center & FAQ", suppLabel: "Support Center",
-                loginSubtitle: "Duales Ausbildungssystem Portal", lblEmail: "E-Mail-Adresse", lblPass: "Passwort", lblRole: "Rolle", btnLogin: "Anmelden"
-            },
-            ar: {
-                navDash: "📊 لوحة التحكم", navUsers: "👥 إدارة المستخدمين", navSkills: "⭐ خريطة المهارات (أسبوع 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 الواجبات", navChat: "💬 المحادثات والمراسلة", navAzubi: "📓 دفتر التقارير و PDF", navCal: "📅 التقويم السنوي (12 شهراً)", navAbout: "ℹ️ حول النظام", navHelp: "❓ مركز المساعدة",
-                hdrAdmin: "مركز تحكم المشرف العام", btnLogout: "تسجيل الخروج",
-                welcome: "مرحباً بك في النظام، ", dashSub: "نظام المتدربين المؤسسي مفعل.",
-                stat1Label: "المتدربون", stat2Label: "إجمالي المستخدمين", stat3Label: "التقارير", stat4Label: "حالة النظام",
-                skillTitle: "⭐ خريطة المهارات والأسابيع السنوية (من أسبوع 1 إلى 52)", skillSub: "نظام التقييم الألماني الرسمية من 1 (ممتاز) إلى 6 (راسب) - مقسمة ومجمعة بكل شهر",
-                btnNewSkill: "+ إضافة تقييم مهارة", thMonthGroup: "الشهر", thWeek: "الأسبوع التقويمي", thSkill: "المهارة والجاهزية", thGrade: "الدرجة (1-6)", thRemark: "التقييم والملاحظة",
-                calTitle: "📅 التقويم السنوي الشامل (12 شهراً)", calSub: "التخطيط السنوي لأيام المدرسة المهنية والعمل والمناوبات", btnEditCal: "+ تعديل خطة الشهر",
-                thMonth: "الشهر", thSchoolCal: "🏫 المدرسة المهنية", thWorkCal: "🏢 العمل والشركة", thNoteCal: "الملاحظات والامتحانات",
-                aboutTitle: "حول نظام المتدربين 🇩🇪", aboutDesc: "منصة رقمية متخصصة لإدارة نظام التدريب المهني المزدوج في ألمانيا وفق أعلى المعايير.",
-                helpTitle: "مركز المساعدة والأسئلة الشائعة", suppLabel: "مركز الدعم الفني",
-                loginSubtitle: "بوابة نظام التدريب المهني المزدوج", lblEmail: "البريد الإلكتروني", lblPass: "كلمة المرور", lblRole: "الصلاحية", btnLogin: "تسجيل الدخول"
-            },
-            en: {
-                navDash: "📊 Dashboard", navUsers: "👥 Users", navSkills: "⭐ Skill Matrix (KW 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Homework", navChat: "💬 Chat & Messages", navAzubi: "📓 Report Book & PDF", navCal: "📅 Annual Calendar (12 Months)", navAbout: "ℹ️ About", navHelp: "❓ Help Center",
-                hdrAdmin: "Super Admin Control Center", btnLogout: "Logout",
-                welcome: "Welcome to the system, ", dashSub: "Enterprise AzubiSystem Active.",
-                stat1Label: "Azubis", stat2Label: "Total Users", stat3Label: "Reports", stat4Label: "System Status",
-                skillTitle: "⭐ Annual Skill Matrix (KW 1 to KW 52)", skillSub: "German Grading System: 1 (Very Good) to 6 (Insufficient) - Structured by month",
-                btnNewSkill: "+ Add Grade", thMonthGroup: "Month", thWeek: "Calendar Week", thSkill: "Competence", thGrade: "Grade (1-6)", thRemark: "Remark",
-                calTitle: "📅 Annual Calendar & Roster (12 Months)", calSub: "Annual overview for company, school and exams", btnEditCal: "+ Edit Month",
-                thMonth: "Month", thSchoolCal: "🏫 Vocational School", thWorkCal: "🏢 Company / Shift", thNoteCal: "Notes & Exams",
-                aboutTitle: "About AzubiSystem 🇩🇪", aboutDesc: "Specialized digital management platform for the dual vocational training system in Germany.",
-                helpTitle: "Help Center & FAQ", suppLabel: "Support Center",
-                loginSubtitle: "Dual Vocational Training Portal", lblEmail: "E-Mail Address", lblPass: "Password", lblRole: "Role", btnLogin: "Login"
-            },
-            fr: {
-                navDash: "📊 Tableau de bord", navUsers: "👥 Utilisateurs", navSkills: "⭐ Skill Matrix (Sem 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Devoirs", navChat: "💬 Chat & Messages", navAzubi: "📓 Carnet & PDF", navCal: "📅 Calendrier Annuel (12 Mois)", navAbout: "ℹ️ À propos", navHelp: "❓ Centre d'aide",
-                hdrAdmin: "Centre de contrôle Super Admin", btnLogout: "Se déconnecter",
-                welcome: "Bienvenue dans le système, ", dashSub: "Enterprise AzubiSystem Actif.",
-                stat1Label: "Apprentis", stat2Label: "Total Utilisateurs", stat3Label: "Rapports", stat4Label: "État du Système",
-                skillTitle: "⭐ Matrice des compétences (Semaine 1 à 52)", skillSub: "Notation allemande : 1 (Très bien) à 6 (Insuffisant) - Structuré par mois",
-                btnNewSkill: "+ Ajouter une note", thMonthGroup: "Mois", thWeek: "Semaine", thSkill: "Compétence", thGrade: "Note (1-6)", thRemark: "Remarque",
-                calTitle: "📅 Calendrier Annuel (12 Mois)", calSub: "Aperçu annuel des cours et du travail", btnEditCal: "+ Modifier le mois",
-                thMonth: "Mois", thSchoolCal: "🏫 École professionnelle", thWorkCal: "🏢 Entreprise", thNoteCal: "Notes & Examens",
-                aboutTitle: "À propos d'AzubiSystem 🇩🇪", aboutDesc: "Plateforme de gestion numérique spécialisée pour la formation professionnelle en Allemagne.",
-                helpTitle: "Centre d'aide & FAQ", suppLabel: "Centre de Support",
-                loginSubtitle: "Portail de Formation Professionnelle", lblEmail: "Adresse E-Mail", lblPass: "Mot de passe", lblRole: "Rôle", btnLogin: "Se connecter"
-            },
-            es: {
-                navDash: "📊 Tablero", navUsers: "👥 Usuarios", navSkills: "⭐ Skill Matrix (KW 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Tareas", navChat: "💬 Chat y Mensajes", navAzubi: "📓 Informes y PDF", navCal: "📅 Calendario Anual (12 Meses)", navAbout: "ℹ️ Acerca de", navHelp: "❓ Ayuda",
-                hdrAdmin: "Centro de Super Admin", btnLogout: "Cerrar sesión",
-                welcome: "Bienvenido al sistema, ", dashSub: "AzubiSystem Enterprise activo.",
-                stat1Label: "Aprendices", stat2Label: "Total Usuarios", stat3Label: "Informes", stat4Label: "Estado",
-                skillTitle: "⭐ Matriz de Habilidades (Semana 1 a 52)", skillSub: "Sistema alemán: 1 (Excelente) a 6 (Insuficiente) - Estructurado por meses",
-                btnNewSkill: "+ Agregar Nota", thMonthGroup: "Mes", thWeek: "Semana", thSkill: "Competencia", thGrade: "Nota (1-6)", thRemark: "Nota",
-                calTitle: "📅 Calendario Anual (12 Meses)", calSub: "Planificación anual de clases y trabajo", btnEditCal: "+ Editar Mes",
-                thMonth: "Mes", thSchoolCal: "🏫 Escuela Profesional", thWorkCal: "🏢 Empresa", thNoteCal: "Notas y Exámenes",
-                aboutTitle: "Acerca de AzubiSystem 🇩🇪", aboutDesc: "Plataforma de gestión digital para el sistema de formación dual en Alemania.",
-                helpTitle: "Centro de ayuda y FAQ", suppLabel: "Centro de Soporte",
-                loginSubtitle: "Portal de Formación Dual", lblEmail: "Correo electrónico", lblPass: "Contraseña", lblRole: "Rol", btnLogin: "Iniciar sesión"
-            },
-            it: {
-                navDash: "📊 Dashboard", navUsers: "👥 Utenti", navSkills: "⭐ Skill Matrix (Sett 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Compiti", navChat: "💬 Chat e Messaggi", navAzubi: "📓 Rapporti e PDF", navCal: "📅 Calendario Annuale (12 Mesi)", navAbout: "ℹ️ Chi siamo", navHelp: "❓ Aiuto",
-                hdrAdmin: "Centro Super Admin", btnLogout: "Disconnetti",
-                welcome: "Benvenuto nel sistema, ", dashSub: "AzubiSystem Enterprise attivo.",
-                stat1Label: "Apprendisti", stat2Label: "Utenti Totali", stat3Label: "Rapporti", stat4Label: "Stato",
-                skillTitle: "⭐ Matrice Competenze (Settimana 1 a 52)", skillSub: "Sistema tedesco: 1 (Ottimo) a 6 (Insufficiente) - Strutturato per mese",
-                btnNewSkill: "+ Aggiungi Voto", thMonthGroup: "Mese", thWeek: "Settimana", thSkill: "Competenza", thGrade: "Voto (1-6)", thRemark: "Note",
-                calTitle: "📅 Calendario Annuale (12 Mesi)", calSub: "Pianificazione annuale della scuola e del lavoro", btnEditCal: "+ Modifica Mese",
-                thMonth: "Mese", thSchoolCal: "🏫 Scuola Professionale", thWorkCal: "🏢 Azienda", thNoteCal: "Note e Esami",
-                aboutTitle: "Informazioni su AzubiSystem 🇩🇪", aboutDesc: "Piattaforma di gestione digitale per il sistema di formazione duale in Germania.",
-                helpTitle: "Centro assistenza e FAQ", suppLabel: "Centro Assistenza",
-                loginSubtitle: "Portale di Formazione Duale", lblEmail: "Indirizzo E-Mail", lblPass: "Password", lblRole: "Ruolo", btnLogin: "Accedi"
-            },
-            tr: {
-                navDash: "📊 Gösterge Paneli", navUsers: "👥 Kullanıcılar", navSkills: "⭐ Yetenek Matrisi (Hafta 1-52)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Ödevler", navChat: "💬 Sohbet ve Mesajlar", navAzubi: "📓 Rapor Defteri ve PDF", navCal: "📅 Yıllık Takvim (12 Ay)", navAbout: "ℹ️ Hakkında", navHelp: "❓ Yardım",
-                hdrAdmin: "Süper Yönetici Paneli", btnLogout: "Çıkış Yap",
-                welcome: "Sisteme hoş geldiniz, ", dashSub: "Kurumsal AzubiSystem Aktif.",
-                stat1Label: "Çıraklar", stat2Label: "Toplam Kullanıcı", stat3Label: "Raporlar", stat4Label: "Sistem Durumu",
-                skillTitle: "⭐ Yıllık Beceriler Matrisi (Hafta 1 - 52)", skillSub: "Alman Not Sistemi: 1 (Pekiyi) ile 6 (Yetersiz) - Aylara göre gruplandırılmış",
-                btnNewSkill: "+ Not Ekle", thMonthGroup: "Ay", thWeek: "Hafta", thSkill: "Beceriler", thGrade: "Not (1-6)", thRemark: "Değerlendirme",
-                calTitle: "📅 Yıllık Takvim (12 Ay)", calSub: "Okul ve çalışma günleri yıllık planlaması", btnEditCal: "+ Ayı Düzenle",
-                thMonth: "Ay", thSchoolCal: "🏫 Meslek Okulu", thWorkCal: "🏢 Şirket", thNoteCal: "Notlar ve Sınavlar",
-                aboutTitle: "AzubiSystem Hakkında 🇩🇪", aboutDesc: "Almanya ikili mesleki eğitim sistemi için dijital yönetim platformu.",
-                helpTitle: "Yardım Merkezi ve SSS", suppLabel: "Destek Merkezi",
-                loginSubtitle: "İkili Mesleki Eğitim Portalı", lblEmail: "E-Posta Adresi", lblPass: "Şifre", lblRole: "Rol", btnLogin: "Giriş Yap"
-            }
+            de: { navDash: "📊 Dashboard", navUsers: "👥 Benutzerverwaltung", navSkills: "⭐ Skill Matrix (1-6 Tabellen)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Aufgaben", navChat: "💬 Chat & Nachrichten", navAzubi: "📓 Berichtsheft & PDF", navCal: "📅 Jahreskalender (12 Monate)", navAbout: "ℹ️ Über uns", navHelp: "❓ Hilfe-Center" },
+            ar: { navDash: "📊 لوحة التحكم", navUsers: "👥 إدارة المستخدمين", navSkills: "⭐ خريطة المهارات المستقلة (1-6)", navAI: "🤖 chat AzubiSystem", navHw: "📚 الواجبات", navChat: "💬 المحادثات والمراسلة", navAzubi: "📓 دفتر التقارير و PDF", navCal: "📅 التقويم السنوي (12 شهراً)", navAbout: "ℹ️ حول النظام", navHelp: "❓ مركز المساعدة" },
+            en: { navDash: "📊 Dashboard", navUsers: "👥 Users", navSkills: "⭐ Skill Matrix (1-6 Tables)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Homework", navChat: "💬 Chat & Messages", navAzubi: "📓 Report Book & PDF", navCal: "📅 Annual Calendar (12 Months)", navAbout: "ℹ️ About", navHelp: "❓ Help Center" },
+            fr: { navDash: "📊 Tableau de bord", navUsers: "👥 Utilisateurs", navSkills: "⭐ Skill Matrix (Tables 1-6)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Devoirs", navChat: "💬 Chat & Messages", navAzubi: "📓 Carnet & PDF", navCal: "📅 Calendrier Annuel (12 Mois)", navAbout: "ℹ️ À propos", navHelp: "❓ Centre d'aide" },
+            es: { navDash: "📊 Tablero", navUsers: "👥 Usuarios", navSkills: "⭐ Skill Matrix (Tablas 1-6)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Tareas", navChat: "💬 Chat y Mensajes", navAzubi: "📓 Informes y PDF", navCal: "📅 Calendario Anual (12 Meses)", navAbout: "ℹ️ Acerca de", navHelp: "❓ Ayuda" },
+            it: { navDash: "📊 Dashboard", navUsers: "👥 Utenti", navSkills: "⭐ Skill Matrix (Tabelle 1-6)", navAI: "🤖 chat AzubiSystem", navHw: "📚 Compiti", navChat: "💬 Chat e Messaggi", navAzubi: "📓 Rapporti e PDF", navCal: "📅 Calendario Annuale (12 Mesi)", navAbout: "ℹ️ Chi siamo", navHelp: "❓ Aiuto" },
+            tr: { navDash: "📊 Gösterge Paneli", navUsers: "👥 Kullanıcılar", navSkills: "⭐ Yetenek Matrisi (1-6 Tablolar)", navAI: "🤖 chat AzubiSystem", navHw: "Ödevler", navChat: "💬 Sohbet", navAzubi: "📓 Rapor", navCal: "📅 Yıllık Takvim", navAbout: "ℹ️ Hakkında", navHelp: "❓ Yardım" }
         };
 
         function changeLanguage(lang) {
-            const t = translations[lang];
+            const t = translations[lang] || translations.de;
             document.getElementById('htmlRoot').setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
             document.getElementById('htmlRoot').setAttribute('lang', lang);
-            
-            for (let key in t) {
-                const el = document.getElementById(key);
-                if (el) el.innerText = t[key];
-            }
-
+            for (let key in t) { const el = document.getElementById(key); if (el) el.innerText = t[key]; }
             updateWelcomeMessage();
         }
 
         function updateWelcomeMessage() {
             if(!currentUser) return;
-            const lang = document.getElementById('langSwitcher').value;
-            const t = translations[lang];
-            document.getElementById('welcomeMsg').innerText = t.welcome + currentUser.name + " (" + currentUser.role.toUpperCase() + ")";
+            document.getElementById('welcomeMsg').innerText = "Willkommen im System, " + currentUser.name + " (" + currentUser.role.toUpperCase() + ")";
         }
 
         async function doLogin() {
             const email = document.getElementById('loginUser').value;
             const password = document.getElementById('loginPass').value;
             const role = document.getElementById('roleSelector').value;
-            try {
-                const res = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password, role })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    currentUser = data.user;
-                    document.getElementById('loginScreen').classList.add('hidden');
-                    updateRoleUI();
-                    updateWelcomeMessage();
-                    loadUsers();
-                    loadReports();
-                    loadStats();
-                    loadSkills();
-                    loadAnnualCalendar();
-                    loadMessages();
-                } else { alert(data.message); }
-            } catch (err) { alert("Verbindungsfehler zum Server."); }
+            const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password, role }) });
+            const data = await res.json();
+            if (data.success) {
+                currentUser = data.user;
+                document.getElementById('loginScreen').classList.add('hidden');
+                updateRoleUI();
+                updateWelcomeMessage();
+                loadUsers(); loadReports(); loadStats(); loadSkillTables(); loadAnnualCalendar(); loadMessages();
+            } else { alert(data.message); }
         }
 
         async function loadStats() {
-            try {
-                const res = await fetch('/api/stats');
-                const stats = await res.json();
-                document.getElementById('statAzubis').innerText = stats.totalAzubis;
-                document.getElementById('statUsers').innerText = stats.totalUsers;
-                document.getElementById('statReports').innerText = stats.totalReports;
-            } catch (e) { console.error(e); }
+            const res = await fetch('/api/stats');
+            const stats = await res.json();
+            document.getElementById('statAzubis').innerText = stats.totalAzubis;
+            document.getElementById('statUsers').innerText = stats.totalUsers;
+            document.getElementById('statReports').innerText = stats.totalReports;
         }
 
         function updateRoleUI() {
@@ -585,84 +328,96 @@
                 const el = document.getElementById('tab-' + id);
                 if(el) el.classList.add('hidden');
             });
-            const target = document.getElementById('tab-' + tabId);
-            if(target) target.classList.remove('hidden');
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
         }
 
         function logout() { currentUser = null; document.getElementById('loginScreen').classList.remove('hidden'); }
 
-        // المهارات لـ 52 أسبوعاً مقسمة شهرياً
-        function toggleSkillForm() { document.getElementById('skillFormBox').classList.toggle('hidden'); }
-        async function loadSkills() {
-            const res = await fetch('/api/skills');
-            const data = await res.json();
-            const tbody = document.getElementById('skillTableBody');
-            if(data.length === 0) return;
+        // توليد الجداول المستقلة للمهارات مع خانات فارغة لدرجات 1 إلى 6
+        async function loadSkillTables() {
+            const catRes = await fetch('/api/skills/categories');
+            const categories = await catRes.json();
+            const gradeRes = await fetch('/api/skills/grades');
+            const savedGrades = await gradeRes.json();
 
-            let html = '';
-            let currentMonth = '';
+            const container = document.getElementById('skillTablesContainer');
+            container.innerHTML = "";
 
-            data.forEach((s) => {
-                const isNewMonth = s.month !== currentMonth;
-                if (isNewMonth) currentMonth = s.month;
-
-                html += `
-                    <tr class="hover:bg-slate-50 border-b border-slate-100">
-                        <td class="py-3 px-4 font-extrabold text-blue-900 bg-slate-50/80">${isNewMonth ? s.month : ''}</td>
-                        <td class="py-3 px-4 font-bold text-slate-800">${s.week} (${s.weekInMonth || ''})</td>
-                        <td class="py-3 px-4 text-slate-700 font-medium">${s.skill}</td>
-                        <td class="py-3 px-4"><span class="px-2.5 py-1 rounded-lg font-bold text-xs ${s.grade <= 2 ? 'bg-emerald-100 text-emerald-800' : s.grade <= 4 ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'}">Note ${s.grade}</span></td>
-                        <td class="py-3 px-4 text-slate-600">${s.remark || '-'}</td>
-                    </tr>
+            categories.forEach(cat => {
+                let tableHTML = `
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm">
+                        <div class="bg-slate-900 text-white px-6 py-3 font-bold text-sm flex justify-between items-center">
+                            <span>${cat.name}</span>
+                            <span class="text-xs text-blue-300 font-mono">KW 1 - KW 52</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-700 border-b uppercase font-bold">
+                                        <th class="py-3 px-6 w-40">Kalenderwoche</th>
+                                        <th class="py-3 px-6">Note (1 bis 6) auswählen</th>
+                                        <th class="py-3 px-6">Status / Bewertung</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
                 `;
-            });
 
-            tbody.innerHTML = html;
+                for (let w = 1; w <= 52; w++) {
+                    const weekStr = `KW ${w}`;
+                    const found = savedGrades.find(g => g.categoryId === cat.id && g.week === weekStr);
+                    const currentGrade = found ? found.grade : "";
+
+                    tableHTML += `
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-2.5 px-6 font-bold text-slate-800">${weekStr}</td>
+                            <td class="py-2.5 px-6">
+                                <select onchange="updateSkillGrade('${cat.id}', '${weekStr}', this.value)" class="px-3 py-1.5 border rounded-lg bg-white font-bold text-blue-900 focus:ring-2 focus:ring-blue-500">
+                                    <option value="" ${!currentGrade ? 'selected' : ''}>-- Note wählen (1-6) --</option>
+                                    <option value="1" ${currentGrade == '1' ? 'selected' : ''}>Note 1 - Sehr gut (ممتاز)</option>
+                                    <option value="2" ${currentGrade == '2' ? 'selected' : ''}>Note 2 - Gut (جيد جداً)</option>
+                                    <option value="3" ${currentGrade == '3' ? 'selected' : ''}>Note 3 - Befriedigend (جيد)</option>
+                                    <option value="4" ${currentGrade == '4' ? 'selected' : ''}>Note 4 - Ausreichend (كافٍ)</option>
+                                    <option value="5" ${currentGrade == '5' ? 'selected' : ''}>Note 5 - Mangelhaft (ضعيف)</option>
+                                    <option value="6" ${currentGrade == '6' ? 'selected' : ''}>Note 6 - Ungenügend (راسب)</option>
+                                </select>
+                            </td>
+                            <td class="py-2.5 px-6 font-semibold text-slate-600">
+                                ${currentGrade ? `<span class="px-2.5 py-1 rounded bg-blue-100 text-blue-800">Note ${currentGrade}</span>` : '<span class="text-slate-400 italic">Noch nicht bewertet (فارغ)</span>'}
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                tableHTML += `</tbody></table></div></div>`;
+                container.innerHTML += tableHTML;
+            });
         }
 
-        async function saveSkillGrade() {
-            const week = document.getElementById('skWeek').value;
-            const skill = document.getElementById('skSkill').value;
-            const grade = document.getElementById('skGrade').value;
-            const remark = document.getElementById('skRemark').value;
-            if(!week || !skill) return alert('Bitte Felder ausfüllen');
-            await fetch('/api/skills', {
+        async function updateSkillGrade(categoryId, week, grade) {
+            await fetch('/api/skills/grades', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ week, skill, grade, remark })
+                body: JSON.stringify({ categoryId, week, grade })
             });
-            loadSkills();
-            toggleSkillForm();
+            loadSkillTables();
         }
 
-        // التقويم السنوي الشامل لـ 12 شهراً
-        function toggleAnnualCalForm() { document.getElementById('annualCalFormBox').classList.toggle('hidden'); }
         async function loadAnnualCalendar() {
             const res = await fetch('/api/calendar/annual');
             const data = await res.json();
-            const tbody = document.getElementById('annualCalTableBody');
-            if(data.length === 0) return;
-            tbody.innerHTML = data.map(c => `
-                <tr class="hover:bg-slate-50 border-b border-slate-100">
-                    <td class="py-3 px-4 font-extrabold text-slate-900">${c.month}</td>
-                    <td class="py-3 px-4 text-blue-700 font-bold">${c.schoolDays}</td>
-                    <td class="py-3 px-4 text-emerald-700 font-bold">${c.workDays}</td>
-                    <td class="py-3 px-4 text-slate-600">${c.note || '-'}</td>
-                </tr>
+            document.getElementById('annualCalTableBody').innerHTML = data.map(c => `
+                <tr class="hover:bg-slate-50 border-b"><td class="py-3 px-4 font-bold">${c.month}</td><td class="py-3 px-4 text-blue-700">${c.schoolDays}</td><td class="py-3 px-4 text-emerald-700">${c.workDays}</td><td class="py-3 px-4 text-slate-600">${c.note}</td></tr>
             `).join('');
         }
 
+        function toggleAnnualCalForm() { document.getElementById('annualCalFormBox').classList.toggle('hidden'); }
         async function saveAnnualCal() {
             const month = document.getElementById('calMonth').value;
             const schoolDays = document.getElementById('calSchool').value;
             const workDays = document.getElementById('calWork').value;
             const note = document.getElementById('calNote').value;
-            if(!month) return alert('Bitte Monat angeben');
-            await fetch('/api/calendar/annual', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ month, schoolDays, workDays, note })
-            });
+            if(!month) return alert('Monat angeben');
+            await fetch('/api/calendar/annual', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ month, schoolDays, workDays, note }) });
             loadAnnualCalendar();
             toggleAnnualCalForm();
         }
@@ -672,24 +427,16 @@
             if(!text) return;
             const out = document.getElementById('aiOutput');
             out.classList.remove('hidden');
-            out.innerHTML = `<strong>🤖 chat AzubiSystem Antwort:</strong><br>• <strong>Optimierte Formulierung für das Berichtsheft:</strong> "Im Arbeitszeitraum wurden folgende Fachaufgaben qualitätsgerecht ausgeführt: ${text}. Die Tätigkeiten entsprachen den Vorgaben des BBiG und Ausbildungsrahmenplans."<br>• <strong>Rechtlicher Hinweis:</strong> Berichtshefte müssen wöchentlich geführt und vom Ausbilder unterzeichnet werden.`;
+            out.innerHTML = `<strong>🤖 chat AzubiSystem Antwort:</strong><br>• <strong>Optimierte Formulierung:</strong> "Im Rahmen der Ausbildung wurden folgende Fachaufgaben qualitätsgerecht ausgeführt: ${text}."<br>• <strong>Rechtlicher Hinweis:</strong> Gemäß BBiG wöchentlich zu führen.`;
         }
 
         async function saveReport() {
             const week = document.getElementById('reportWeek').value;
             const dept = document.getElementById('reportDept').value;
             const text = document.getElementById('reportText').value;
-            if(!week || !text) { alert('Bitte Pflichtfelder ausfüllen'); return; }
-            await fetch('/api/reports', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ week, dept, text, author: currentUser.name })
-            });
-            loadReports();
-            loadStats();
-            document.getElementById('reportWeek').value = "";
-            document.getElementById('reportText').value = "";
-            alert('Bericht gespeichert!');
+            if(!week || !text) return alert('Pflichtfelder ausfüllen');
+            await fetch('/api/reports', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ week, dept, text, author: currentUser.name }) });
+            loadReports(); loadStats(); alert('Gespeichert!');
         }
 
         async function loadReports() {
@@ -697,35 +444,20 @@
             const reports = await res.json();
             const list = document.getElementById('reportList');
             if(reports.length === 0) return;
-
             list.innerHTML = reports.map(r => `
-                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex justify-between items-center">
-                    <div>
-                        <h5 class="font-bold text-slate-900 text-sm">${r.week} (${r.dept || 'Allgemein'})</h5>
-                        <p class="text-xs text-slate-600 mt-1">${r.text}</p>
-                        <div class="flex items-center gap-2 mt-2">
-                            <span class="text-[10px] text-blue-600 font-mono">📅 ${r.timestamp} | ${r.author}</span>
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded ${r.signedBy ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${r.status}</span>
-                        </div>
-                    </div>
-                    ${currentUser && currentUser.role === 'admin' && !r.signedBy ? `<button onclick="approveReport(${r.id})" class="text-xs bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg">توقيع واعتماد</button>` : ''}
+                <div class="p-4 rounded-xl border bg-slate-50 flex justify-between items-center">
+                    <div><h5 class="font-bold text-sm">${r.week} (${r.dept})</h5><p class="text-xs text-slate-600 mt-1">${r.text}</p></div>
+                    ${currentUser.role === 'admin' && !r.signedBy ? `<button onclick="approveReport(${r.id})" class="text-xs bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg">Signieren</button>` : `<span class="text-xs font-bold text-emerald-700">${r.status}</span>`}
                 </div>
             `).join('');
         }
 
         async function approveReport(id) {
-            await fetch('/api/reports/approve', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ reportId: id, adminName: currentUser.name })
-            });
+            await fetch('/api/reports/approve', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reportId: id, adminName: currentUser.name }) });
             loadReports();
         }
 
-        function exportToPDF() {
-            const element = document.getElementById('pdfContainer');
-            html2pdf().from(element).save('Azubi_Berichtsheft.pdf');
-        }
+        function exportToPDF() { html2pdf().from(document.getElementById('pdfContainer')).save('Azubi_Berichtsheft.pdf'); }
 
         async function addUser() {
             const name = document.getElementById('newUserName').value;
@@ -733,66 +465,30 @@
             const password = document.getElementById('newUserPass').value;
             const org = document.getElementById('newUserOrg').value;
             const role = document.getElementById('newUserRole').value;
-            if(!name || !email || !password) { alert('Pflichtfelder ausfüllen'); return; }
-            const res = await fetch('/api/users', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password, org, role })
-            });
-            const data = await res.json();
-            if(data.success) {
-                alert('Registriert!');
-                loadUsers();
-                loadStats();
-            } else { alert(data.message); }
+            if(!name || !email) return;
+            await fetch('/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password, org, role }) });
+            loadUsers(); alert('Registriert!');
         }
 
         async function loadUsers() {
             const res = await fetch('/api/users');
             const users = await res.json();
-            const tbody = document.getElementById('userTableBody');
-            if(users.length === 0) return;
-            tbody.innerHTML = users.map(u => `
-                <tr>
-                    <td class="py-4 px-6 font-semibold">${u.name}</td>
-                    <td class="py-4 px-6 text-slate-500">${u.email}</td>
-                    <td class="py-4 px-6 text-slate-500">${u.org}</td>
-                    <td class="py-4 px-6 text-slate-600">${u.role}</td>
-                    <td class="py-4 px-6 font-mono text-blue-600 font-bold">${u.code || 'MASTER'}</td>
-                </tr>
-            `).join('');
+            document.getElementById('userTableBody').innerHTML = users.map(u => `<tr><td class="py-3 px-6 font-semibold">${u.name}</td><td class="py-3 px-6 text-slate-500">${u.email}</td><td class="py-3 px-6">${u.org}</td><td class="py-3 px-6">${u.role}</td><td class="py-3 px-6 font-mono text-blue-600 font-bold">${u.code}</td></tr>`).join('');
         }
 
         async function addHomework() {
             const title = document.getElementById('hwTitle').value;
             const desc = document.getElementById('hwDesc').value;
             if(!title) return;
-            await fetch('/api/homework', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, desc })
-            });
+            await fetch('/api/homework', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, desc }) });
             alert('Veröffentlicht!');
         }
 
         async function sendMessage() {
             const input = document.getElementById('chatInput');
-            const type = document.getElementById('msgRecipientType').value;
-            const recipient = document.getElementById('msgRecipient').value;
             if(!input.value) return;
-
-            await fetch('/api/messages', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    sender: currentUser ? currentUser.name : 'Anonym',
-                    recipient: recipient ? `${type} (${recipient})` : type,
-                    text: input.value
-                })
-            });
-
-            input.value = "";
-            loadMessages();
+            await fetch('/api/messages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sender: currentUser.name, recipient: document.getElementById('msgRecipientType').value, text: input.value }) });
+            input.value = ""; loadMessages();
         }
 
         async function loadMessages() {
@@ -800,16 +496,7 @@
             const msgs = await res.json();
             const chat = document.getElementById('chatMessages');
             if(msgs.length === 0) return;
-            
-            chat.innerHTML = msgs.map(m => `
-                <div class="p-3 bg-white border border-slate-200 rounded-xl shadow-sm space-y-1">
-                    <div class="flex justify-between items-center text-[11px] font-bold">
-                        <span class="text-blue-600">${m.sender} ➔ ${m.recipient}</span>
-                        <span class="text-slate-400">${m.timestamp}</span>
-                    </div>
-                    <p class="text-xs text-slate-700">${m.text}</p>
-                </div>
-            `).join('');
+            chat.innerHTML = msgs.map(m => `<div class="p-3 bg-white border rounded-xl shadow-sm"><div class="flex justify-between font-bold text-[11px] text-blue-600"><span>${m.sender} ➔ ${m.recipient}</span><span>${m.timestamp}</span></div><p class="text-xs text-slate-700">${m.text}</p></div>`).join('');
             chat.scrollTop = chat.scrollHeight;
         }
     </script>
