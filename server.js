@@ -14,20 +14,19 @@ app.use(express.static(path.join(__dirname)));
 let usersDB = [{ name: "Super Admin", email: "azubisystem.ha@gmail.com", password: "123456", org: "AzubiSystem", role: "admin", code: "ADMIN-MASTER" }];
 let reportsDB = [];
 let homeworkDB = [];
+let homeworkSubmissionsDB = [];
 let messagesDB = [];
 
 const monthsList = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 
-// تقويم سنوي قابل للتعديل بالكامل من قبل المسؤولين
 let annualCalendarDB = monthsList.map((m, idx) => ({
     month: m,
-    periodType: idx === 0 ? "Orientierung" : idx === 5 ? "Zwischenprüfung" : "Betrieb / Praxis",
-    schoolDays: `KW ${idx*4 + 1}-${idx*4 + 2}: Berufsschule`,
-    workDays: `KW ${idx*4 + 3}-${idx*4 + 4}: Betrieb`,
-    note: "Regulärer Ausbildungsbetrieb"
+    phase: idx === 0 ? "Orientierung" : idx === 5 ? "Betriebsprüfung" : "Betrieb",
+    schoolDays: "KW 1-2: Berufsschule",
+    workDays: "KW 3-4: Praxis",
+    note: "Regulärer Betrieb"
 }));
 
-// الجداول المستقلة للمهارات (لكل مهارة جدول مصغر مستقل بخانات فارغة 1 إلى 6)
 const skillCategories = [
     { id: "verstaendnis", name: "1. التفاهم (Verständnis)" },
     { id: "integration", name: "2. الاندماج (Integration)" },
@@ -72,10 +71,10 @@ app.post('/api/skills/grades', (req, res) => {
 
 app.get('/api/calendar/annual', (req, res) => res.json(annualCalendarDB));
 app.post('/api/calendar/annual', (req, res) => {
-    const { month, periodType, schoolDays, workDays, note } = req.body;
+    const { month, phase, schoolDays, workDays, note } = req.body;
     const existing = annualCalendarDB.find(c => c.month === month);
     if (existing) {
-        existing.periodType = periodType || existing.periodType;
+        existing.phase = phase || existing.phase;
         existing.schoolDays = schoolDays || existing.schoolDays;
         existing.workDays = workDays || existing.workDays;
         existing.note = note || existing.note;
@@ -94,16 +93,22 @@ app.post('/api/reports/approve', (req, res) => {
     res.json({ success: true });
 });
 
+app.get('/api/homework', (req, res) => res.json(homeworkDB));
+app.post('/api/homework', (req, res) => {
+    homeworkDB.push({ id: Date.now(), title: req.body.title, desc: req.body.desc, pdfUrl: req.body.pdfUrl || "#", timestamp: new Date().toLocaleString('de-DE') });
+    res.json({ success: true });
+});
+
+app.get('/api/homework/submissions', (req, res) => res.json(homeworkSubmissionsDB));
+app.post('/api/homework/submissions', (req, res) => {
+    homeworkSubmissionsDB.push({ id: Date.now(), hwId: req.body.hwId, studentName: req.body.studentName, solutionText: req.body.solutionText, timestamp: new Date().toLocaleString('de-DE') });
+    res.json({ success: true });
+});
+
 app.get('/api/messages', (req, res) => res.json(messagesDB));
 app.post('/api/messages', (req, res) => {
     messagesDB.push({ id: Date.now(), sender: req.body.sender, recipient: req.body.recipient || "Allgemein", text: req.body.text, timestamp: new Date().toLocaleTimeString('de-DE') });
     res.json({ success: true });
 });
-
-app.post('/api/homework', (req, res) => {
-    homeworkDB.push({ id: Date.now(), title: req.body.title, desc: req.body.desc, timestamp: new Date().toLocaleString('de-DE') });
-    res.json({ success: true });
-});
-app.get('/api/homework', (req, res) => res.json(homeworkDB));
 
 app.listen(PORT, '0.0.0.0', () => console.log(`Server läuft auf Port ${PORT}`));
