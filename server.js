@@ -16,13 +16,13 @@ let reportsDB = [];
 let homeworkDB = [];
 let homeworkSubmissionsDB = [];
 let messagesDB = [];
-let classesDB = ["Klasse 1 (Fachinformatik)", "Klasse 2 (Büromanagement)", "Klasse 3 (Handwerk)"];
+let classesDB = ["Klasse 1", "Klasse 2", "Klasse 3", "Klasse 4", "Klasse 5", "Klasse 6", "Klasse 7", "Klasse 8", "Klasse 9", "Klasse 10"];
 
 const monthsList = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 
 let annualCalendarDB = monthsList.map((m, idx) => ({
     month: m,
-    className: "Klasse 1 (Fachinformatik)",
+    className: "Klasse 1",
     phase: idx === 0 ? "Orientierung" : idx === 5 ? "Betriebsprüfung" : "Betrieb",
     schoolDays: "KW 1-2: Berufsschule",
     workDays: "KW 3-4: Praxis",
@@ -30,13 +30,13 @@ let annualCalendarDB = monthsList.map((m, idx) => ({
 }));
 
 const skillCategories = [
-    { id: "verstaendnis", name: "1. التفاهم / Verständnis" },
-    { id: "integration", name: "2. الاندماج / Integration" },
-    { id: "kommunikation", name: "3. التواصل / Kommunikation" },
-    { id: "zuhoeren", name: "4. الاستماع / Zuhören" },
-    { id: "lernen", name: "5. التعلم / Lernen" },
-    { id: "mitarbeit", name: "6. المشاركة / Mitarbeit" },
-    { id: "deutsch", name: "7. اللغة الألمانية / Deutsch als Zweitsprache" }
+    { id: "verstaendnis", name: "1. التفاهم (Verständnis)" },
+    { id: "integration", name: "2. الاندماج (Integration)" },
+    { id: "kommunikation", name: "3. التواصل (Kommunikation)" },
+    { id: "zuhoeren", name: "4. الاستماع (Zuhören)" },
+    { id: "lernen", name: "5. التعلم (Lernen)" },
+    { id: "mitarbeit", name: "6. المشاركة (Mitarbeit)" },
+    { id: "deutsch", name: "7. اللغة الألمانية (Deutsch)" }
 ];
 
 let customGradesDB = [];

@@ -9,19 +9,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
-        /* خلفية مائية شفافة تعبر عن شعار المتدربين AzubiSystem */
-        .azubi-watermark-bg {
+        /* خلفية باردة مع لوجو رسم هندسي فني رمزي للمتدربين دون كتابة نصوص */
+        .azubi-logo-bg {
             background-color: #f1f5f9;
             background-image: 
-                radial-gradient(at 10% 20%, rgba(59, 130, 246, 0.04) 0px, transparent 50%),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='0.3' stroke-opacity='0.1'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3Ctext x='3' y='21' font-size='3.5' fill='%233b82f6' font-weight='bold' opacity='0.2'%3EAzubiSystem%3C/text%3E%3C/svg%3E");
+                radial-gradient(at 15% 25%, rgba(59, 130, 246, 0.06) 0px, transparent 55%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='0.4' stroke-opacity='0.15'%3E%3Cpath d='M12 2l10 5-10 5L2 7l10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3Ccircle cx='12' cy='12' r='3' stroke='%233b82f6' stroke-width='0.4' stroke-opacity='0.15'/%3E%3C/svg%3E");
             background-repeat: repeat;
         }
         .phone-num { direction: ltr !important; unicode-bidi: isolate; display: inline-block; }
         @media print { .no-print { display: none !important; } }
     </style>
 </head>
-<body class="azubi-watermark-bg text-slate-800 h-screen flex flex-col overflow-hidden">
+<body class="azubi-logo-bg text-slate-800 h-screen flex flex-col overflow-hidden">
 
     <!-- شاشة تسجيل الدخول -->
     <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 no-print">
@@ -169,16 +169,27 @@
                 <div id="tab-homework" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <div class="flex gap-3 pb-4 border-b">
-                            <input type="text" id="newClassNameInput" placeholder="إضافة اسم قسم جديد (مثال: Klasse 4)..." class="px-4 py-2 border rounded-xl text-xs flex-1">
+                            <input type="text" id="newClassNameInput" placeholder="أضف قسماً جديداً (مثال: Klasse 11)..." class="px-4 py-2 border rounded-xl text-xs flex-1">
                             <button onclick="addNewClass()" id="btnAddClass" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl">➕ إضافة قسم</button>
                         </div>
 
                         <div id="adminHwBox" class="space-y-4 border-b pb-6">
                             <h3 class="text-lg font-bold text-slate-900" id="hwAdminTitle">📚 نشر واجب مخصص لقسم أو متدرب</h3>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <select id="hwTargetClass" class="px-4 py-2 border rounded-xl text-sm bg-white"></select>
-                                <input type="text" id="hwStudent" placeholder="اسم المتدرب (اختياري / أو للكل)" class="px-4 py-2 border rounded-xl text-sm">
-                                <input type="text" id="hwTitle" placeholder="عنوان الواجب" class="px-4 py-2 border rounded-xl text-sm">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1" id="lblTargetClass">اختر القسم:</label>
+                                    <select id="hwTargetClass" class="w-full px-4 py-2 border rounded-xl text-sm bg-white"></select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1" id="lblTargetStudent">المتدرب المستهدف:</label>
+                                    <select id="hwStudent" class="w-full px-4 py-2 border rounded-xl text-sm bg-white">
+                                        <option value="Alle Azubis">جميع المتدربين (Alle Azubis)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1" id="lblHwTitle">عنوان الواجب:</label>
+                                    <input type="text" id="hwTitle" placeholder="العنوان..." class="w-full px-4 py-2 border rounded-xl text-sm">
+                                </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <input type="text" id="hwPdf" placeholder="رابط ملف PDF للواجب" class="px-4 py-2 border rounded-xl text-sm">
@@ -245,24 +256,33 @@
                     </div>
                 </div>
 
-                <!-- 9. حول النظام -->
+                <!-- 9. حول النظام (معلومات تفصيلية وكاملة) -->
                 <div id="tab-about" class="hidden space-y-6">
                     <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <h3 class="text-2xl font-bold text-slate-900" id="aboutTitle">حول نظام AzubiSystem 🇩🇪</h3>
-                        <p class="text-sm text-slate-600 leading-relaxed" id="aboutDesc">منصة رقمية متقدمة لإدارة نظام التدريب المهني المزدوج في ألمانيا وفق معايير BBiG و DSGVO.</p>
+                        <p class="text-sm text-slate-600 leading-relaxed" id="aboutDesc">
+                            يعتبر نظام <strong>AzubiSystem</strong> منصة رقمية متكاملة مصممة خصيصاً لإدارة نظام التدريب المهني المزدوج (Duales Ausbildungssystem) في ألمانيا. يربط النظام بين المتدربين (Azubis)، الشركات والمؤسسات المدربة، والمراكز أو المدارس المهنية (Berufsschule). يقوم النظام بتنظيم دفتر التقارير الأسبوعي (Berichtsheft) وفق قانون التدريب المهني الألماني (BBiG)، وتتبع خريطة المهارات والمستويات (Skill Matrix)، وتقييم الدرجات الألمانية من 1 إلى 6، بالإضافة إلى إدارة الأقسام والواجبات وحلولها مع الالتزام التام بمعايير حماية البيانات الأوروبية (DSGVO).
+                        </p>
                     </div>
                 </div>
 
-                <!-- 10. مركز المساعدة -->
+                <!-- 10. مركز المساعدة (أسئلة وأجوبة تفصيلية وشاملة) -->
                 <div id="tab-help" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <h3 class="text-xl font-bold text-slate-900" id="helpTitle">مركز المساعدة والدعم (Help Center & FAQ)</h3>
                         <div class="space-y-4 text-xs">
                             <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl space-y-3">
-                                <p class="font-bold text-slate-900">1. كيف أقوم بتسجيل التقارير الأسبوعية؟</p>
-                                <p class="text-slate-600">من خلال الانتقال إلى دفتر التقارير وتعبئة خانة الأسبوع والمهام ثم الحفظ.</p>
-                                <p class="font-bold text-slate-900 pt-2 border-t border-blue-200">2. كيف يتم رفع حلول الواجبات؟</p>
-                                <p class="text-slate-600">يذهب المتدرب إلى قسم الواجبات، يكتب الحل أو يرفقه ثم يضغط على إرسال الحل.</p>
+                                <p class="font-bold text-slate-900">1. كيف أقوم بتسجيل التقارير الأسبوعية (Berichtsheft)؟</p>
+                                <p class="text-slate-600">يمكنك الذهاب إلى قسم "دفتر التقارير و PDF"، إدخال رقم الأسبوع (مثال: KW 1) والقسم، ثم كتابة المهام وحفظها لتصديرها كملف PDF رسمي.</p>
+                                
+                                <p class="font-bold text-slate-900 pt-2 border-t border-blue-200">2. كيف يتم رفع الواجبات والحلول الخاصة بالمتدربين؟</p>
+                                <p class="text-slate-600">يقوم المسؤول بنشر الواجب وتحديد القسم واسم المتدرب أو اختيار الجميع. يمكن للمتدرب الدخول إلى نفس القسم ورفع الحل الخاص به أو إرفاقه.</p>
+                                
+                                <p class="font-bold text-slate-900 pt-2 border-t border-blue-200">3. كيف يقوم المسؤول بتعديل الأقسام والتقويم السنوي؟</p>
+                                <p class="text-slate-600">من خلال قسم "الأقسام والواجبات" لإضافة أقسام جديدة (Klasse 1 إلى Klasse 10)، ومن قسم "التقويم السنوي" لتحديد مراحل كل شهر لكل قسم على حدة.</p>
+                                
+                                <p class="font-bold text-slate-900 pt-2 border-t border-blue-200">4. كيف تعمل خريطة المهارات والتقييمات؟</p>
+                                <p class="text-slate-600">يحتوي النظام على جداول منفصلة لكل مهارة (التفاهم، الاندماج، التواصل، الاستماع، التعلم، المشاركة، اللغة الألمانية) مع درجات التقييم الألمانية من 1 إلى 6 فارغة ليملأها المسؤولون.</p>
                             </div>
                             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                                 <h4 class="font-bold text-slate-800 text-sm" id="supContactTitle">بيانات الاتصال والدعم الفني:</h4>
@@ -292,7 +312,7 @@
                 repHead: "Wochenbericht eintragen:", btnSaveRep: "Bericht speichern", pdfTitle: "Meine Berichte:", btnExportPDF: "📄 als PDF exportieren",
                 uAddTitle: "Neuen Benutzer anlegen", btnRegUser: "Registrieren", chatHeader: "💬 Chat & Vertrauliche Nachricht",
                 lblRecType: "Empfänger-Typ:", lblRecEmail: "E-Mail / Name:", btnSendMsg: "Senden",
-                aboutTitle: "Über AzubiSystem 🇩🇪", aboutDesc: "Spezialisierte digitale Plattform für das duale Ausbildungssystem in Deutschland.",
+                aboutTitle: "Über AzubiSystem 🇩🇪", aboutDesc: "Spezialisierte digitale Plattform für das duale Ausbildungssystem in Deutschland nach BBiG & DSGVO.",
                 helpTitle: "Hilfe-Center & FAQ", supContactTitle: "Support-Kontaktdaten:", suppLabel: "Support Center",
                 loginSubtitle: "Duales Ausbildungssystem Portal", lblEmail: "E-Mail-Adresse", lblPass: "Passwort", lblRole: "Rolle", btnLogin: "Anmelden"
             },
@@ -394,7 +414,6 @@
             });
             document.getElementById('tab-' + tabId).classList.remove('hidden');
 
-            // تمييز القسم النشط في القائمة الجانبية باللون الأزرق
             document.querySelectorAll('aside nav a').forEach(a => a.classList.remove('bg-blue-600', 'text-white'));
             event && event.target && event.target.classList.add('bg-blue-600', 'text-white');
         }
@@ -408,6 +427,14 @@
             const hwSelect = document.getElementById('hwTargetClass');
             select.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
             if(hwSelect) hwSelect.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
+
+            // تحميل قائمة المتدربين في خانة اختيار الواجب
+            const userRes = await fetch('/api/users');
+            const users = await userRes.json();
+            const studentSelect = document.getElementById('hwStudent');
+            studentSelect.innerHTML = `<option value="Alle Azubis">جميع المتدربين (Alle Azubis)</option>` + 
+                users.filter(u => u.role === 'azubi').map(u => `<option value="${u.name}">${u.name}</option>`).join('');
+
             loadAnnualCalendar();
         }
 
@@ -421,7 +448,7 @@
         }
 
         async function loadAnnualCalendar() {
-            const selectedClass = document.getElementById('calClassFilter').value || "Klasse 1 (Fachinformatik)";
+            const selectedClass = document.getElementById('calClassFilter').value || "Klasse 1";
             const res = await fetch('/api/calendar/annual');
             const data = await res.json();
             const container = document.getElementById('annualCalendarContainer');
@@ -480,7 +507,7 @@
 
         async function publishHomework() {
             const className = document.getElementById('hwTargetClass').value;
-            const studentName = document.getElementById('hwStudent').value || "Alle Azubis";
+            const studentName = document.getElementById('hwStudent').value;
             const title = document.getElementById('hwTitle').value;
             const pdfUrl = document.getElementById('hwPdf').value;
             const desc = document.getElementById('hwDesc').value;
