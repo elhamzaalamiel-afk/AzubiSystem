@@ -16,11 +16,13 @@ let reportsDB = [];
 let homeworkDB = [];
 let homeworkSubmissionsDB = [];
 let messagesDB = [];
+let classesDB = ["Klasse 1 (Fachinformatik)", "Klasse 2 (Büromanagement)", "Klasse 3 (Handwerk)"];
 
 const monthsList = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 
 let annualCalendarDB = monthsList.map((m, idx) => ({
     month: m,
+    className: "Klasse 1 (Fachinformatik)",
     phase: idx === 0 ? "Orientierung" : idx === 5 ? "Betriebsprüfung" : "Betrieb",
     schoolDays: "KW 1-2: Berufsschule",
     workDays: "KW 3-4: Praxis",
@@ -28,13 +30,13 @@ let annualCalendarDB = monthsList.map((m, idx) => ({
 }));
 
 const skillCategories = [
-    { id: "verstaendnis", name: "1. التفاهم (Verständnis)" },
-    { id: "integration", name: "2. الاندماج (Integration)" },
-    { id: "kommunikation", name: "3. التواصل (Kommunikation)" },
-    { id: "zuhoeren", name: "4. الاستماع (Zuhören)" },
-    { id: "lernen", name: "5. التعلم (Lernen)" },
-    { id: "mitarbeit", name: "6. المشاركة (Mitarbeit)" },
-    { id: "deutsch", name: "7. اللغة الألمانية (Deutsch als Zweitsprache)" }
+    { id: "verstaendnis", name: "1. التفاهم / Verständnis" },
+    { id: "integration", name: "2. الاندماج / Integration" },
+    { id: "kommunikation", name: "3. التواصل / Kommunikation" },
+    { id: "zuhoeren", name: "4. الاستماع / Zuhören" },
+    { id: "lernen", name: "5. التعلم / Lernen" },
+    { id: "mitarbeit", name: "6. المشاركة / Mitarbeit" },
+    { id: "deutsch", name: "7. اللغة الألمانية / Deutsch als Zweitsprache" }
 ];
 
 let customGradesDB = [];
@@ -56,6 +58,13 @@ app.post('/api/users', (req, res) => {
     res.json({ success: true, user: newUser });
 });
 
+app.get('/api/classes', (req, res) => res.json(classesDB));
+app.post('/api/classes', (req, res) => {
+    const { className } = req.body;
+    if (className && !classesDB.includes(className)) { classesDB.push(className); }
+    res.json({ success: true, classesDB });
+});
+
 app.get('/api/stats', (req, res) => {
     res.json({ totalUsers: usersDB.length, totalAzubis: usersDB.filter(u => u.role === 'azubi').length, totalReports: reportsDB.length, totalHomework: homeworkDB.length });
 });
@@ -71,13 +80,15 @@ app.post('/api/skills/grades', (req, res) => {
 
 app.get('/api/calendar/annual', (req, res) => res.json(annualCalendarDB));
 app.post('/api/calendar/annual', (req, res) => {
-    const { month, phase, schoolDays, workDays, note } = req.body;
-    const existing = annualCalendarDB.find(c => c.month === month);
+    const { month, className, phase, schoolDays, workDays, note } = req.body;
+    const existing = annualCalendarDB.find(c => c.month === month && c.className === className);
     if (existing) {
         existing.phase = phase || existing.phase;
         existing.schoolDays = schoolDays || existing.schoolDays;
         existing.workDays = workDays || existing.workDays;
         existing.note = note || existing.note;
+    } else {
+        annualCalendarDB.push({ month, className, phase, schoolDays, workDays, note });
     }
     res.json({ success: true, calendar: annualCalendarDB });
 });
@@ -95,7 +106,7 @@ app.post('/api/reports/approve', (req, res) => {
 
 app.get('/api/homework', (req, res) => res.json(homeworkDB));
 app.post('/api/homework', (req, res) => {
-    homeworkDB.push({ id: Date.now(), title: req.body.title, desc: req.body.desc, pdfUrl: req.body.pdfUrl || "#", timestamp: new Date().toLocaleString('de-DE') });
+    homeworkDB.push({ id: Date.now(), className: req.body.className, studentName: req.body.studentName, title: req.body.title, desc: req.body.desc, pdfUrl: req.body.pdfUrl || "#", timestamp: new Date().toLocaleString('de-DE') });
     res.json({ success: true });
 });
 
