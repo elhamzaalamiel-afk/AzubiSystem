@@ -17,6 +17,7 @@ let homeworkDB = [];
 let homeworkSubmissionsDB = [];
 let messagesDB = [];
 let classesDB = ["Klasse 1", "Klasse 2", "Klasse 3", "Klasse 4", "Klasse 5", "Klasse 6", "Klasse 7", "Klasse 8", "Klasse 9", "Klasse 10"];
+let studentsDB = []; // جدول الطلاب الفارغ القابل للتعبئة والتعديل بواسطة المسؤول
 
 const monthsList = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 
@@ -58,11 +59,30 @@ app.post('/api/users', (req, res) => {
     res.json({ success: true, user: newUser });
 });
 
+// إدارة وتعديل الطلاب والأقسام المخصصة
+app.get('/api/students', (req, res) => res.json(studentsDB));
+app.post('/api/students', (req, res) => {
+    const { action, id, name, className } = req.body;
+    if (action === 'add') {
+        studentsDB.push({ id: Date.now(), name: name || "Nuevo Student", className: className || classesDB[0] });
+    } else if (action === 'edit') {
+        const student = studentsDB.find(s => s.id == id);
+        if (student) {
+            student.name = name !== undefined ? name : student.name;
+            student.className = className !== undefined ? className : student.className;
+        }
+    } else if (action === 'delete') {
+        studentsDB = studentsDB.filter(s => s.id != id);
+    }
+    res.json({ success: true, studentsDB });
+});
+
 app.get('/api/classes', (req, res) => res.json(classesDB));
 app.post('/api/classes', (req, res) => {
     const { action, oldName, newName, className } = req.body;
     if (action === 'rename' && oldName && newName) {
         classesDB = classesDB.map(c => c === oldName ? newName : c);
+        studentsDB.forEach(s => { if(s.className === oldName) s.className = newName; });
     } else if (className && !classesDB.includes(className)) {
         classesDB.push(className);
     }
@@ -70,7 +90,7 @@ app.post('/api/classes', (req, res) => {
 });
 
 app.get('/api/stats', (req, res) => {
-    res.json({ totalUsers: usersDB.length, totalAzubis: usersDB.filter(u => u.role === 'azubi').length, totalReports: reportsDB.length, totalHomework: homeworkDB.length });
+    res.json({ totalUsers: usersDB.length, totalAzubis: studentsDB.length, totalReports: reportsDB.length, totalHomework: homeworkDB.length });
 });
 
 app.get('/api/skills/categories', (req, res) => res.json(skillCategories));
@@ -85,7 +105,7 @@ app.post('/api/skills/grades', (req, res) => {
 app.get('/api/calendar/annual', (req, res) => res.json(annualCalendarDB));
 app.post('/api/calendar/annual', (req, res) => {
     const { month, className, phase, schoolDays, workDays, note } = req.body;
-    const existing = annualCalendarDB.find(c => c.month === month && c.className === className);
+    let existing = annualCalendarDB.find(c => c.month === month && c.className === className);
     if (existing) {
         existing.phase = phase || existing.phase;
         existing.schoolDays = schoolDays || existing.schoolDays;

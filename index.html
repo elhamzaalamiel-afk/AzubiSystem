@@ -9,7 +9,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
-        /* خلفية أنيقة تحتوي على لوجو رئيسي واحد كبير وبارد في المنتصف */
         .azubi-single-logo-bg {
             background-color: #f8fafc;
             background-image: 
@@ -30,25 +29,25 @@
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-200">
             <div class="text-center mb-6">
                 <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">AzubiSystem 🇩🇪</h2>
-                <p class="text-sm text-slate-500 mt-2" id="loginSubtitle">Duales Ausbildungssystem Portal</p>
+                <p class="text-sm text-slate-500 mt-2" data-i18n="loginSubtitle">Duales Ausbildungssystem Portal</p>
             </div>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1" id="lblEmail">E-Mail-Adresse</label>
+                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1" data-i18n="lblEmail">E-Mail-Adresse</label>
                     <input type="email" id="loginUser" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none" value="azubisystem.ha@gmail.com">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1" id="lblPass">Passwort</label>
+                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1" data-i18n="lblPass">Passwort</label>
                     <input type="password" id="loginPass" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none" value="123456">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1" id="lblRole">Rolle</label>
+                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1" data-i18n="lblRole">Rolle</label>
                     <select id="roleSelector" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm bg-white font-semibold focus:ring-2 focus:ring-blue-600 focus:outline-none">
                         <option value="admin">Super Admin</option>
                         <option value="azubi">Azubi</option>
                     </select>
                 </div>
-                <button type="button" onclick="doLogin()" id="btnLogin" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition shadow-md">Anmelden</button>
+                <button type="button" onclick="doLogin()" id="btnLogin" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition shadow-md" data-i18n="btnLogin">Anmelden</button>
             </div>
         </div>
     </div>
@@ -65,27 +64,27 @@
                 </div>
                 <nav class="mt-4 px-3 space-y-1 text-sm">
                     <div id="adminNav" class="space-y-1">
-                        <a href="#" onclick="switchTab('dashboard')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navDash">📊 لوحة التحكم</a>
-                        <a href="#" onclick="switchTab('users')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navUsers">👥 إدارة المستخدمين</a>
-                        <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navSkills">⭐ خريطة المهارات</a>
-                        <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navAI">🤖 chat AzubiSystem</a>
-                        <a href="#" onclick="switchTab('homework')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navHw">📚 الأقسام والواجبات</a>
-                        <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navChat">💬 المحادثات والمراسلة</a>
+                        <a href="#" onclick="switchTab('dashboard')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navDash">📊 لوحة التحكم</a>
+                        <a href="#" onclick="switchTab('users')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navUsers">👥 إدارة المستخدمين والجداول</a>
+                        <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navSkills">⭐ خريطة المهارات</a>
+                        <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAI">🤖 chat AzubiSystem</a>
+                        <a href="#" onclick="switchTab('homework')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navHw">📚 الأقسام والواجبات</a>
+                        <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navChat">💬 المحادثات والمراسلة</a>
                     </div>
                     <div id="azubiNav" class="hidden space-y-1">
-                        <a href="#" onclick="switchTab('azubi-portal')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navAzubi">📓 دفتر التقارير و PDF</a>
-                        <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navAzubiAI">🤖 chat AzubiSystem</a>
-                        <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navAzubiSkills">⭐ خريطة المهارات</a>
-                        <a href="#" onclick="switchTab('homework')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navAzubiHw">📚 الواجبات والحلول</a>
-                        <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navAzubiChat">💬 المحادثات والمراسلة</a>
+                        <a href="#" onclick="switchTab('azubi-portal')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAzubi">📓 دفتر التقارير و PDF</a>
+                        <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAI">🤖 chat AzubiSystem</a>
+                        <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navSkills">⭐ خريطة المهارات</a>
+                        <a href="#" onclick="switchTab('homework')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navHw">📚 الأقسام والواجبات</a>
+                        <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navChat">💬 المحادثات والمراسلة</a>
                     </div>
-                    <a href="#" onclick="switchTab('calendar')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navCal">📅 التقويم السنوي للأقسام</a>
-                    <a href="#" onclick="switchTab('about')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navAbout">ℹ️ حول النظام</a>
-                    <a href="#" onclick="switchTab('help')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" id="navHelp">❓ مركز المساعدة</a>
+                    <a href="#" onclick="switchTab('calendar')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navCal">📅 التقويم السنوي للأقسام</a>
+                    <a href="#" onclick="switchTab('about')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAbout">ℹ️ حول النظام</a>
+                    <a href="#" onclick="switchTab('help')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navHelp">❓ مركز المساعدة</a>
                 </nav>
             </div>
             <div class="p-4 m-4 bg-slate-800 rounded-xl border border-slate-700 text-xs text-slate-300 space-y-1">
-                <div class="font-bold text-white" id="suppLabel">مركز الدعم الفني</div>
+                <div class="font-bold text-white" data-i18n="suppLabel">مركز الدعم الفني</div>
                 <div class="font-mono text-blue-300 font-semibold phone-num">📞 +49 176 63160304</div>
             </div>
         </aside>
@@ -93,7 +92,7 @@
         <!-- المحتوى الرئيسي -->
         <main class="flex-1 flex flex-col overflow-y-auto">
             <header class="bg-white/90 backdrop-blur border-b border-slate-200 h-16 flex items-center justify-between px-8 no-print shadow-sm">
-                <div class="font-bold text-slate-700 text-lg" id="hdrTitle">Super Admin Kontrollzentrum</div>
+                <div class="font-bold text-slate-700 text-lg" id="hdrTitle" data-i18n="hdrAdmin">Super Admin Kontrollzentrum</div>
                 <div class="flex items-center gap-3">
                     <select id="langSwitcher" onchange="changeLanguage(this.value)" class="text-xs bg-slate-100 border border-slate-300 px-3 py-1.5 rounded-lg font-semibold text-slate-700 cursor-pointer focus:outline-none">
                         <option value="de">🇩🇪 Deutsch</option>
@@ -104,7 +103,7 @@
                         <option value="it">🇮🇹 Italiano</option>
                         <option value="tr">🇹🇷 Türkçe</option>
                     </select>
-                    <button onclick="logout()" id="btnLogout" class="text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg font-semibold hover:bg-red-100 transition">تسجيل الخروج</button>
+                    <button onclick="logout()" id="btnLogout" class="text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg font-semibold hover:bg-red-100 transition" data-i18n="btnLogout">تسجيل الخروج</button>
                 </div>
             </header>
 
@@ -114,13 +113,13 @@
                 <div id="tab-dashboard" class="space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <h3 class="text-lg font-black text-slate-900" id="welcomeMsg">Willkommen</h3>
-                        <p class="text-xs text-slate-500 mt-1" id="dashSub">Enterprise AzubiSystem Aktiv.</p>
+                        <p class="text-xs text-slate-500 mt-1" data-i18n="dashSub">Enterprise AzubiSystem Aktiv.</p>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" id="stat1Label">المتدربون</span><div class="text-2xl font-black text-slate-800 mt-1" id="statAzubis">0</div></div>
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" id="stat2Label">إجمالي المستخدمين</span><div class="text-2xl font-black text-slate-800 mt-1" id="statUsers">1</div></div>
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" id="stat3Label">التقارير</span><div class="text-2xl font-black text-blue-600 mt-1" id="statReports">0</div></div>
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" id="stat4Label">حالة النظام</span><div class="text-xs font-bold text-emerald-600 mt-2 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live & Secure</div></div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat1Label">المتدربون</span><div class="text-2xl font-black text-slate-800 mt-1" id="statAzubis">0</div></div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat2Label">إجمالي المستخدمين</span><div class="text-2xl font-black text-slate-800 mt-1" id="statUsers">1</div></div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat3Label">التقارير</span><div class="text-2xl font-black text-blue-600 mt-1" id="statReports">0</div></div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat4Label">حالة النظام</span><div class="text-xs font-bold text-emerald-600 mt-2 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live & Secure</div></div>
                     </div>
                 </div>
 
@@ -128,8 +127,8 @@
                 <div id="tab-skills" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <div>
-                            <h3 class="text-xl font-bold text-slate-900" id="skillSecTitle">⭐ خريطة المهارات والمستويات</h3>
-                            <p class="text-xs text-slate-500 mt-1" id="skillSecSub">جداول مستقلة لكل مهارة مع درجات تقييم من 1 إلى 6.</p>
+                            <h3 class="text-xl font-bold text-slate-900" data-i18n="skillSecTitle">⭐ خريطة المهارات والمستويات</h3>
+                            <p class="text-xs text-slate-500 mt-1" data-i18n="skillSecSub">جداول مستقلة لكل مهارة مع درجات تقييم من 1 إلى 6.</p>
                         </div>
                         <div id="skillTablesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                     </div>
@@ -140,8 +139,8 @@
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h3 class="text-lg font-bold text-slate-800" id="calSecTitle">📅 التقويم السنوي حسب الأقسام</h3>
-                                <p class="text-xs text-slate-500" id="calSecSub">اختر القسم وحدد جدول العمل والدراسة لكل شهر.</p>
+                                <h3 class="text-lg font-bold text-slate-800" data-i18n="calSecTitle">📅 التقويم السنوي حسب الأقسام</h3>
+                                <p class="text-xs text-slate-500" data-i18n="calSecSub">اختر القسم وحدد جدول العمل والدراسة لكل شهر.</p>
                             </div>
                             <select id="calClassFilter" onchange="loadAnnualCalendar()" class="px-3 py-2 border rounded-xl text-xs bg-white font-bold text-blue-900"></select>
                         </div>
@@ -149,19 +148,19 @@
                     </div>
                 </div>
 
-                <!-- 4. المساعد الذكي chat AzubiSystem -->
+                <!-- 4. المساعد الذكي -->
                 <div id="tab-ai-assistant" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 bg-blue-600 text-white rounded-2xl font-bold text-xl shadow-md">🤖</div>
                             <div>
                                 <h3 class="text-xl font-bold text-slate-900">chat AzubiSystem</h3>
-                                <p class="text-xs text-slate-500" id="aiSubDesc">المساعد الذكي لإعداد التقارير والإجابة على استفسارات التدريب.</p>
+                                <p class="text-xs text-slate-500" data-i18n="aiSubDesc">المساعد الذكي لإعداد التقارير والإجابة على استفسارات التدريب.</p>
                             </div>
                         </div>
                         <div class="border border-blue-200 rounded-2xl p-5 bg-blue-50/50 space-y-3">
-                            <textarea id="aiInput" placeholder="اكتب استفسارك هنا..." class="w-full px-4 py-3 border rounded-xl text-sm border-blue-200 h-32 bg-white"></textarea>
-                            <button onclick="runAIAssistant()" id="btnAiRun" class="bg-blue-600 text-white text-xs font-bold px-6 py-3 rounded-xl hover:bg-blue-700 shadow-md">✨ إرسال إلى chat AzubiSystem</button>
+                            <textarea id="aiInput" placeholder="اكتب استفسارك هنا..." class="w-full px-4 py-3 border rounded-xl text-sm border-blue-200 h-32 bg-white" data-i18n-placeholder="aiPlaceholder"></textarea>
+                            <button onclick="runAIAssistant()" id="btnAiRun" class="bg-blue-600 text-white text-xs font-bold px-6 py-3 rounded-xl hover:bg-blue-700 shadow-md" data-i18n="btnAiRun">✨ إرسال إلى chat AzubiSystem</button>
                         </div>
                         <div id="aiOutput" class="hidden p-5 bg-white border border-blue-200 rounded-2xl text-xs text-slate-800 space-y-2 shadow-sm"></div>
                     </div>
@@ -171,29 +170,29 @@
                 <div id="tab-homework" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <div class="space-y-4 border-b pb-6">
-                            <h3 class="text-lg font-bold text-slate-900" id="classManTitle">🏫 إدارة وتعديل الأقسام (Klassen bearbeiten)</h3>
+                            <h3 class="text-lg font-bold text-slate-900" data-i18n="classManTitle">🏫 إدارة وتعديل الأقسام (Klassen bearbeiten)</h3>
                             <div class="flex gap-3">
-                                <input type="text" id="newClassNameInput" placeholder="أضف قسماً جديداً..." class="px-4 py-2 border rounded-xl text-xs flex-1">
-                                <button onclick="addNewClass()" id="btnAddClass" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl">➕ إضافة قسم</button>
+                                <input type="text" id="newClassNameInput" placeholder="أضف قسماً جديداً..." class="px-4 py-2 border rounded-xl text-xs flex-1" data-i18n-placeholder="newClassPlaceholder">
+                                <button onclick="addNewClass()" id="btnAddClass" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl" data-i18n="btnAddClass">➕ إضافة قسم</button>
                             </div>
                             <div id="classListContainer" class="flex flex-wrap gap-2 pt-2"></div>
                         </div>
 
                         <div id="adminHwBox" class="space-y-4 border-b pb-6">
-                            <h3 class="text-lg font-bold text-slate-900" id="hwAdminTitle">📚 نشر واجب مخصص لقسم أو متدرب</h3>
+                            <h3 class="text-lg font-bold text-slate-900" data-i18n="hwAdminTitle">📚 نشر واجب مخصص لقسم أو متدرب</h3>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                    <label class="block text-[11px] font-bold text-slate-600 mb-1" id="lblTargetClass">اختر القسم:</label>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1" data-i18n="lblTargetClass">اختر القسم:</label>
                                     <select id="hwTargetClass" class="w-full px-4 py-2 border rounded-xl text-sm bg-white"></select>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-bold text-slate-600 mb-1" id="lblTargetStudent">المتدرب المستهدف:</label>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1" data-i18n="lblTargetStudent">المتدرب المستهدف:</label>
                                     <select id="hwStudent" class="w-full px-4 py-2 border rounded-xl text-sm bg-white">
-                                        <option value="Alle Azubis">جميع المتدربين (Alle Azubis)</option>
+                                        <option value="Alle Azubis" data-i18n="allAzubisOpt">جميع المتدربين (Alle Azubis)</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-bold text-slate-600 mb-1" id="lblHwTitle">عنوان الواجب:</label>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1" data-i18n="lblHwTitle">عنوان الواجب:</label>
                                     <input type="text" id="hwTitle" placeholder="العنوان..." class="w-full px-4 py-2 border rounded-xl text-sm">
                                 </div>
                             </div>
@@ -201,11 +200,11 @@
                                 <input type="text" id="hwPdf" placeholder="رابط ملف PDF للواجب" class="px-4 py-2 border rounded-xl text-sm">
                                 <input type="text" id="hwDesc" placeholder="تفاصيل الواجب..." class="px-4 py-2 border rounded-xl text-sm">
                             </div>
-                            <button onclick="publishHomework()" id="btnPubHw" class="bg-blue-600 text-white text-xs font-bold px-6 py-2.5 rounded-xl">نشر الواجب</button>
+                            <button onclick="publishHomework()" id="btnPubHw" class="bg-blue-600 text-white text-xs font-bold px-6 py-2.5 rounded-xl" data-i18n="btnPubHw">نشر الواجب</button>
                         </div>
 
                         <div class="space-y-4">
-                            <h3 class="text-lg font-bold text-slate-900" id="hwListTitle">📋 الواجبات المتاحة وحلول المتدربين حسب القسم</h3>
+                            <h3 class="text-lg font-bold text-slate-900" data-i18n="hwListTitle">📋 الواجبات المتاحة وحلول المتدربين حسب القسم</h3>
                             <div id="homeworkList" class="space-y-4"></div>
                         </div>
                     </div>
@@ -214,59 +213,53 @@
                 <!-- 6. بوابة المتدرب و PDF -->
                 <div id="tab-azubi-portal" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                        <h4 class="font-bold text-slate-800 text-sm" id="repHead">إضافة تقرير أسبوعي:</h4>
+                        <h4 class="font-bold text-slate-800 text-sm" data-i18n="repHead">إضافة تقرير أسبوعي:</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <input type="text" id="reportWeek" placeholder="الأسبوع (مثال: KW 1)" class="px-4 py-2 border rounded-xl text-sm">
                             <input type="text" id="reportDept" placeholder="القسم" class="px-4 py-2 border rounded-xl text-sm">
                         </div>
                         <textarea id="reportText" placeholder="اكتب مهامك هنا..." class="w-full px-4 py-2 border rounded-xl text-sm h-28"></textarea>
-                        <button onclick="saveReport()" id="btnSaveRep" class="bg-blue-600 text-white text-xs font-bold px-6 py-2.5 rounded-xl">حفظ التقرير</button>
+                        <button onclick="saveReport()" id="btnSaveRep" class="bg-blue-600 text-white text-xs font-bold px-6 py-2.5 rounded-xl" data-i18n="btnSaveRep">حفظ التقرير</button>
                     </div>
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6" id="pdfContainer">
-                        <div class="flex justify-between items-center mb-4"><h4 class="font-bold text-slate-800" id="pdfTitle">تقاريري:</h4><button onclick="exportToPDF()" id="btnExportPDF" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl">📄 تصدير كـ PDF</button></div>
+                        <div class="flex justify-between items-center mb-4"><h4 class="font-bold text-slate-800" data-i18n="pdfTitle">تقاريري:</h4><button onclick="exportToPDF()" id="btnExportPDF" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl" data-i18n="btnExportPDF">📄 تصدير كـ PDF</button></div>
                         <div id="reportList" class="space-y-4"><p class="text-xs text-slate-400">لا توجد تقارير.</p></div>
                     </div>
                 </div>
 
-                <!-- 7. إدارة المستخدمين -->
+                <!-- 7. إدارة المستخدمين والجداول المستقلة لكل قسم -->
                 <div id="tab-users" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <h3 class="text-base font-bold text-slate-800 mb-2" id="uAddTitle">تسجيل مستخدم جديد</h3>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                        <h3 class="text-base font-bold text-slate-800" data-i18n="uAddTitle">إضافة متدرب جديد إلى القسم (Name & Klasse)</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" id="newUserName" placeholder="الاسم" class="px-4 py-2 border rounded-xl text-sm">
-                            <input type="email" id="newUserEmail" placeholder="البريد الإلكتروني" class="px-4 py-2 border rounded-xl text-sm">
-                            <input type="password" id="newUserPass" placeholder="كلمة المرور" class="px-4 py-2 border rounded-xl text-sm">
-                            <input type="text" id="newUserOrg" placeholder="المؤسسة / الشركة" class="px-4 py-2 border rounded-xl text-sm">
-                            <select id="newUserRole" class="px-4 py-2 border rounded-xl text-sm md:col-span-2"><option value="Azubi">متدرب (Azubi)</option><option value="Lehrer">مشرف / أستاذ</option></select>
-                            <button type="button" onclick="addUser()" id="btnRegUser" class="bg-blue-600 text-white font-semibold py-2 rounded-xl text-sm">تسجيل</button>
+                            <input type="text" id="studentNameInput" placeholder="اسم المتدرب (Name)..." class="px-4 py-2 border rounded-xl text-sm">
+                            <select id="studentClassSelect" class="px-4 py-2 border rounded-xl text-sm bg-white"></select>
+                            <button type="button" onclick="addNewStudent()" class="bg-blue-600 text-white font-semibold py-2 rounded-xl text-sm" data-i18n="btnAddStudent">➕ إضافة المتدرب للجدول</button>
                         </div>
                     </div>
-                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                        <table class="w-full text-left border-collapse">
-                            <thead><tr class="bg-slate-50 text-slate-500 text-xs uppercase border-b"><th class="py-3 px-6">الاسم</th><th class="py-3 px-6">البريد</th><th class="py-3 px-6">المؤسسة</th><th class="py-3 px-6">الصلاحية</th><th class="py-3 px-6">الرمز</th></tr></thead>
-                            <tbody id="userTableBody" class="divide-y text-sm"></tbody>
-                        </table>
-                    </div>
+
+                    <!-- حاوية الجداول المستقلة لكل قسم على حده -->
+                    <div id="independentClassTablesContainer" class="space-y-6"></div>
                 </div>
 
                 <!-- 8. المراسلات -->
                 <div id="tab-messages" class="hidden space-y-6">
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[580px]">
-                        <div class="p-4 bg-slate-900 text-white flex justify-between items-center"><h3 class="font-bold text-sm" id="chatHeader">💬 محادثة سرية وموجهة</h3><span class="text-xs text-blue-300">مشفّر</span></div>
+                        <div class="p-4 bg-slate-900 text-white flex justify-between items-center"><h3 class="font-bold text-sm" id="chatHeader" data-i18n="chatHeader">💬 محادثة سرية وموجهة</h3><span class="text-xs text-blue-300">مشفّر</span></div>
                         <div class="p-3 bg-slate-100 border-b grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                            <div><label class="font-bold text-slate-600 block mb-1" id="lblRecType">نوع المستلم:</label><select id="msgRecipientType" class="w-full px-3 py-1.5 border rounded-lg bg-white"><option value="Betrieb">🏢 الشركة</option><option value="Berufsschule">🏫 المدرسة</option><option value="Ausbilder">👤 المشرف</option></select></div>
-                            <div><label class="font-bold text-slate-600 block mb-1" id="lblRecEmail">البريد أو الاسم:</label><input type="text" id="msgRecipient" placeholder="ausbilder@firma.de" class="w-full px-3 py-1.5 border rounded-lg bg-white"></div>
+                            <div><label class="font-bold text-slate-600 block mb-1" data-i18n="lblRecType">نوع المستلم:</label><select id="msgRecipientType" class="w-full px-3 py-1.5 border rounded-lg bg-white"><option value="Betrieb">🏢 الشركة</option><option value="Berufsschule">🏫 المدرسة</option><option value="Ausbilder">👤 المشرف</option></select></div>
+                            <div><label class="font-bold text-slate-600 block mb-1" data-i18n="lblRecEmail">البريد أو الاسم:</label><input type="text" id="msgRecipient" placeholder="ausbilder@firma.de" class="w-full px-3 py-1.5 border rounded-lg bg-white"></div>
                         </div>
                         <div id="chatMessages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 text-sm"><p class="text-xs text-slate-400 text-center">لا توجد رسائل.</p></div>
-                        <div class="p-4 bg-white border-t flex gap-3"><input type="text" id="chatInput" placeholder="اكتب رسالة..." class="flex-1 px-4 py-2.5 border rounded-xl text-sm"><button type="button" onclick="sendMessage()" id="btnSendMsg" class="bg-blue-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm">إرسال</button></div>
+                        <div class="p-4 bg-white border-t flex gap-3"><input type="text" id="chatInput" placeholder="اكتب رسالة..." class="flex-1 px-4 py-2.5 border rounded-xl text-sm"><button type="button" onclick="sendMessage()" id="btnSendMsg" class="bg-blue-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm" data-i18n="btnSendMsg">إرسال</button></div>
                     </div>
                 </div>
 
                 <!-- 9. حول النظام -->
                 <div id="tab-about" class="hidden space-y-6">
                     <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                        <h3 class="text-2xl font-bold text-slate-900" id="aboutTitle">حول نظام AzubiSystem 🇩🇪</h3>
-                        <p class="text-sm text-slate-600 leading-relaxed" id="aboutDesc">
+                        <h3 class="text-2xl font-bold text-slate-900" id="aboutTitle" data-i18n="aboutTitle">حول نظام AzubiSystem 🇩🇪</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed" id="aboutDesc" data-i18n="aboutDesc">
                             يعتبر نظام <strong>AzubiSystem</strong> منصة رقمية متكاملة مصممة خصيصاً لإدارة نظام التدريب المهني المزدوج (Duales Ausbildungssystem) في ألمانيا وفق معايير BBiG و DSGVO.
                         </p>
                     </div>
@@ -275,16 +268,16 @@
                 <!-- 10. مركز المساعدة -->
                 <div id="tab-help" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                        <h3 class="text-xl font-bold text-slate-900" id="helpTitle">مركز المساعدة والدعم (Help Center & FAQ)</h3>
+                        <h3 class="text-xl font-bold text-slate-900" id="helpTitle" data-i18n="helpTitle">مركز المساعدة والدعم (Help Center & FAQ)</h3>
                         <div class="space-y-4 text-xs">
                             <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl space-y-3">
-                                <p class="font-bold text-slate-900">1. كيف أقوم بتسجيل التقارير الأسبوعية (Berichtsheft)؟</p>
-                                <p class="text-slate-600">من خلال الانتقال إلى دفتر التقارير وتعبئة الأسبوع والمهام ثم الحفظ والتصدير كـ PDF.</p>
-                                <p class="font-bold text-slate-900 pt-2 border-t border-blue-200">2. كيف يتم إدارة وتعديل أسماء الأقسام؟</p>
-                                <p class="text-slate-600">من قسم "الأقسام والواجبات"، يمكنك تعديل أي اسم قسم فوراً أو إضافة أقسام جديدة.</p>
+                                <p class="font-bold text-slate-900" data-i18n="faq1Q">1. كيف أقوم بتسجيل التقارير الأسبوعية (Berichtsheft)؟</p>
+                                <p class="text-slate-600" data-i18n="faq1A">من خلال الانتقال إلى دفتر التقارير وتعبئة الأسبوع والمهام ثم الحفظ والتصدير كـ PDF.</p>
+                                <p class="font-bold text-slate-900 pt-2 border-t border-blue-200" data-i18n="faq2Q">2. كيف يتم إدارة وتعديل أسماء الأقسام والطلاب؟</p>
+                                <p class="text-slate-600" data-i18n="faq2A">من قسم "إدارة المستخدمين والجداول"، يمكنك إضافة الطلاب في جداول مستقلة لكل قسم، وتعديل الأسماء والأقسام بحرية تامة.</p>
                             </div>
                             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                                <h4 class="font-bold text-slate-800 text-sm" id="supContactTitle">بيانات الاتصال والدعم الفني:</h4>
+                                <h4 class="font-bold text-slate-800 text-sm" id="supContactTitle" data-i18n="supContactTitle">بيانات الاتصال والدعم الفني:</h4>
                                 <p class="text-slate-600">البريد الإلكتروني: <span class="font-mono text-blue-600 font-bold">azubisystem.ha@gmail.com</span></p>
                                 <p class="text-slate-600">رقم الهاتف: <span class="font-mono text-blue-600 font-bold phone-num">📞 +49 176 63160304</span></p>
                             </div>
@@ -301,7 +294,7 @@
 
         const translations = {
             de: {
-                navDash: "📊 Dashboard", navUsers: "👥 Benutzerverwaltung", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Klassen & Aufgaben", navChat: "💬 Chat & Nachrichten", navAzubi: "📓 Berichtsheft & PDF", navCal: "📅 Jahreskalender", navAbout: "ℹ️ Über uns", navHelp: "❓ Hilfe-Center",
+                navDash: "📊 Dashboard", navUsers: "👥 Benutzer & Tabellen", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Klassen & Aufgaben", navChat: "💬 Chat & Nachrichten", navAzubi: "📓 Berichtsheft & PDF", navCal: "📅 Jahreskalender", navAbout: "ℹ️ Über uns", navHelp: "❓ Hilfe-Center",
                 hdrAdmin: "Super Admin Kontrollzentrum", btnLogout: "Abmelden", welcome: "Willkommen im System, ", dashSub: "Enterprise AzubiSystem Aktiv.",
                 stat1Label: "Azubis", stat2Label: "Gesamt Benutzer", stat3Label: "Berichte", stat4Label: "System Status",
                 skillSecTitle: "⭐ Skill Matrix & Kompetenzbereiche", skillSecSub: "Getrennte Tabellen mit Noten von 1 bis 6.",
@@ -309,14 +302,16 @@
                 aiSubDesc: "Ihr KI-Assistent für Berichte und Fragen.", btnAiRun: "✨ chat AzubiSystem antworten lassen",
                 hwAdminTitle: "📚 Aufgaben für Klasse / Azubi veröffentlichen", btnPubHw: "Aufgabe veröffentlichen", hwListTitle: "📋 Aufgaben & Lösungen nach Klassen",
                 repHead: "Wochenbericht eintragen:", btnSaveRep: "Bericht speichern", pdfTitle: "Meine Berichte:", btnExportPDF: "📄 als PDF exportieren",
-                uAddTitle: "Neuen Benutzer anlegen", btnRegUser: "Registrieren", chatHeader: "💬 Chat & Vertrauliche Nachricht",
+                uAddTitle: "Neuen Azubi zur Tabelle hinzufügen", btnAddStudent: "➕ Azubi zur Tabelle hinzufügen", chatHeader: "💬 Chat & Vertrauliche Nachricht",
                 lblRecType: "Empfänger-Typ:", lblRecEmail: "E-Mail / Name:", btnSendMsg: "Senden",
                 aboutTitle: "Über AzubiSystem 🇩🇪", aboutDesc: "Spezialisierte digitale Plattform für das duale Ausbildungssystem in Deutschland nach BBiG & DSGVO.",
                 helpTitle: "Hilfe-Center & FAQ", supContactTitle: "Support-Kontaktdaten:", suppLabel: "Support Center",
-                loginSubtitle: "Duales Ausbildungssystem Portal", lblEmail: "E-Mail-Adresse", lblPass: "Passwort", lblRole: "Rolle", btnLogin: "Anmelden"
+                loginSubtitle: "Duales Ausbildungssystem Portal", lblEmail: "E-Mail-Adresse", lblPass: "Passwort", lblRole: "Rolle", btnLogin: "Anmelden",
+                classManTitle: "🏫 Klassen bearbeiten & verwalten", btnAddClass: "➕ Klasse hinzufügen", lblTargetClass: "Klasse wählen:",
+                lblTargetStudent: "Ziel-Azubi:", lblHwTitle: "Aufgabentitel:", allAzubisOpt: "Alle Azubis", welcomeUser: "Willkommen"
             },
             ar: {
-                navDash: "📊 لوحة التحكم", navUsers: "👥 إدارة المستخدمين", navSkills: "⭐ خريطة المهارات", navAI: "🤖 chat AzubiSystem", navHw: "📚 الأقسام والواجبات", navChat: "💬 المحادثات والمراسلة", navAzubi: "📓 دفتر التقارير و PDF", navCal: "📅 التقويم السنوي للأقسام", navAbout: "ℹ️ حول النظام", navHelp: "❓ مركز المساعدة",
+                navDash: "📊 لوحة التحكم", navUsers: "👥 المستخدمون والجداول", navSkills: "⭐ خريطة المهارات", navAI: "🤖 chat AzubiSystem", navHw: "📚 الأقسام والواجبات", navChat: "💬 المحادثات والمراسلة", navAzubi: "📓 دفتر التقارير و PDF", navCal: "📅 التقويم السنوي للأقسام", navAbout: "ℹ️ حول النظام", navHelp: "❓ مركز المساعدة",
                 hdrAdmin: "مركز تحكم المشرف العام", btnLogout: "تسجيل الخروج", welcome: "مرحباً بك في النظام، ", dashSub: "نظام المتدربين المؤسسي مفعل.",
                 stat1Label: "المتدربون", stat2Label: "إجمالي المستخدمين", stat3Label: "التقارير", stat4Label: "حالة النظام",
                 skillSecTitle: "⭐ خريطة المهارات والمستويات", skillSecSub: "جداول مستقلة لكل مهارة مع درجات تقييم من 1 إلى 6.",
@@ -324,14 +319,16 @@
                 aiSubDesc: "المساعد الذكي لإعداد التقارير والإجابة على استفسارات التدريب.", btnAiRun: "✨ إرسال إلى chat AzubiSystem",
                 hwAdminTitle: "📚 نشر واجب مخصص لقسم أو متدرب", btnPubHw: "نشر الواجب", hwListTitle: "📋 الواجبات المتاحة وحلول المتدربين حسب القسم",
                 repHead: "إضافة تقرير أسبوعي:", btnSaveRep: "حفظ التقرير", pdfTitle: "تقاريري:", btnExportPDF: "📄 تصدير كـ PDF",
-                uAddTitle: "تسجيل مستخدم جديد", btnRegUser: "تسجيل", chatHeader: "💬 محادثة سرية وموجهة",
+                uAddTitle: "إضافة متدرب جديد للجدول", btnAddStudent: "➕ إضافة متدرب للجدول", chatHeader: "💬 محادثة سرية وموجهة",
                 lblRecType: "نوع المستلم:", lblRecEmail: "البريد أو الاسم:", btnSendMsg: "إرسال",
                 aboutTitle: "حول نظام AzubiSystem 🇩🇪", aboutDesc: "منصة رقمية متقدمة لإدارة نظام التدريب المهني المزدوج في ألمانيا وفق معايير BBiG و DSGVO.",
                 helpTitle: "مركز المساعدة والدعم (Help Center & FAQ)", supContactTitle: "بيانات الاتصال والدعم الفني:", suppLabel: "مركز الدعم الفني",
-                loginSubtitle: "بوابة نظام التدريب المهني المزدوج", lblEmail: "البريد الإلكتروني", lblPass: "كلمة المرور", lblRole: "الصلاحية", btnLogin: "تسجيل الدخول"
+                loginSubtitle: "بوابة نظام التدريب المهني المزدوج", lblEmail: "البريد الإلكتروني", lblPass: "كلمة المرور", lblRole: "الصلاحية", btnLogin: "تسجيل الدخول",
+                classManTitle: "🏫 إدارة وتعديل الأقسام", btnAddClass: "➕ إضافة قسم", lblTargetClass: "اختر القسم:",
+                lblTargetStudent: "المتدرب المستهدف:", lblHwTitle: "عنوان الواجب:", allAzubisOpt: "جميع المتدربين (Alle Azubis)", welcomeUser: "مرحباً"
             },
             en: {
-                navDash: "📊 Dashboard", navUsers: "👥 Users", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classes & Homework", navChat: "💬 Chat & Messages", navAzubi: "📓 Report Book & PDF", navCal: "📅 Annual Calendar", navAbout: "ℹ️ About", navHelp: "❓ Help Center",
+                navDash: "📊 Dashboard", navUsers: "👥 Users & Tables", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classes & Homework", navChat: "💬 Chat & Messages", navAzubi: "📓 Report Book & PDF", navCal: "📅 Annual Calendar", navAbout: "ℹ️ About", navHelp: "❓ Help Center",
                 hdrAdmin: "Super Admin Control Center", btnLogout: "Logout", welcome: "Welcome to the system, ", dashSub: "Enterprise AzubiSystem Active.",
                 stat1Label: "Azubis", stat2Label: "Total Users", stat3Label: "Reports", stat4Label: "System Status",
                 skillSecTitle: "⭐ Skill Matrix & Competences", skillSecSub: "Individual tables with grades 1 to 6.",
@@ -339,11 +336,13 @@
                 aiSubDesc: "Your AI assistant for reports and training questions.", btnAiRun: "✨ Send to chat AzubiSystem",
                 hwAdminTitle: "📚 Publish Homework for Class / Azubi", btnPubHw: "Publish Homework", hwListTitle: "📋 Homework & Solutions by Class",
                 repHead: "Add Weekly Report:", btnSaveRep: "Save Report", pdfTitle: "My Reports:", btnExportPDF: "📄 Export as PDF",
-                uAddTitle: "Add New User", btnRegUser: "Register", chatHeader: "💬 Confidential Chat",
+                uAddTitle: "Add New Azubi to Table", btnAddStudent: "➕ Add Azubi to Table", chatHeader: "💬 Confidential Chat",
                 lblRecType: "Recipient Type:", lblRecEmail: "Email / Name:", btnSendMsg: "Send",
                 aboutTitle: "About AzubiSystem 🇩🇪", aboutDesc: "Specialized digital platform for dual vocational training in Germany.",
                 helpTitle: "Help Center & FAQ", supContactTitle: "Support Contact Data:", suppLabel: "Support Center",
-                loginSubtitle: "Dual Vocational Training Portal", lblEmail: "E-Mail Address", lblPass: "Password", lblRole: "Role", btnLogin: "Login"
+                loginSubtitle: "Dual Vocational Training Portal", lblEmail: "E-Mail Address", lblPass: "Password", lblRole: "Role", btnLogin: "Login",
+                classManTitle: "🏫 Manage Classes", btnAddClass: "➕ Add Class", lblTargetClass: "Select Class:",
+                lblTargetStudent: "Target Azubi:", lblHwTitle: "Homework Title:", allAzubisOpt: "All Azubis", welcomeUser: "Welcome"
             },
             fr: { navDash: "📊 Tableau de bord", navUsers: "👥 Utilisateurs", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classes & Devoirs", navChat: "💬 Chat", navAzubi: "📓 Carnet", navCal: "📅 Calendrier", navAbout: "ℹ️ À propos", navHelp: "❓ Aide" },
             es: { navDash: "📊 Tablero", navUsers: "👥 Usuarios", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Clases y Tareas", navChat: "💬 Chat", navAzubi: "📓 Informes", navCal: "📅 Calendario", navAbout: "ℹ️ Acerca de", navHelp: "❓ Ayuda" },
@@ -355,14 +354,21 @@
             const t = translations[lang] || translations.de;
             document.getElementById('htmlRoot').setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
             document.getElementById('htmlRoot').setAttribute('lang', lang);
-            for (let key in t) { const el = document.getElementById(key); if (el) el.innerText = t[key]; }
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) el.innerText = t[key];
+            });
+
             updateWelcomeMessage();
         }
 
         function updateWelcomeMessage() {
             if(!currentUser) return;
-            const t = translations[document.getElementById('langSwitcher').value] || translations.de;
-            document.getElementById('welcomeMsg').innerText = (t.welcome || "Welcome ") + currentUser.name + " (" + currentUser.role.toUpperCase() + ")";
+            const lang = document.getElementById('langSwitcher').value;
+            const t = translations[lang] || translations.de;
+            const welcomeText = t.welcome || "Willkommen im System, ";
+            document.getElementById('welcomeMsg').innerText = welcomeText + currentUser.name + " (" + currentUser.role.toUpperCase() + ")";
         }
 
         async function doLogin() {
@@ -376,7 +382,7 @@
                 document.getElementById('loginScreen').classList.add('hidden');
                 updateRoleUI();
                 updateWelcomeMessage();
-                loadUsers(); loadReports(); loadStats(); loadSkillTables(); loadClassesAndCalendar(); loadHomework(); loadMessages();
+                loadStudentsAndTables(); loadReports(); loadStats(); loadSkillTables(); loadClassesAndCalendar(); loadHomework(); loadMessages();
             } else { alert(data.message); }
         }
 
@@ -424,10 +430,12 @@
             const classes = await res.json();
             const select = document.getElementById('calClassFilter');
             const hwSelect = document.getElementById('hwTargetClass');
+            const studentClassSelect = document.getElementById('studentClassSelect');
+
             select.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
             if(hwSelect) hwSelect.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
+            if(studentClassSelect) studentClassSelect.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
 
-            // عرض قائمة الأقسام القابلة للتعديل في قسم الواجبات
             const classListDiv = document.getElementById('classListContainer');
             classListDiv.innerHTML = classes.map(c => `
                 <div class="flex items-center gap-1 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold">
@@ -436,11 +444,13 @@
                 </div>
             `).join('');
 
-            const userRes = await fetch('/api/users');
-            const users = await userRes.json();
+            const studentRes = await fetch('/api/students');
+            const students = await studentRes.json();
             const studentSelect = document.getElementById('hwStudent');
-            studentSelect.innerHTML = `<option value="Alle Azubis">جميع المتدربين (Alle Azubis)</option>` + 
-                users.filter(u => u.role === 'azubi').map(u => `<option value="${u.name}">${u.name}</option>`).join('');
+            const lang = document.getElementById('langSwitcher').value;
+            const allText = lang === 'ar' ? "جميع المتدربين (Alle Azubis)" : "Alle Azubis";
+            studentSelect.innerHTML = `<option value="Alle Azubis">${allText}</option>` + 
+                students.map(s => `<option value="${s.name}">${s.name} (${s.className})</option>`).join('');
 
             loadAnnualCalendar();
         }
@@ -451,15 +461,96 @@
             await fetch('/api/classes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ className: name }) });
             document.getElementById('newClassNameInput').value = "";
             loadClassesAndCalendar();
+            loadStudentsAndTables();
             alert('Neuer Klasse hinzugefügt!');
         }
 
         async function renameClassPrompt(oldName) {
-            const newName = prompt("أدخل الاسم الجديد للقسم:", oldName);
+            const newName = prompt("أدخل الاسم الجديد للقسم (Klasse):", oldName);
             if(!newName || newName === oldName) return;
             await fetch('/api/classes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'rename', oldName, newName }) });
             loadClassesAndCalendar();
+            loadStudentsAndTables();
             alert('تم تعديل اسم القسم بنجاح!');
+        }
+
+        // إدارة جداول الطلاب المستقلة لكل قسم
+        async function addNewStudent() {
+            const name = document.getElementById('studentNameInput').value;
+            const className = document.getElementById('studentClassSelect').value;
+            if(!name) return alert('Bitte Namen eingeben');
+            await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'add', name, className }) });
+            document.getElementById('studentNameInput').value = "";
+            loadStudentsAndTables();
+            loadClassesAndCalendar();
+            loadStats();
+        }
+
+        async function loadStudentsAndTables() {
+            const classRes = await fetch('/api/classes');
+            const classes = await classRes.json();
+            const studentRes = await fetch('/api/students');
+            const students = await studentRes.json();
+            const container = document.getElementById('independentClassTablesContainer');
+            container.innerHTML = "";
+
+            classes.forEach(c => {
+                const classStudents = students.filter(s => s.className === c);
+                let tableHTML = `
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-6">
+                        <div class="bg-slate-900 text-white px-6 py-3 font-bold text-sm flex justify-between items-center">
+                            <span>🏫 قسم: ${c}</span>
+                            <span class="text-xs text-blue-300 font-mono">${classStudents.length} متدرب</span>
+                        </div>
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase border-b">
+                                    <th class="py-3 px-6">Name (الاسم)</th>
+                                    <th class="py-3 px-6">Klasse (القسم)</th>
+                                    <th class="py-3 px-6 text-right">Aktionen (إجراءات)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y text-sm">
+                `;
+
+                if(classStudents.length === 0) {
+                    tableHTML += `<tr><td colspan="3" class="py-4 px-6 text-center text-xs text-slate-400">لا توجد متدربين في هذا القسم بعد (الجدول فارغ جاهز للتعبئة).</td></tr>`;
+                } else {
+                    classStudents.forEach(s => {
+                        tableHTML += `
+                            <tr class="hover:bg-slate-50">
+                                <td class="py-3 px-6 font-semibold">
+                                    <input type="text" value="${s.name}" onchange="updateStudentField(${s.id}, 'name', this.value)" class="px-2 py-1 border rounded text-sm w-full bg-slate-50 font-semibold">
+                                </td>
+                                <td class="py-3 px-6">
+                                    <input type="text" value="${s.className}" onchange="updateStudentField(${s.id}, 'className', this.value)" class="px-2 py-1 border rounded text-sm w-full bg-slate-50 font-semibold text-blue-900">
+                                </td>
+                                <td class="py-3 px-6 text-right">
+                                    <button onclick="deleteStudent(${s.id})" class="text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg font-semibold hover:bg-red-100 transition">حذف</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                tableHTML += `</tbody></table></div>`;
+                container.innerHTML += tableHTML;
+            });
+        }
+
+        async function updateStudentField(id, field, value) {
+            const payload = { action: 'edit', id };
+            payload[field] = value;
+            await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            loadClassesAndCalendar();
+        }
+
+        async function deleteStudent(id) {
+            if(!confirm('هل تريد حذف هذا المتدرب؟')) return;
+            await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', id }) });
+            loadStudentsAndTables();
+            loadClassesAndCalendar();
+            loadStats();
         }
 
         async function loadAnnualCalendar() {
@@ -613,23 +704,6 @@
         }
 
         function exportToPDF() { html2pdf().from(document.getElementById('pdfContainer')).save('Azubi_Berichtsheft.pdf'); }
-
-        async function addUser() {
-            const name = document.getElementById('newUserName').value;
-            const email = document.getElementById('newUserEmail').value;
-            const password = document.getElementById('newUserPass').value;
-            const org = document.getElementById('newUserOrg').value;
-            const role = document.getElementById('newUserRole').value;
-            if(!name || !email) return;
-            await fetch('/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password, org, role }) });
-            loadUsers(); alert('Registriert!');
-        }
-
-        async function loadUsers() {
-            const res = await fetch('/api/users');
-            const users = await res.json();
-            document.getElementById('userTableBody').innerHTML = users.map(u => `<tr><td class="py-3 px-6 font-semibold">${u.name}</td><td class="py-3 px-6 text-slate-500">${u.email}</td><td class="py-3 px-6">${u.org}</td><td class="py-3 px-6">${u.role}</td><td class="py-3 px-6 font-mono text-blue-600 font-bold">${u.code}</td></tr>`).join('');
-        }
 
         async function sendMessage() {
             const input = document.getElementById('chatInput');
