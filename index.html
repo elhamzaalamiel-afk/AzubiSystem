@@ -43,8 +43,8 @@
                 <div>
                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1" data-i18n="lblRole">Rolle</label>
                     <select id="roleSelector" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm bg-white font-semibold focus:ring-2 focus:ring-blue-600 focus:outline-none">
-                        <option value="admin">Super Admin</option>
-                        <option value="azubi">Azubi</option>
+                        <option value="admin">Super Admin / Ausbilder</option>
+                        <option value="azubi">Azubi (متدرب)</option>
                     </select>
                 </div>
                 <button type="button" onclick="doLogin()" id="btnLogin" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition shadow-md" data-i18n="btnLogin">Anmelden</button>
@@ -65,7 +65,8 @@
                 <nav class="mt-4 px-3 space-y-1 text-sm">
                     <div id="adminNav" class="space-y-1">
                         <a href="#" onclick="switchTab('dashboard')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navDash">📊 لوحة التحكم</a>
-                        <a href="#" onclick="switchTab('users')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navUsers">👥 إدارة المستخدمين والجداول</a>
+                        <a href="#" onclick="switchTab('students')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navStudents">🎓 إدارة المتدربين والملفات</a>
+                        <a href="#" onclick="switchTab('admins')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAdmins">👤 إدارة المسؤولين (Ausbilder)</a>
                         <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navSkills">⭐ خريطة المهارات</a>
                         <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAI">🤖 chat AzubiSystem</a>
                         <a href="#" onclick="switchTab('homework')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navHw">📚 الأقسام والواجبات</a>
@@ -78,7 +79,7 @@
                         <a href="#" onclick="switchTab('homework')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navHw">📚 الأقسام والواجبات</a>
                         <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navChat">💬 المحادثات والمراسلة</a>
                     </div>
-                    <a href="#" onclick="switchTab('calendar')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navCal">📅 التقويم السنوي للأقسام</a>
+                    <a href="#" onclick="switchTab('calendar')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navCal">📅 التقويم السنوي المتقدم للأقسام</a>
                     <a href="#" onclick="switchTab('about')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAbout">ℹ️ حول النظام</a>
                     <a href="#" onclick="switchTab('help')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navHelp">❓ مركز المساعدة</a>
                 </nav>
@@ -117,13 +118,66 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat1Label">المتدربون</span><div class="text-2xl font-black text-slate-800 mt-1" id="statAzubis">0</div></div>
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat2Label">إجمالي المستخدمين</span><div class="text-2xl font-black text-slate-800 mt-1" id="statUsers">1</div></div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat2Label">المسؤولون (Ausbilder)</span><div class="text-2xl font-black text-slate-800 mt-1" id="statAdmins">1</div></div>
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat3Label">التقارير</span><div class="text-2xl font-black text-blue-600 mt-1" id="statReports">0</div></div>
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat4Label">حالة النظام</span><div class="text-xs font-bold text-emerald-600 mt-2 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live & Secure</div></div>
                     </div>
                 </div>
 
-                <!-- 2. خريطة المهارات -->
+                <!-- 2. إدارة المتدربين الشاملة (بطاقات ومعلومات تفصيلية) -->
+                <div id="tab-students" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                        <h3 class="text-lg font-bold text-slate-900" data-i18n="studSecTitle">🎓 إدارة بيانات المتدربين الشاملة والملفات الشخصية</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-4 rounded-xl border">
+                            <input type="text" id="addStudName" placeholder="الاسم الكامل (Name)..." class="px-3 py-2 border rounded-xl text-xs bg-white">
+                            <input type="email" id="addStudEmail" placeholder="البريد الإلكتروني..." class="px-3 py-2 border rounded-xl text-xs bg-white">
+                            <select id="addStudClass" class="px-3 py-2 border rounded-xl text-xs bg-white"></select>
+                            <input type="text" id="addStudPhone" placeholder="رقم الهاتف..." class="px-3 py-2 border rounded-xl text-xs bg-white phone-num">
+                            <input type="text" id="addStudBirth" placeholder="تاريخ الميلاد (01.01.2000)..." class="px-3 py-2 border rounded-xl text-xs bg-white">
+                            <button onclick="addNewStudentFull()" class="bg-blue-600 text-white font-semibold text-xs py-2 rounded-xl shadow-md" data-i18n="btnAddStud">➕ إضافة متدرب جديد</button>
+                        </div>
+                        <div id="studentCardsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2"></div>
+                    </div>
+                </div>
+
+                <!-- نافذة منسدلة / تفصيلية لمعلومات الطالب -->
+                <div id="studentDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+                    <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg border border-slate-200 space-y-4">
+                        <div class="flex justify-between items-center border-b pb-3">
+                            <h4 class="font-bold text-base text-slate-900" id="modalStudTitle">تفاصيل المتدرب</h4>
+                            <button onclick="closeStudentModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+                        </div>
+                        <div id="modalStudBody" class="space-y-3 text-xs"></div>
+                        <div class="flex justify-end pt-2">
+                            <button onclick="closeStudentModal()" class="bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-bold">إغلاق</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. إدارة المسؤولين (Ausbilder / Super Admin) -->
+                <div id="tab-admins" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                        <h3 class="text-lg font-bold text-slate-900" data-i18n="adminSecTitle">👤 إدارة المسؤولين والمشرفين (Ausbilder / Super Admin)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-4 rounded-xl border">
+                            <input type="text" id="admName" placeholder="اسم المسؤول..." class="px-3 py-2 border rounded-xl text-xs bg-white">
+                            <input type="email" id="admEmail" placeholder="البريد الإلكتروني..." class="px-3 py-2 border rounded-xl text-xs bg-white">
+                            <input type="text" id="admRole" placeholder="الصلاحية (Ausbilder)..." class="px-3 py-2 border rounded-xl text-xs bg-white" value="Ausbilder">
+                            <input type="text" id="admPhone" placeholder="رقم الهاتف..." class="px-3 py-2 border rounded-xl text-xs bg-white phone-num">
+                            <input type="text" id="admOrg" placeholder="الشركة / القسم..." class="px-3 py-2 border rounded-xl text-xs bg-white">
+                            <button onclick="addNewAdmin()" class="bg-emerald-600 text-white font-semibold text-xs py-2 rounded-xl shadow-md" data-i18n="btnAddAdmin">➕ إضافة مسؤول</button>
+                        </div>
+                        <div class="overflow-hidden border rounded-xl">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead class="bg-slate-100 text-slate-600 uppercase border-b">
+                                    <tr><th class="py-3 px-4">Name</th><th class="py-3 px-4">E-Mail</th><th class="py-3 px-4">Rolle</th><th class="py-3 px-4">Telefon</th><th class="py-3 px-4">Organisation</th></tr>
+                                </thead>
+                                <tbody id="adminTableBody" class="divide-y"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. خريطة المهارات -->
                 <div id="tab-skills" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <div>
@@ -134,13 +188,13 @@
                     </div>
                 </div>
 
-                <!-- 3. التقويم السنوي للأقسام -->
+                <!-- 5. التقويم السنوي المتقدم للأقسام -->
                 <div id="tab-calendar" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h3 class="text-lg font-bold text-slate-800" data-i18n="calSecTitle">📅 التقويم السنوي حسب الأقسام</h3>
-                                <p class="text-xs text-slate-500" data-i18n="calSecSub">اختر القسم وحدد جدول العمل والدراسة لكل شهر.</p>
+                                <h3 class="text-lg font-bold text-slate-800" data-i18n="calSecTitle">📅 التقويم السنوي المتقدم للأقسام (الفترات الزمنية)</h3>
+                                <p class="text-xs text-slate-500" data-i18n="calSecSub">اختر القسم وحدد الفترات الزمنية ومراحل التدريب (Betrieb, Schule, Prüfung, Praxis).</p>
                             </div>
                             <select id="calClassFilter" onchange="loadAnnualCalendar()" class="px-3 py-2 border rounded-xl text-xs bg-white font-bold text-blue-900"></select>
                         </div>
@@ -148,7 +202,7 @@
                     </div>
                 </div>
 
-                <!-- 4. المساعد الذكي -->
+                <!-- 6. المساعد الذكي -->
                 <div id="tab-ai-assistant" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                         <div class="flex items-center gap-3">
@@ -166,7 +220,7 @@
                     </div>
                 </div>
 
-                <!-- 5. الأقسام والواجبات -->
+                <!-- 7. الأقسام والواجبات -->
                 <div id="tab-homework" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <div class="space-y-4 border-b pb-6">
@@ -210,7 +264,7 @@
                     </div>
                 </div>
 
-                <!-- 6. بوابة المتدرب و PDF -->
+                <!-- 8. بوابة المتدرب و PDF -->
                 <div id="tab-azubi-portal" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                         <h4 class="font-bold text-slate-800 text-sm" data-i18n="repHead">إضافة تقرير أسبوعي:</h4>
@@ -227,22 +281,7 @@
                     </div>
                 </div>
 
-                <!-- 7. إدارة المستخدمين والجداول المستقلة لكل قسم -->
-                <div id="tab-users" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                        <h3 class="text-base font-bold text-slate-800" data-i18n="uAddTitle">إضافة متدرب جديد إلى القسم (Name & Klasse)</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" id="studentNameInput" placeholder="اسم المتدرب (Name)..." class="px-4 py-2 border rounded-xl text-sm">
-                            <select id="studentClassSelect" class="px-4 py-2 border rounded-xl text-sm bg-white"></select>
-                            <button type="button" onclick="addNewStudent()" class="bg-blue-600 text-white font-semibold py-2 rounded-xl text-sm" data-i18n="btnAddStudent">➕ إضافة المتدرب للجدول</button>
-                        </div>
-                    </div>
-
-                    <!-- حاوية الجداول المستقلة لكل قسم على حده -->
-                    <div id="independentClassTablesContainer" class="space-y-6"></div>
-                </div>
-
-                <!-- 8. المراسلات -->
+                <!-- 9. المراسلات -->
                 <div id="tab-messages" class="hidden space-y-6">
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[580px]">
                         <div class="p-4 bg-slate-900 text-white flex justify-between items-center"><h3 class="font-bold text-sm" id="chatHeader" data-i18n="chatHeader">💬 محادثة سرية وموجهة</h3><span class="text-xs text-blue-300">مشفّر</span></div>
@@ -255,7 +294,7 @@
                     </div>
                 </div>
 
-                <!-- 9. حول النظام -->
+                <!-- 10. حول النظام -->
                 <div id="tab-about" class="hidden space-y-6">
                     <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <h3 class="text-2xl font-bold text-slate-900" id="aboutTitle" data-i18n="aboutTitle">حول نظام AzubiSystem 🇩🇪</h3>
@@ -265,7 +304,7 @@
                     </div>
                 </div>
 
-                <!-- 10. مركز المساعدة -->
+                <!-- 11. مركز المساعدة -->
                 <div id="tab-help" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <h3 class="text-xl font-bold text-slate-900" id="helpTitle" data-i18n="helpTitle">مركز المساعدة والدعم (Help Center & FAQ)</h3>
@@ -273,8 +312,8 @@
                             <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl space-y-3">
                                 <p class="font-bold text-slate-900" data-i18n="faq1Q">1. كيف أقوم بتسجيل التقارير الأسبوعية (Berichtsheft)؟</p>
                                 <p class="text-slate-600" data-i18n="faq1A">من خلال الانتقال إلى دفتر التقارير وتعبئة الأسبوع والمهام ثم الحفظ والتصدير كـ PDF.</p>
-                                <p class="font-bold text-slate-900 pt-2 border-t border-blue-200" data-i18n="faq2Q">2. كيف يتم إدارة وتعديل أسماء الأقسام والطلاب؟</p>
-                                <p class="text-slate-600" data-i18n="faq2A">من قسم "إدارة المستخدمين والجداول"، يمكنك إضافة الطلاب في جداول مستقلة لكل قسم، وتعديل الأسماء والأقسام بحرية تامة.</p>
+                                <p class="font-bold text-slate-900 pt-2 border-t border-blue-200" data-i18n="faq2Q">2. كيف يتم إدارة المتدربين والمسؤولين والتقويم؟</p>
+                                <p class="text-slate-600" data-i18n="faq2A">عبر الأقسام المخصصة في القائمة الجانبية لإدارة الملفات والتقويم السنوي المتقدم.</p>
                             </div>
                             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                                 <h4 class="font-bold text-slate-800 text-sm" id="supContactTitle" data-i18n="supContactTitle">بيانات الاتصال والدعم الفني:</h4>
@@ -294,16 +333,15 @@
 
         const translations = {
             de: {
-                navDash: "📊 Dashboard", navUsers: "👥 Benutzer & Tabellen", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Klassen & Aufgaben", navChat: "💬 Chat & Nachrichten", navAzubi: "📓 Berichtsheft & PDF", navCal: "📅 Jahreskalender", navAbout: "ℹ️ Über uns", navHelp: "❓ Hilfe-Center",
+                navDash: "📊 Dashboard", navStudents: "🎓 Azubi Profile", navAdmins: "👤 Ausbilder & Admin", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Klassen & Aufgaben", navChat: "💬 Nachrichten", navAzubi: "📓 Berichtsheft & PDF", navCal: "📅 Jahreskalender", navAbout: "ℹ️ Über uns", navHelp: "❓ Hilfe-Center",
                 hdrAdmin: "Super Admin Kontrollzentrum", btnLogout: "Abmelden", welcome: "Willkommen im System, ", dashSub: "Enterprise AzubiSystem Aktiv.",
-                stat1Label: "Azubis", stat2Label: "Gesamt Benutzer", stat3Label: "Berichte", stat4Label: "System Status",
+                stat1Label: "Azubis", stat2Label: "Ausbilder", stat3Label: "Berichte", stat4Label: "System Status",
+                studSecTitle: "👥 Azubi Verwaltung & Profildaten", btnAddStud: "➕ Azubi hinzufügen", adminSecTitle: "👤 Ausbilder & Admin Verwaltung", btnAddAdmin: "➕ Ausbilder hinzufügen",
                 skillSecTitle: "⭐ Skill Matrix & Kompetenzbereiche", skillSecSub: "Getrennte Tabellen mit Noten von 1 bis 6.",
-                calSecTitle: "📅 Jahreskalender nach Klassen", calSecSub: "Monatsplanung für Betrieb, Schule oder Orientierung.",
+                calSecTitle: "📅 Erweiterter Jahreskalender nach Klassen", calSecSub: "Monatsplanung mit Zeiträumen für Betrieb, Schule oder Prüfung.",
                 aiSubDesc: "Ihr KI-Assistent für Berichte und Fragen.", btnAiRun: "✨ chat AzubiSystem antworten lassen",
                 hwAdminTitle: "📚 Aufgaben für Klasse / Azubi veröffentlichen", btnPubHw: "Aufgabe veröffentlichen", hwListTitle: "📋 Aufgaben & Lösungen nach Klassen",
                 repHead: "Wochenbericht eintragen:", btnSaveRep: "Bericht speichern", pdfTitle: "Meine Berichte:", btnExportPDF: "📄 als PDF exportieren",
-                uAddTitle: "Neuen Azubi zur Tabelle hinzufügen", btnAddStudent: "➕ Azubi zur Tabelle hinzufügen", chatHeader: "💬 Chat & Vertrauliche Nachricht",
-                lblRecType: "Empfänger-Typ:", lblRecEmail: "E-Mail / Name:", btnSendMsg: "Senden",
                 aboutTitle: "Über AzubiSystem 🇩🇪", aboutDesc: "Spezialisierte digitale Plattform für das duale Ausbildungssystem in Deutschland nach BBiG & DSGVO.",
                 helpTitle: "Hilfe-Center & FAQ", supContactTitle: "Support-Kontaktdaten:", suppLabel: "Support Center",
                 loginSubtitle: "Duales Ausbildungssystem Portal", lblEmail: "E-Mail-Adresse", lblPass: "Passwort", lblRole: "Rolle", btnLogin: "Anmelden",
@@ -311,16 +349,15 @@
                 lblTargetStudent: "Ziel-Azubi:", lblHwTitle: "Aufgabentitel:", allAzubisOpt: "Alle Azubis", welcomeUser: "Willkommen"
             },
             ar: {
-                navDash: "📊 لوحة التحكم", navUsers: "👥 المستخدمون والجداول", navSkills: "⭐ خريطة المهارات", navAI: "🤖 chat AzubiSystem", navHw: "📚 الأقسام والواجبات", navChat: "💬 المحادثات والمراسلة", navAzubi: "📓 دفتر التقارير و PDF", navCal: "📅 التقويم السنوي للأقسام", navAbout: "ℹ️ حول النظام", navHelp: "❓ مركز المساعدة",
+                navDash: "📊 لوحة التحكم", navStudents: "🎓 ملفات المتدربين", navAdmins: "👤 إدارة المسؤولين", navSkills: "⭐ خريطة المهارات", navAI: "🤖 chat AzubiSystem", navHw: "📚 الأقسام والواجبات", navChat: "💬 المحادثات والمراسلة", navAzubi: "📓 دفتر التقارير و PDF", navCal: "📅 التقويم السنوي المتقدم", navAbout: "ℹ️ حول النظام", navHelp: "❓ مركز المساعدة",
                 hdrAdmin: "مركز تحكم المشرف العام", btnLogout: "تسجيل الخروج", welcome: "مرحباً بك في النظام، ", dashSub: "نظام المتدربين المؤسسي مفعل.",
-                stat1Label: "المتدربون", stat2Label: "إجمالي المستخدمين", stat3Label: "التقارير", stat4Label: "حالة النظام",
+                stat1Label: "المتدربون", stat2Label: "المسؤولون", stat3Label: "التقارير", stat4Label: "حالة النظام",
+                studSecTitle: "🎓 إدارة بيانات المتدربين الشاملة والملفات", btnAddStud: "➕ إضافة متدرب جديد", adminSecTitle: "👤 إدارة المسؤولين والمشرفين (Ausbilder)", btnAddAdmin: "➕ إضافة مسؤول",
                 skillSecTitle: "⭐ خريطة المهارات والمستويات", skillSecSub: "جداول مستقلة لكل مهارة مع درجات تقييم من 1 إلى 6.",
-                calSecTitle: "📅 التقويم السنوي حسب الأقسام", calSecSub: "اختر القسم وحدد جدول العمل والدراسة لكل شهر.",
+                calSecTitle: "📅 التقويم السنوي المتقدم للأقسام (الفترات الزمنية)", calSecSub: "اختر القسم وحدد الفترات الزمنية ومراحل التدريب.",
                 aiSubDesc: "المساعد الذكي لإعداد التقارير والإجابة على استفسارات التدريب.", btnAiRun: "✨ إرسال إلى chat AzubiSystem",
                 hwAdminTitle: "📚 نشر واجب مخصص لقسم أو متدرب", btnPubHw: "نشر الواجب", hwListTitle: "📋 الواجبات المتاحة وحلول المتدربين حسب القسم",
                 repHead: "إضافة تقرير أسبوعي:", btnSaveRep: "حفظ التقرير", pdfTitle: "تقاريري:", btnExportPDF: "📄 تصدير كـ PDF",
-                uAddTitle: "إضافة متدرب جديد للجدول", btnAddStudent: "➕ إضافة متدرب للجدول", chatHeader: "💬 محادثة سرية وموجهة",
-                lblRecType: "نوع المستلم:", lblRecEmail: "البريد أو الاسم:", btnSendMsg: "إرسال",
                 aboutTitle: "حول نظام AzubiSystem 🇩🇪", aboutDesc: "منصة رقمية متقدمة لإدارة نظام التدريب المهني المزدوج في ألمانيا وفق معايير BBiG و DSGVO.",
                 helpTitle: "مركز المساعدة والدعم (Help Center & FAQ)", supContactTitle: "بيانات الاتصال والدعم الفني:", suppLabel: "مركز الدعم الفني",
                 loginSubtitle: "بوابة نظام التدريب المهني المزدوج", lblEmail: "البريد الإلكتروني", lblPass: "كلمة المرور", lblRole: "الصلاحية", btnLogin: "تسجيل الدخول",
@@ -328,26 +365,25 @@
                 lblTargetStudent: "المتدرب المستهدف:", lblHwTitle: "عنوان الواجب:", allAzubisOpt: "جميع المتدربين (Alle Azubis)", welcomeUser: "مرحباً"
             },
             en: {
-                navDash: "📊 Dashboard", navUsers: "👥 Users & Tables", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classes & Homework", navChat: "💬 Chat & Messages", navAzubi: "📓 Report Book & PDF", navCal: "📅 Annual Calendar", navAbout: "ℹ️ About", navHelp: "❓ Help Center",
+                navDash: "📊 Dashboard", navStudents: "🎓 Azubi Profiles", navAdmins: "👤 Ausbilder & Admin", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classes & Homework", navChat: "💬 Messages", navAzubi: "📓 Report Book & PDF", navCal: "📅 Annual Calendar", navAbout: "ℹ️ About", navHelp: "❓ Help Center",
                 hdrAdmin: "Super Admin Control Center", btnLogout: "Logout", welcome: "Welcome to the system, ", dashSub: "Enterprise AzubiSystem Active.",
-                stat1Label: "Azubis", stat2Label: "Total Users", stat3Label: "Reports", stat4Label: "System Status",
+                stat1Label: "Azubis", stat2Label: "Ausbilder", stat3Label: "Reports", stat4Label: "System Status",
+                studSecTitle: "🎓 Azubi Comprehensive Profiles", btnAddStud: "➕ Add Azubi", adminSecTitle: "👤 Ausbilder Management", btnAddAdmin: "➕ Add Ausbilder",
                 skillSecTitle: "⭐ Skill Matrix & Competences", skillSecSub: "Individual tables with grades 1 to 6.",
-                calSecTitle: "📅 Annual Calendar by Classes", calSecSub: "Monthly planning for company, school or orientation.",
+                calSecTitle: "📅 Advanced Annual Calendar by Classes", calSecSub: "Monthly planning with timeframes for company, school or exam.",
                 aiSubDesc: "Your AI assistant for reports and training questions.", btnAiRun: "✨ Send to chat AzubiSystem",
                 hwAdminTitle: "📚 Publish Homework for Class / Azubi", btnPubHw: "Publish Homework", hwListTitle: "📋 Homework & Solutions by Class",
                 repHead: "Add Weekly Report:", btnSaveRep: "Save Report", pdfTitle: "My Reports:", btnExportPDF: "📄 Export as PDF",
-                uAddTitle: "Add New Azubi to Table", btnAddStudent: "➕ Add Azubi to Table", chatHeader: "💬 Confidential Chat",
-                lblRecType: "Recipient Type:", lblRecEmail: "Email / Name:", btnSendMsg: "Send",
                 aboutTitle: "About AzubiSystem 🇩🇪", aboutDesc: "Specialized digital platform for dual vocational training in Germany.",
                 helpTitle: "Help Center & FAQ", supContactTitle: "Support Contact Data:", suppLabel: "Support Center",
                 loginSubtitle: "Dual Vocational Training Portal", lblEmail: "E-Mail Address", lblPass: "Password", lblRole: "Role", btnLogin: "Login",
                 classManTitle: "🏫 Manage Classes", btnAddClass: "➕ Add Class", lblTargetClass: "Select Class:",
                 lblTargetStudent: "Target Azubi:", lblHwTitle: "Homework Title:", allAzubisOpt: "All Azubis", welcomeUser: "Welcome"
             },
-            fr: { navDash: "📊 Tableau de bord", navUsers: "👥 Utilisateurs", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classes & Devoirs", navChat: "💬 Chat", navAzubi: "📓 Carnet", navCal: "📅 Calendrier", navAbout: "ℹ️ À propos", navHelp: "❓ Aide" },
-            es: { navDash: "📊 Tablero", navUsers: "👥 Usuarios", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Clases y Tareas", navChat: "💬 Chat", navAzubi: "📓 Informes", navCal: "📅 Calendario", navAbout: "ℹ️ Acerca de", navHelp: "❓ Ayuda" },
-            it: { navDash: "📊 Dashboard", navUsers: "👥 Utenti", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classi e Compiti", navChat: "💬 Chat", navAzubi: "📓 Rapporti", navCal: "📅 Calendario", navAbout: "ℹ️ Chi siamo", navHelp: "❓ Aiuto" },
-            tr: { navDash: "📊 Gösterge Paneli", navUsers: "👥 Kullanıcılar", navSkills: "⭐ Yetenek Matrisi", navAI: "🤖 chat AzubiSystem", navHw: "📚 Sınıflar ve Ödevler", navChat: "💬 Sohbet", navAzubi: "📓 Rapor", navCal: "📅 Yıllık Takvim", navAbout: "ℹ️ Hakkında", navHelp: "❓ Yardım" }
+            fr: { navDash: "📊 Tableau de bord", navStudents: "🎓 Azubis", navAdmins: "👤 Ausbilder", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classes & Devoirs", navChat: "💬 Chat", navAzubi: "📓 Carnet", navCal: "📅 Calendrier", navAbout: "ℹ️ À propos", navHelp: "❓ Aide" },
+            es: { navDash: "📊 Tablero", navStudents: "🎓 Azubis", navAdmins: "👤 Ausbilder", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Clases y Tareas", navChat: "💬 Chat", navAzubi: "📓 Informes", navCal: "📅 Calendario", navAbout: "ℹ️ Acerca de", navHelp: "❓ Ayuda" },
+            it: { navDash: "📊 Dashboard", navStudents: "🎓 Azubis", navAdmins: "👤 Ausbilder", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classi e Compiti", navChat: "💬 Chat", navAzubi: "📓 Rapporti", navCal: "📅 Calendario", navAbout: "ℹ️ Chi siamo", navHelp: "❓ Aiuto" },
+            tr: { navDash: "📊 Gösterge Paneli", navStudents: "🎓 Azubis", navAdmins: "👤 Ausbilder", navSkills: "⭐ Yetenek Matrisi", navAI: "🤖 chat AzubiSystem", navHw: "📚 Sınıflar ve Ödevler", navChat: "💬 Sohbet", navAzubi: "📓 Rapor", navCal: "📅 Yıllık Takvim", navAbout: "ℹ️ Hakkında", navHelp: "❓ Yardım" }
         };
 
         function changeLanguage(lang) {
@@ -382,7 +418,7 @@
                 document.getElementById('loginScreen').classList.add('hidden');
                 updateRoleUI();
                 updateWelcomeMessage();
-                loadStudentsAndTables(); loadReports(); loadStats(); loadSkillTables(); loadClassesAndCalendar(); loadHomework(); loadMessages();
+                loadAdmins(); loadStudentsAndCards(); loadReports(); loadStats(); loadSkillTables(); loadClassesAndCalendar(); loadHomework(); loadMessages();
             } else { alert(data.message); }
         }
 
@@ -390,7 +426,7 @@
             const res = await fetch('/api/stats');
             const stats = await res.json();
             document.getElementById('statAzubis').innerText = stats.totalAzubis;
-            document.getElementById('statUsers').innerText = stats.totalUsers;
+            document.getElementById('statAdmins').innerText = stats.totalAdmins;
             document.getElementById('statReports').innerText = stats.totalReports;
         }
 
@@ -413,7 +449,7 @@
         }
 
         function switchTab(tabId) {
-            ['dashboard', 'azubi-portal', 'ai-assistant', 'skills', 'calendar', 'users', 'homework', 'messages', 'about', 'help'].forEach(id => {
+            ['dashboard', 'students', 'admins', 'azubi-portal', 'ai-assistant', 'skills', 'calendar', 'homework', 'messages', 'about', 'help'].forEach(id => {
                 const el = document.getElementById('tab-' + id);
                 if(el) el.classList.add('hidden');
             });
@@ -430,11 +466,11 @@
             const classes = await res.json();
             const select = document.getElementById('calClassFilter');
             const hwSelect = document.getElementById('hwTargetClass');
-            const studentClassSelect = document.getElementById('studentClassSelect');
+            const studClassSel = document.getElementById('addStudClass');
 
             select.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
             if(hwSelect) hwSelect.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
-            if(studentClassSelect) studentClassSelect.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
+            if(studClassSel) studClassSel.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
 
             const classListDiv = document.getElementById('classListContainer');
             classListDiv.innerHTML = classes.map(c => `
@@ -461,7 +497,6 @@
             await fetch('/api/classes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ className: name }) });
             document.getElementById('newClassNameInput').value = "";
             loadClassesAndCalendar();
-            loadStudentsAndTables();
             alert('Neuer Klasse hinzugefügt!');
         }
 
@@ -470,85 +505,127 @@
             if(!newName || newName === oldName) return;
             await fetch('/api/classes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'rename', oldName, newName }) });
             loadClassesAndCalendar();
-            loadStudentsAndTables();
+            loadStudentsAndCards();
             alert('تم تعديل اسم القسم بنجاح!');
         }
 
-        // إدارة جداول الطلاب المستقلة لكل قسم
-        async function addNewStudent() {
-            const name = document.getElementById('studentNameInput').value;
-            const className = document.getElementById('studentClassSelect').value;
+        // إدارة المسؤولين
+        async function addNewAdmin() {
+            const name = document.getElementById('admName').value;
+            const email = document.getElementById('admEmail').value;
+            const role = document.getElementById('admRole').value;
+            const phone = document.getElementById('admPhone').value;
+            const org = document.getElementById('admOrg').value;
+            if(!name || !email) return alert('Bitte Name und E-Mail eingeben');
+            await fetch('/api/admins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, role, phone, org }) });
+            document.getElementById('admName').value = "";
+            document.getElementById('admEmail').value = "";
+            document.getElementById('admPhone').value = "";
+            document.getElementById('admOrg').value = "";
+            loadAdmins();
+            loadStats();
+            alert('Ausbilder hinzugefügt!');
+        }
+
+        async function loadAdmins() {
+            const res = await fetch('/api/admins');
+            const admins = await res.json();
+            document.getElementById('adminTableBody').innerHTML = admins.map(a => `
+                <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-semibold">${a.name}</td>
+                    <td class="py-3 px-4 text-slate-500">${a.email}</td>
+                    <td class="py-3 px-4 font-bold text-blue-800">${a.role}</td>
+                    <td class="py-3 px-4 phone-num font-mono">${a.phone}</td>
+                    <td class="py-3 px-4">${a.org}</td>
+                </tr>
+            `).join('');
+        }
+
+        // إدارة المتدربين والبطاقات التفصيلية
+        async function addNewStudentFull() {
+            const name = document.getElementById('addStudName').value;
+            const email = document.getElementById('addStudEmail').value;
+            const className = document.getElementById('addStudClass').value;
+            const phone = document.getElementById('addStudPhone').value;
+            const birthdate = document.getElementById('addStudBirth').value;
             if(!name) return alert('Bitte Namen eingeben');
-            await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'add', name, className }) });
-            document.getElementById('studentNameInput').value = "";
-            loadStudentsAndTables();
+            await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'add', name, email, className, phone, birthdate, address: "Deutschland", notes: "Regulärer Auszubildender" }) });
+            document.getElementById('addStudName').value = "";
+            document.getElementById('addStudEmail').value = "";
+            document.getElementById('addStudPhone').value = "";
+            document.getElementById('addStudBirth').value = "";
+            loadStudentsAndCards();
             loadClassesAndCalendar();
             loadStats();
+            alert('Azubi erfolgreich hinzugefügt!');
         }
 
-        async function loadStudentsAndTables() {
-            const classRes = await fetch('/api/classes');
-            const classes = await classRes.json();
-            const studentRes = await fetch('/api/students');
-            const students = await studentRes.json();
-            const container = document.getElementById('independentClassTablesContainer');
-            container.innerHTML = "";
+        async function loadStudentsAndCards() {
+            const res = await fetch('/api/students');
+            const students = await res.json();
+            const grid = document.getElementById('studentCardsGrid');
+            if(students.length === 0) { grid.innerHTML = '<p class="text-xs text-slate-400">Keine Azubis vorhanden.</p>'; return; }
 
-            classes.forEach(c => {
-                const classStudents = students.filter(s => s.className === c);
-                let tableHTML = `
-                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-6">
-                        <div class="bg-slate-900 text-white px-6 py-3 font-bold text-sm flex justify-between items-center">
-                            <span>🏫 قسم: ${c}</span>
-                            <span class="text-xs text-blue-300 font-mono">${classStudents.length} متدرب</span>
-                        </div>
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase border-b">
-                                    <th class="py-3 px-6">Name (الاسم)</th>
-                                    <th class="py-3 px-6">Klasse (القسم)</th>
-                                    <th class="py-3 px-6 text-right">Aktionen (إجراءات)</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y text-sm">
-                `;
-
-                if(classStudents.length === 0) {
-                    tableHTML += `<tr><td colspan="3" class="py-4 px-6 text-center text-xs text-slate-400">لا توجد متدربين في هذا القسم بعد (الجدول فارغ جاهز للتعبئة).</td></tr>`;
-                } else {
-                    classStudents.forEach(s => {
-                        tableHTML += `
-                            <tr class="hover:bg-slate-50">
-                                <td class="py-3 px-6 font-semibold">
-                                    <input type="text" value="${s.name}" onchange="updateStudentField(${s.id}, 'name', this.value)" class="px-2 py-1 border rounded text-sm w-full bg-slate-50 font-semibold">
-                                </td>
-                                <td class="py-3 px-6">
-                                    <input type="text" value="${s.className}" onchange="updateStudentField(${s.id}, 'className', this.value)" class="px-2 py-1 border rounded text-sm w-full bg-slate-50 font-semibold text-blue-900">
-                                </td>
-                                <td class="py-3 px-6 text-right">
-                                    <button onclick="deleteStudent(${s.id})" class="text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg font-semibold hover:bg-red-100 transition">حذف</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
-
-                tableHTML += `</tbody></table></div>`;
-                container.innerHTML += tableHTML;
-            });
+            grid.innerHTML = students.map(s => `
+                <div onclick="openStudentModal(${s.id})" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition cursor-pointer space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs bg-blue-900 text-white px-2 py-0.5 rounded font-bold">${s.className}</span>
+                        <span class="text-[10px] text-slate-400 font-mono">ID: ${s.id.toString().slice(-4)}</span>
+                    </div>
+                    <h5 class="font-bold text-sm text-slate-900">${s.name}</h5>
+                    <p class="text-xs text-slate-500">${s.email}</p>
+                    <div class="pt-2 border-t flex justify-between items-center text-[11px] text-blue-600 font-semibold">
+                        <span>تفاصيل الملف الشخصي ➔</span>
+                    </div>
+                </div>
+            `).join('');
+            window.allStudentsCache = students;
         }
 
-        async function updateStudentField(id, field, value) {
-            const payload = { action: 'edit', id };
-            payload[field] = value;
-            await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        function openStudentModal(id) {
+            const s = window.allStudentsCache.find(x => x.id === id);
+            if(!s) return;
+            document.getElementById('modalStudTitle').innerText = "الملف الشخصي: " + s.name;
+            document.getElementById('modalStudBody').innerHTML = `
+                <div class="space-y-2">
+                    <p><strong>الاسم الكامل (Name):</strong> <input type="text" id="m_name" value="${s.name}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 font-semibold"></p>
+                    <p><strong>البريد الإلكتروني (E-Mail):</strong> <input type="text" id="m_email" value="${s.email}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50"></p>
+                    <p><strong>القسم (Klasse):</strong> <input type="text" id="m_class" value="${s.className}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 font-semibold text-blue-900"></p>
+                    <p><strong>رقم الهاتف (Telefon):</strong> <input type="text" id="m_phone" value="${s.phone}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 phone-num"></p>
+                    <p><strong>تاريخ الميلاد (Geburtsdatum):</strong> <input type="text" id="m_birth" value="${s.birthdate}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50"></p>
+                    <p><strong>العنوان (Adresse):</strong> <input type="text" id="m_addr" value="${s.address}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50"></p>
+                    <p><strong>ملاحظات التدريب (Notizen):</strong> <textarea id="m_notes" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 h-16">${s.notes}</textarea></p>
+                    <button onclick="saveStudentModal(${s.id})" class="w-full bg-emerald-600 text-white font-semibold py-2 rounded-xl text-xs mt-2 shadow">حفظ التعديلات</button>
+                    <button onclick="deleteStudent(${s.id})" class="w-full bg-red-50 text-red-600 border border-red-200 font-semibold py-1.5 rounded-xl text-xs mt-1">حذف المتدرب</button>
+                </div>
+            `;
+            document.getElementById('studentDetailModal').classList.remove('hidden');
+        }
+
+        function closeStudentModal() {
+            document.getElementById('studentDetailModal').classList.add('hidden');
+        }
+
+        async function saveStudentModal(id) {
+            const name = document.getElementById('m_name').value;
+            const email = document.getElementById('m_email').value;
+            const className = document.getElementById('m_class').value;
+            const phone = document.getElementById('m_phone').value;
+            const birthdate = document.getElementById('m_birth').value;
+            const address = document.getElementById('m_addr').value;
+            const notes = document.getElementById('m_notes').value;
+            await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'edit', id, name, email, className, phone, birthdate, address, notes }) });
+            closeStudentModal();
+            loadStudentsAndCards();
             loadClassesAndCalendar();
+            alert('Gespeichert!');
         }
 
         async function deleteStudent(id) {
-            if(!confirm('هل تريد حذف هذا المتدرب؟')) return;
+            if(!confirm('Wirklich löschen?')) return;
             await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', id }) });
-            loadStudentsAndTables();
+            closeStudentModal();
+            loadStudentsAndCards();
             loadClassesAndCalendar();
             loadStats();
         }
@@ -566,16 +643,16 @@
                     <div class="font-bold text-blue-800 text-sm flex justify-between items-center">
                         <span>${c.month}</span>
                         <select onchange="updateAnnualCal('${c.month}', '${selectedClass}', 'phase', this.value)" class="text-xs font-semibold px-2 py-1 border rounded bg-slate-50 text-blue-900">
-                            <option value="Betrieb" ${c.phase === 'Betrieb' ? 'selected' : ''}>🏢 Betrieb</option>
-                            <option value="Praxis" ${c.phase === 'Praxis' ? 'selected' : ''}>🛠️ Praxis</option>
-                            <option value="Betriebsprüfung" ${c.phase === 'Betriebsprüfung' ? 'selected' : ''}>📋 Prüfung</option>
-                            <option value="Berufsschule" ${c.phase === 'Berufsschule' ? 'selected' : ''}>🏫 Schule</option>
-                            <option value="Orientierung" ${c.phase === 'Orientierung' ? 'selected' : ''}>🧭 Orientierung</option>
+                            <option value="Betrieb" ${c.phase.includes('Betrieb') ? 'selected' : ''}>🏢 Betrieb</option>
+                            <option value="Praxis" ${c.phase.includes('Praxis') ? 'selected' : ''}>🛠️ Praxis</option>
+                            <option value="Betriebsprüfung" ${c.phase.includes('Prüfung') ? 'selected' : ''}>📋 Prüfung</option>
+                            <option value="Berufsschule" ${c.phase.includes('Schule') ? 'selected' : ''}>🏫 Schule</option>
+                            <option value="Orientierung" ${c.phase.includes('Orientierung') ? 'selected' : ''}>🧭 Orientierung</option>
                         </select>
                     </div>
-                    <div><label class="text-[10px] text-slate-500 font-bold">Schule:</label><input type="text" value="${c.schoolDays}" onchange="updateAnnualCal('${c.month}', '${selectedClass}', 'schoolDays', this.value)" class="w-full px-2 py-1 border rounded text-xs bg-slate-50"></div>
-                    <div><label class="text-[10px] text-slate-500 font-bold">Praxis:</label><input type="text" value="${c.workDays}" onchange="updateAnnualCal('${c.month}', '${selectedClass}', 'workDays', this.value)" class="w-full px-2 py-1 border rounded text-xs bg-slate-50"></div>
-                    <div><label class="text-[10px] text-slate-500 font-bold">Notiz:</label><input type="text" value="${c.note}" onchange="updateAnnualCal('${c.month}', '${selectedClass}', 'note', this.value)" class="w-full px-2 py-1 border rounded text-xs bg-slate-50"></div>
+                    <div><label class="text-[10px] text-slate-500 font-bold">Zeitraum / Schule:</label><input type="text" value="${c.schoolDays}" onchange="updateAnnualCal('${c.month}', '${selectedClass}', 'schoolDays', this.value)" class="w-full px-2 py-1 border rounded text-xs bg-slate-50"></div>
+                    <div><label class="text-[10px] text-slate-500 font-bold">Zeitraum / Praxis:</label><input type="text" value="${c.workDays}" onchange="updateAnnualCal('${c.month}', '${selectedClass}', 'workDays', this.value)" class="w-full px-2 py-1 border rounded text-xs bg-slate-50"></div>
+                    <div><label class="text-[10px] text-slate-500 font-bold">Notiz / BBiG:</label><input type="text" value="${c.note}" onchange="updateAnnualCal('${c.month}', '${selectedClass}', 'note', this.value)" class="w-full px-2 py-1 border rounded text-xs bg-slate-50"></div>
                 </div>
             `).join('');
         }
@@ -663,7 +740,7 @@
             const text = document.getElementById(`sol_${hwId}`).value;
             if(!text) return alert('Bitte Lösung eingeben');
             await fetch('/api/homework/submissions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ hwId, studentName: currentUser.name, solutionText: text }) });
-            document.getElementById(`sol_${hwId}`).value = "";
+            document.getElementById(`sol_${hwId}` ).value = "";
             loadHomework();
             alert('Lösung eingereicht!');
         }

@@ -11,23 +11,23 @@ app.use((req, res, next) => {
 });
 app.use(express.static(path.join(__dirname)));
 
-let usersDB = [{ name: "Super Admin", email: "azubisystem.ha@gmail.com", password: "123456", org: "AzubiSystem", role: "admin", code: "ADMIN-MASTER" }];
+let adminsDB = [{ id: 1, name: "Super Admin", email: "azubisystem.ha@gmail.com", role: "Super Admin", phone: "+49 176 63160304", org: "AzubiSystem" }];
+let studentsDB = [];
 let reportsDB = [];
 let homeworkDB = [];
 let homeworkSubmissionsDB = [];
 let messagesDB = [];
 let classesDB = ["Klasse 1", "Klasse 2", "Klasse 3", "Klasse 4", "Klasse 5", "Klasse 6", "Klasse 7", "Klasse 8", "Klasse 9", "Klasse 10"];
-let studentsDB = []; // جدول الطلاب الفارغ القابل للتعبئة والتعديل بواسطة المسؤول
 
 const monthsList = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 
 let annualCalendarDB = monthsList.map((m, idx) => ({
     month: m,
     className: "Klasse 1",
-    phase: idx === 0 ? "Orientierung" : idx === 5 ? "Betriebsprüfung" : "Betrieb",
+    phase: idx === 0 ? "Orientierung (01.01 - 31.01)" : idx === 5 ? "Betriebsprüfung (01.06 - 30.06)" : "Betrieb (Regulär)",
     schoolDays: "KW 1-2: Berufsschule",
-    workDays: "KW 3-4: Praxis",
-    note: "Regulärer Betrieb"
+    workDays: "KW 3-4: Praxis im Betrieb",
+    note: "Gemäß BBiG Ausbildungsplan"
 }));
 
 const skillCategories = [
@@ -44,35 +44,52 @@ let customGradesDB = [];
 
 app.post('/api/login', (req, res) => {
     const { email, password, role } = req.body;
-    const user = usersDB.find(u => u.email.toLowerCase().trim() === email.toLowerCase().trim());
-    if (!user || user.password !== password || user.role !== role) {
-        return res.json({ success: false, message: "Falsche Anmeldedaten." });
+    if (email === "azubisystem.ha@gmail.com" && password === "123456") {
+        return res.json({ success: true, user: { name: "Super Admin", email, role: role || "admin", org: "AzubiSystem" } });
     }
-    res.json({ success: true, user: { name: user.name, email: user.email, role: user.role, org: user.org } });
+    const student = studentsDB.find(s => s.email === email);
+    if (student && password === "123456") {
+        return res.json({ success: true, user: { name: student.name, email: student.email, role: "azubi", org: student.className } });
+    }
+    res.json({ success: false, message: "Falsche Anmeldedaten." });
 });
 
-app.get('/api/users', (req, res) => res.json(usersDB));
-app.post('/api/users', (req, res) => {
-    const { name, email, password, org, role } = req.body;
-    const newUser = { name, email, password: password || "123456", org: org || "Betrieb", role: role.toLowerCase().includes('azubi') ? 'azubi' : 'admin', code: "AZUBI-" + Math.floor(1000 + Math.random() * 9000) };
-    usersDB.push(newUser);
-    res.json({ success: true, user: newUser });
+// إدارة المسؤولين (Ausbilder / Super Admin)
+app.get('/api/admins', (req, res) => res.json(adminsDB));
+app.post('/api/admins', (req, res) => {
+    const { name, email, role, phone, org } = req.body;
+    adminsDB.push({ id: Date.now(), name, email, role: role || "Ausbilder", phone: phone || "+49 ...", org: org || "Betrieb" });
+    res.json({ success: true, adminsDB });
 });
 
-// إدارة وتعديل الطلاب والأقسام المخصصة
+// إدارة الطلاب والمعلومات الشاملة
 app.get('/api/students', (req, res) => res.json(studentsDB));
 app.post('/api/students', (req, res) => {
-    const { action, id, name, className } = req.body;
+    const { action, id, name, email, className, phone, address, birthdate, notes } = req.body;
     if (action === 'add') {
-        studentsDB.push({ id: Date.now(), name: name || "Nuevo Student", className: className || classesDB[0] });
+        studentsDB.push({
+            id: Date.now(),
+            name: name || "Neuer Azubi",
+            email: email || "azubi@system.de",
+            className: className || classesDB[0],
+            phone: phone || "+49 15... ",
+            address: address || "Deutschland",
+            birthdate: birthdate || "01.01.2000",
+            notes: notes || "Keine Notizen"
+        });
     } else if (action === 'edit') {
-        const student = studentsDB.find(s => s.id == id);
-        if (student) {
-            student.name = name !== undefined ? name : student.name;
-            student.className = className !== undefined ? className : student.className;
+        const s = studentsDB.find(x => x.id == id);
+        if (s) {
+            s.name = name !== undefined ? name : s.name;
+            s.email = email !== undefined ? email : s.email;
+            s.className = className !== undefined ? className : s.className;
+            s.phone = phone !== undefined ? phone : s.phone;
+            s.address = address !== undefined ? address : s.address;
+            s.birthdate = birthdate !== undefined ? birthdate : s.birthdate;
+            s.notes = notes !== undefined ? notes : s.notes;
         }
     } else if (action === 'delete') {
-        studentsDB = studentsDB.filter(s => s.id != id);
+        studentsDB = studentsDB.filter(x => x.id != id);
     }
     res.json({ success: true, studentsDB });
 });
@@ -90,7 +107,7 @@ app.post('/api/classes', (req, res) => {
 });
 
 app.get('/api/stats', (req, res) => {
-    res.json({ totalUsers: usersDB.length, totalAzubis: studentsDB.length, totalReports: reportsDB.length, totalHomework: homeworkDB.length });
+    res.json({ totalAdmins: adminsDB.length, totalAzubis: studentsDB.length, totalReports: reportsDB.length, totalHomework: homeworkDB.length });
 });
 
 app.get('/api/skills/categories', (req, res) => res.json(skillCategories));
