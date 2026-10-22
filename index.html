@@ -9,7 +9,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
-        /* الشعار الشفاف خلفية لكافة الأقسام */
         .azubi-watermark-bg {
             background-color: #f8fafc;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 200' opacity='0.035'%3E%3Cg transform='translate(50,20)'%3E%3Cpath d='M80 120 L20 120 L50 60 Z' fill='%23d97706'/%3E%3Cpath d='M85 55 L135 25 L105 85 Z' fill='%230f5132'/%3E%3Cpath d='M140 90 L110 150 L170 140 Z' fill='%23198754'/%3E%3Cpath d='M55 125 L115 155 L75 165 Z' fill='%23157347'/%3E%3C/g%3E%3Ctext x='230' y='125' font-family='sans-serif' font-weight='900' font-size='38' fill='%230f5132' letter-spacing='2'%3EAZUBISYSTEM%3C/text%3E%3C/svg%3E");
@@ -28,7 +27,6 @@
     <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 no-print">
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-200">
             <div class="text-center mb-6 flex flex-col items-center">
-                <!-- الشعار الملون بوضوح في شاشة الدخول -->
                 <div class="w-64 mb-3">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 140" class="w-full h-auto">
                         <g transform="translate(10,10)">
@@ -121,14 +119,13 @@
 
             <div class="p-8 space-y-8">
                 
-                <!-- 1. لوحة التحكم (Dashboard) مع الشعار الملون تحت البطاقات الأربع -->
+                <!-- 1. لوحة التحكم -->
                 <div id="tab-dashboard" class="space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <h3 class="text-xl font-black text-slate-900" id="welcomeMsg">مرحباً بك</h3>
                         <p class="text-xs text-slate-500 mt-1" data-i18n="dashSub">نظام إدارة التدريب المهني المؤسسي مفعل بنجاح.</p>
                     </div>
 
-                    <!-- الخانات الأربع -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat1Label">المتدربون</span><div class="text-2xl font-black text-slate-800 mt-1" id="statAzubis">0</div></div>
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat2Label">المسؤولون (Ausbilder)</span><div class="text-2xl font-black text-slate-800 mt-1" id="statAdmins">1</div></div>
@@ -136,7 +133,7 @@
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat4Label">حالة النظام</span><div class="text-xs font-bold text-emerald-600 mt-2 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> نشط ومؤمن (Live)</div></div>
                     </div>
 
-                    <!-- الشعار الأصلي الملون الظاهر تحت الخانات الأربع في Dashboard -->
+                    <!-- الشعار الملون الظاهر في Dashboard -->
                     <div class="bg-white p-10 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-center min-h-[260px]">
                         <div class="w-full max-w-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 140" class="w-full h-auto drop-shadow-sm">
@@ -149,16 +146,15 @@
                                 <text x="160" y="90" font-family="'Inter', sans-serif" font-weight="900" font-size="34" fill="#0d5235" letter-spacing="1.5">AZUBISYSTEM</text>
                             </svg>
                         </div>
-                        <p class="text-xs text-slate-400 mt-4 font-semibold tracking-wide" data-i18n="logoSubtext">Duales Ausbildungssystem Portal • Official Enterprise Edition</p>
+                        <p class="text-xs text-slate-400 mt-4 font-semibold tracking-wide" data-i18n="logoSubtext">بوابة نظام التدريب المهني المزدوج • الإصدار المؤسسي الرسمي</p>
                     </div>
                 </div>
 
-                <!-- 2. إدارة بيانات المتدربين الشاملة مع الحقول المفتوحة بالكامل -->
+                <!-- 2. إدارة بيانات المتدربين الشاملة -->
                 <div id="tab-students" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <h3 class="text-lg font-bold text-slate-900" data-i18n="studSecTitle">🎓 إدارة بيانات المتدربين الشاملة والملفات</h3>
                         
-                        <!-- نموذج إضافة المتدرب مع كتابة حرة لكل التفاصيل -->
                         <div class="bg-slate-50 p-5 rounded-xl border space-y-4">
                             <h4 class="font-bold text-xs text-slate-700" data-i18n="addNewStudHead">➕ إضافة متدرب جديد (جميع الحقول نصية حرة):</h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -175,12 +171,11 @@
                             <button onclick="addNewStudentFull()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-6 py-2.5 rounded-xl shadow-md transition" data-i18n="btnAddStud">➕ حفظ وإضافة المتدرب</button>
                         </div>
 
-                        <!-- عرض بطاقات الطلاب -->
                         <div id="studentCardsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2"></div>
                     </div>
                 </div>
 
-                <!-- نافذة منسدلة تفصيلية قابلة للتعديل الحر بالكامل -->
+                <!-- نافذة منسدلة تفصيلية للمتدرب -->
                 <div id="studentDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
                     <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
                         <div class="flex justify-between items-center border-b pb-3">
@@ -194,7 +189,7 @@
                     </div>
                 </div>
 
-                <!-- 3. إدارة المسؤولين (Ausbilder / Super Admin) -->
+                <!-- 3. إدارة المسؤولين -->
                 <div id="tab-admins" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <h3 class="text-lg font-bold text-slate-900" data-i18n="adminSecTitle">👤 إدارة المسؤولين والمشرفين (Ausbilder / Super Admin)</h3>
@@ -228,7 +223,7 @@
                     </div>
                 </div>
 
-                <!-- 5. التقويم السنوي المتقدم للأقسام -->
+                <!-- 5. التقويم السنوي -->
                 <div id="tab-calendar" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <div class="flex justify-between items-center">
@@ -253,7 +248,7 @@
                             </div>
                         </div>
                         <div class="border border-emerald-200 rounded-2xl p-5 bg-emerald-50/50 space-y-3">
-                            <textarea id="aiInput" placeholder="اكتب استفسارك هنا..." class="w-full px-4 py-3 border rounded-xl text-sm border-emerald-200 h-32 bg-white" data-i18n-placeholder="aiPlaceholder"></textarea>
+                            <textarea id="aiInput" placeholder="اكتب استفسارك هنا..." class="w-full px-4 py-3 border rounded-xl text-sm border-emerald-200 h-32 bg-white"></textarea>
                             <button onclick="runAIAssistant()" id="btnAiRun" class="bg-emerald-700 text-white text-xs font-bold px-6 py-3 rounded-xl hover:bg-emerald-800 shadow-md" data-i18n="btnAiRun">✨ إرسال إلى chat AzubiSystem</button>
                         </div>
                         <div id="aiOutput" class="hidden p-5 bg-white border border-emerald-200 rounded-2xl text-xs text-slate-800 space-y-2 shadow-sm"></div>
@@ -266,7 +261,7 @@
                         <div class="space-y-4 border-b pb-6">
                             <h3 class="text-lg font-bold text-slate-900" data-i18n="classManTitle">🏫 إدارة وتعديل الأقسام (Klassen bearbeiten)</h3>
                             <div class="flex gap-3">
-                                <input type="text" id="newClassNameInput" placeholder="أضف قسماً جديداً..." class="px-4 py-2 border rounded-xl text-xs flex-1" data-i18n-placeholder="newClassPlaceholder">
+                                <input type="text" id="newClassNameInput" placeholder="أضف قسماً جديداً..." class="px-4 py-2 border rounded-xl text-xs flex-1">
                                 <button onclick="addNewClass()" id="btnAddClass" class="bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl" data-i18n="btnAddClass">➕ إضافة قسم</button>
                             </div>
                             <div id="classListContainer" class="flex flex-wrap gap-2 pt-2"></div>
@@ -409,4 +404,245 @@
                 hdrAdmin: "Super Admin Control Center", btnLogout: "Logout", welcome: "Welcome to the system, ", dashSub: "Enterprise AzubiSystem Active.",
                 stat1Label: "Azubis", stat2Label: "Ausbilder", stat3Label: "Reports", stat4Label: "System Status",
                 studSecTitle: "🎓 Azubi Comprehensive Profiles", addNewStudHead: "➕ Add New Azubi (Free Text Inputs):", btnAddStud: "➕ Save Azubi", adminSecTitle: "👤 Ausbilder Management", btnAddAdmin: "➕ Add Ausbilder",
-                skillSecTitle: "⭐ Skill Matrix & Compet
+                skillSecTitle: "⭐ Skill Matrix & Competences", skillSecSub: "Individual tables with grades 1 to 6.",
+                calSecTitle: "📅 Advanced Annual Calendar by Classes", calSecSub: "Monthly planning with timeframes for company, school or exam.",
+                aiSubDesc: "Your AI assistant for reports and training questions.", btnAiRun: "✨ Send to chat AzubiSystem",
+                hwAdminTitle: "📚 Publish Homework for Class / Azubi", btnPubHw: "Publish Homework", hwListTitle: "📋 Homework & Solutions by Class",
+                repHead: "Add Weekly Report:", btnSaveRep: "Save Report", pdfTitle: "My Reports:", btnExportPDF: "📄 Export as PDF",
+                aboutTitle: "About AzubiSystem 🇩🇪", aboutDesc: "Specialized digital platform for dual vocational training in Germany.",
+                helpTitle: "Help Center & FAQ", supContactTitle: "Support Contact Data:", suppLabel: "Support Center",
+                loginSubtitle: "Dual Vocational Training Portal 🇩🇪", lblEmail: "E-Mail Address", lblPass: "Password", lblRole: "Role", btnLogin: "Login",
+                classManTitle: "🏫 Manage Classes", btnAddClass: "➕ Add Class", lblTargetClass: "Select Class:",
+                lblTargetStudent: "Target Azubi:", lblHwTitle: "Homework Title:", allAzubisOpt: "All Azubis", logoSubtext: "Dual Vocational Training Portal • Official Enterprise Edition"
+            },
+            fr: { navDash: "📊 Tableau de bord", navStudents: "🎓 Azubis", navAdmins: "👤 Ausbilder", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classes & Devoirs", navChat: "💬 Chat", navAzubi: "📓 Carnet", navCal: "📅 Calendrier", navAbout: "ℹ️ À propos", navHelp: "❓ Aide" },
+            es: { navDash: "📊 Tablero", navStudents: "🎓 Azubis", navAdmins: "👤 Ausbilder", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Clases y Tareas", navChat: "💬 Chat", navAzubi: "📓 Informes", navCal: "📅 Calendario", navAbout: "ℹ️ Acerca de", navHelp: "❓ Ayuda" },
+            it: { navDash: "📊 Dashboard", navStudents: "🎓 Azubis", navAdmins: "👤 Ausbilder", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classi e Compiti", navChat: "💬 Chat", navAzubi: "📓 Rapporti", navCal: "📅 Calendario", navAbout: "ℹ️ Chi siamo", navHelp: "❓ Aiuto" },
+            tr: { navDash: "📊 Gösterge Paneli", navStudents: "🎓 Azubis", navAdmins: "👤 Ausbilder", navSkills: "⭐ Yetenek Matrisi", navAI: "🤖 chat AzubiSystem", navHw: "📚 Sınıflar ve Ödevler", navChat: "💬 Sohbet", navAzubi: "📓 Rapor", navCal: "📅 Yıllık Takvim", navAbout: "ℹ️ Hakkında", navHelp: "❓ Yardım" }
+        };
+
+        function changeLanguage(lang) {
+            const t = translations[lang] || translations.ar;
+            document.getElementById('htmlRoot').setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+            document.getElementById('htmlRoot').setAttribute('lang', lang);
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) el.innerText = t[key];
+            });
+
+            updateWelcomeMessage();
+        }
+
+        function updateWelcomeMessage() {
+            if(!currentUser) return;
+            const lang = document.getElementById('langSwitcher').value;
+            const t = translations[lang] || translations.ar;
+            const welcomeText = t.welcome || "مرحباً بك، ";
+            document.getElementById('welcomeMsg').innerText = welcomeText + currentUser.name + " (" + currentUser.role.toUpperCase() + ")";
+        }
+
+        async function doLogin() {
+            const email = document.getElementById('loginUser').value;
+            const password = document.getElementById('loginPass').value;
+            const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+            const data = await res.json();
+            if (data.success) {
+                currentUser = data.user;
+                document.getElementById('loginScreen').classList.add('hidden');
+                updateRoleUI();
+                updateWelcomeMessage();
+                loadAdmins(); loadStudentsAndCards(); loadReports(); loadStats(); loadSkillTables(); loadClassesAndCalendar(); loadHomework(); loadMessages();
+            } else { alert(data.message); }
+        }
+
+        async function loadStats() {
+            const res = await fetch('/api/stats');
+            const stats = await res.json();
+            document.getElementById('statAzubis').innerText = stats.totalAzubis;
+            document.getElementById('statAdmins').innerText = stats.totalAdmins;
+            document.getElementById('statReports').innerText = stats.totalReports;
+        }
+
+        function updateRoleUI() {
+            if (currentUser.role === 'azubi') {
+                document.getElementById('roleBadge').innerText = "AZUBI";
+                document.getElementById('hdrTitle').innerText = "Azubi Portal";
+                document.getElementById('adminNav').classList.add('hidden');
+                document.getElementById('azubiNav').classList.remove('hidden');
+                document.getElementById('adminHwBox').classList.add('hidden');
+                switchTab('azubi-portal');
+            } else {
+                document.getElementById('roleBadge').innerText = "ADMIN";
+                document.getElementById('hdrTitle').innerText = "مركز تحكم المشرف العام";
+                document.getElementById('adminNav').classList.remove('hidden');
+                document.getElementById('azubiNav').classList.add('hidden');
+                document.getElementById('adminHwBox').classList.remove('hidden');
+                switchTab('dashboard');
+            }
+        }
+
+        function switchTab(tabId) {
+            ['dashboard', 'students', 'admins', 'azubi-portal', 'ai-assistant', 'skills', 'calendar', 'homework', 'messages', 'about', 'help'].forEach(id => {
+                const el = document.getElementById('tab-' + id);
+                if(el) el.classList.add('hidden');
+            });
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+            document.querySelectorAll('aside nav a').forEach(a => a.classList.remove('bg-emerald-700', 'text-white'));
+            event && event.target && event.target.classList.add('bg-emerald-700', 'text-white');
+        }
+
+        function logout() { currentUser = null; document.getElementById('loginScreen').classList.remove('hidden'); }
+
+        async function loadClassesAndCalendar() {
+            const res = await fetch('/api/classes');
+            const classes = await res.json();
+            const select = document.getElementById('calClassFilter');
+            const hwSelect = document.getElementById('hwTargetClass');
+            const studClassSel = document.getElementById('addStudClass');
+
+            select.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
+            if(hwSelect) hwSelect.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
+            if(studClassSel) studClassSel.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
+
+            const classListDiv = document.getElementById('classListContainer');
+            classListDiv.innerHTML = classes.map(c => `
+                <div class="flex items-center gap-1 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold">
+                    <span>${c}</span>
+                    <button onclick="renameClassPrompt('${c}')" class="text-emerald-700 hover:text-emerald-900 ml-1" title="تعديل اسم القسم">✏️</button>
+                </div>
+            `).join('');
+
+            const studentRes = await fetch('/api/students');
+            const students = await studentRes.json();
+            const studentSelect = document.getElementById('hwStudent');
+            const lang = document.getElementById('langSwitcher').value;
+            const allText = lang === 'ar' ? "جميع المتدربين (Alle Azubis)" : "Alle Azubis";
+            studentSelect.innerHTML = `<option value="Alle Azubis">${allText}</option>` + 
+                students.map(s => `<option value="${s.name}">${s.name} (${s.className})</option>`).join('');
+
+            loadAnnualCalendar();
+        }
+
+        async function addNewClass() {
+            const name = document.getElementById('newClassNameInput').value;
+            if(!name) return alert('Bitte Klassennamen eingeben');
+            await fetch('/api/classes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ className: name }) });
+            document.getElementById('newClassNameInput').value = "";
+            loadClassesAndCalendar();
+            alert('تمت إضافة القسم بنجاح!');
+        }
+
+        async function renameClassPrompt(oldName) {
+            const newName = prompt("أدخل الاسم الجديد للقسم (Klasse):", oldName);
+            if(!newName || newName === oldName) return;
+            await fetch('/api/classes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'rename', oldName, newName }) });
+            loadClassesAndCalendar();
+            loadStudentsAndCards();
+            alert('تم تعديل اسم القسم بنجاح!');
+        }
+
+        async function addNewAdmin() {
+            const name = document.getElementById('admName').value;
+            const email = document.getElementById('admEmail').value;
+            const role = document.getElementById('admRole').value;
+            const phone = document.getElementById('admPhone').value;
+            const org = document.getElementById('admOrg').value;
+            if(!name || !email) return alert('Bitte Name und E-Mail eingeben');
+            await fetch('/api/admins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, role, phone, org }) });
+            document.getElementById('admName').value = "";
+            document.getElementById('admEmail').value = "";
+            document.getElementById('admPhone').value = "";
+            document.getElementById('admOrg').value = "";
+            loadAdmins();
+            loadStats();
+            alert('تمت إضافة المسؤول بنجاح!');
+        }
+
+        async function loadAdmins() {
+            const res = await fetch('/api/admins');
+            const admins = await res.json();
+            document.getElementById('adminTableBody').innerHTML = admins.map(a => `
+                <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-semibold">${a.name}</td>
+                    <td class="py-3 px-4 text-slate-500">${a.email}</td>
+                    <td class="py-3 px-4 font-bold text-emerald-800">${a.role}</td>
+                    <td class="py-3 px-4 phone-num font-mono">${a.phone}</td>
+                    <td class="py-3 px-4">${a.org}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function addNewStudentFull() {
+            const name = document.getElementById('addStudName').value;
+            const email = document.getElementById('addStudEmail').value;
+            const className = document.getElementById('addStudClass').value;
+            const phone = document.getElementById('addStudPhone').value;
+            const birthdate = document.getElementById('addStudBirth').value;
+            const address = document.getElementById('addStudAddr').value;
+            const startDate = document.getElementById('addStudStart').value;
+            const domain = document.getElementById('addStudDomain').value;
+            const specialization = document.getElementById('addStudSpec').value;
+
+            if(!name) return alert('الرجاء كتابة اسم المتدرب');
+            await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'add', name, email, className, phone, birthdate, address, startDate, domain, specialization, notes: "" }) });
+            
+            document.getElementById('addStudName').value = "";
+            document.getElementById('addStudEmail').value = "";
+            document.getElementById('addStudPhone').value = "";
+            document.getElementById('addStudBirth').value = "";
+            document.getElementById('addStudAddr').value = "";
+            document.getElementById('addStudStart').value = "";
+            document.getElementById('addStudDomain').value = "";
+            document.getElementById('addStudSpec').value = "";
+
+            loadStudentsAndCards();
+            loadClassesAndCalendar();
+            loadStats();
+            alert('تم حفظ وإضافة بيانات المتدرب بنجاح!');
+        }
+
+        async function loadStudentsAndCards() {
+            const res = await fetch('/api/students');
+            const students = await res.json();
+            const grid = document.getElementById('studentCardsGrid');
+            if(students.length === 0) { grid.innerHTML = '<p class="text-xs text-slate-400">لا يوجد متدربون حالياً.</p>'; return; }
+
+            grid.innerHTML = students.map(s => `
+                <div onclick="openStudentModal(${s.id})" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition cursor-pointer space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs bg-emerald-900 text-white px-2 py-0.5 rounded font-bold">${s.className}</span>
+                        <span class="text-[10px] text-slate-400 font-mono">ID: ${s.id.toString().slice(-4)}</span>
+                    </div>
+                    <h5 class="font-bold text-sm text-slate-900">${s.name}</h5>
+                    <p class="text-xs text-slate-500">${s.email || "بدون بريد"}</p>
+                    <div class="text-[11px] text-slate-600 font-medium">
+                        <div>مجال التدريب: <strong>${s.domain || "غير محدد"}</strong></div>
+                    </div>
+                    <div class="pt-2 border-t flex justify-between items-center text-[11px] text-emerald-700 font-bold">
+                        <span>عرض وتعديل الملف بالكامل ➔</span>
+                    </div>
+                </div>
+            `).join('');
+            window.allStudentsCache = students;
+        }
+
+        function openStudentModal(id) {
+            const s = window.allStudentsCache.find(x => x.id === id);
+            if(!s) return;
+            document.getElementById('modalStudTitle').innerText = "الملف الشخصي: " + s.name;
+            document.getElementById('modalStudBody').innerHTML = `
+                <div class="space-y-3">
+                    <p><strong>الاسم الكامل (Name):</strong> <input type="text" id="m_name" value="${s.name || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 font-semibold"></p>
+                    <p><strong>البريد الإلكتروني (E-Mail):</strong> <input type="text" id="m_email" value="${s.email || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50"></p>
+                    <p><strong>القسم (Klasse):</strong> <input type="text" id="m_class" value="${s.className || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 font-semibold text-emerald-900"></p>
+                    <p><strong>رقم الهاتف (Telefon):</strong> <input type="text" id="m_phone" value="${s.phone || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 phone-num"></p>
+                    <p><strong>تاريخ الميلاد (Geburtsdatum):</strong> <input type="text" id="m_birth" value="${s.birthdate || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50"></p>
+                    <p><strong>العنوان الكامل (Adresse):</strong> <input type="text" id="m_addr" value="${s.address || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50"></p>
+                    <p><strong>تاريخ بدء التدريب (Ausbildungsbeginn):</strong> <input type="text" id="m_start" value="${s.startDate || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50"></p>
+                    <p><strong>مجال التدريب (Ausbildungsbereich):</strong> <input type="text" id="m_domain" value="${s.domain || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 font-semibold"></p>
+                    <p><strong>التخصص الدقيق (Fachrichtung):</strong> <input type="text" id="m_spec" value="${s.specialization || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 font-semibold text-emerald-800"></p>
+                    <p><strong>ملاحظات التدريب (Notizen):</strong> <textarea id="m_notes" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 h-16">${s.notes || ''}</textarea></p>
+                    <button onclick="saveStudentModal(${s.id})" class="w-full bg-emerald-700 text-white font-semibold py-2 rounded-xl text-xs mt-2 shadow">حفظ جميع التعديلات</button>
+                    <button onclick="deleteStudent(${s

@@ -5,12 +5,15 @@ const PORT = process.env.PORT || 10000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     next();
 });
+
 app.use(express.static(path.join(__dirname)));
 
+// قاعدة البيانات المؤقتة في الذاكرة
 let adminsDB = [{ id: 1, name: "Super Admin", email: "azubisystem.ha@gmail.com", role: "Super Admin", phone: "+49 176 63160304", org: "AzubiSystem HQ" }];
 let studentsDB = [];
 let reportsDB = [];
@@ -42,16 +45,21 @@ const skillCategories = [
 
 let customGradesDB = [];
 
+// دالة الدخول المرنة والمتوافقة مع كافة الخيارات
 app.post('/api/login', (req, res) => {
-    const { email, password, role } = req.body;
-    if (email === "azubisystem.ha@gmail.com" && password === "123456") {
-        return res.json({ success: true, user: { name: "Super Admin", email, role: role || "admin", org: "AzubiSystem HQ" } });
+    const { email, password } = req.body;
+    const cleanEmail = (email || "").trim().toLowerCase();
+
+    if (cleanEmail === "azubisystem.ha@gmail.com" && password === "123456") {
+        return res.json({ success: true, user: { name: "Super Admin", email: "azubisystem.ha@gmail.com", role: "admin", org: "AzubiSystem HQ" } });
     }
-    const student = studentsDB.find(s => s.email === email);
+
+    const student = studentsDB.find(s => (s.email || "").trim().toLowerCase() === cleanEmail);
     if (student && password === "123456") {
         return res.json({ success: true, user: { name: student.name, email: student.email, role: "azubi", org: student.className } });
     }
-    res.json({ success: false, message: "Anmeldedaten ungültig / بيانات الدخول غير صحيحة." });
+
+    res.json({ success: false, message: "بيانات الدخول غير صحيحة / Anmeldedaten ungültig." });
 });
 
 // إدارة المسؤولين
@@ -62,10 +70,11 @@ app.post('/api/admins', (req, res) => {
     res.json({ success: true, adminsDB });
 });
 
-// إدارة بيانات المتدربين الشاملة مع الحقول الحرة الجديدة
+// إدارة بيانات المتدربين مع كافة الحقول النصية المفتوحة
 app.get('/api/students', (req, res) => res.json(studentsDB));
 app.post('/api/students', (req, res) => {
     const { action, id, name, email, className, phone, address, birthdate, startDate, domain, specialization, notes } = req.body;
+    
     if (action === 'add') {
         studentsDB.push({
             id: Date.now(),
@@ -153,20 +162,4 @@ app.post('/api/reports/approve', (req, res) => {
 
 app.get('/api/homework', (req, res) => res.json(homeworkDB));
 app.post('/api/homework', (req, res) => {
-    homeworkDB.push({ id: Date.now(), className: req.body.className, studentName: req.body.studentName, title: req.body.title, desc: req.body.desc, pdfUrl: req.body.pdfUrl || "#", timestamp: new Date().toLocaleString('de-DE') });
-    res.json({ success: true });
-});
-
-app.get('/api/homework/submissions', (req, res) => res.json(homeworkSubmissionsDB));
-app.post('/api/homework/submissions', (req, res) => {
-    homeworkSubmissionsDB.push({ id: Date.now(), hwId: req.body.hwId, studentName: req.body.studentName, solutionText: req.body.solutionText, timestamp: new Date().toLocaleString('de-DE') });
-    res.json({ success: true });
-});
-
-app.get('/api/messages', (req, res) => res.json(messagesDB));
-app.post('/api/messages', (req, res) => {
-    messagesDB.push({ id: Date.now(), sender: req.body.sender, recipient: req.body.recipient || "Allgemein", text: req.body.text, timestamp: new Date().toLocaleTimeString('de-DE') });
-    res.json({ success: true });
-});
-
-app.listen(PORT, '0.0.0.0', () => console.log(`AzubiSystem läuft auf Port ${PORT}`));
+    homeworkDB.push({ id: Date.now(), className: req.body.className, studentName: req.body.studentName, title: req.body.title, desc: req.body.desc, pdfUrl: req.body.pdfUrl || "#",
