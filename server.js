@@ -11,7 +11,7 @@ app.use((req, res, next) => {
 });
 app.use(express.static(path.join(__dirname)));
 
-let adminsDB = [{ id: 1, name: "Super Admin", email: "azubisystem.ha@gmail.com", role: "Super Admin", phone: "+49 176 63160304", org: "AzubiSystem" }];
+let adminsDB = [{ id: 1, name: "Super Admin", email: "azubisystem.ha@gmail.com", role: "Super Admin", phone: "+49 176 63160304", org: "AzubiSystem HQ" }];
 let studentsDB = [];
 let reportsDB = [];
 let homeworkDB = [];
@@ -45,16 +45,16 @@ let customGradesDB = [];
 app.post('/api/login', (req, res) => {
     const { email, password, role } = req.body;
     if (email === "azubisystem.ha@gmail.com" && password === "123456") {
-        return res.json({ success: true, user: { name: "Super Admin", email, role: role || "admin", org: "AzubiSystem" } });
+        return res.json({ success: true, user: { name: "Super Admin", email, role: role || "admin", org: "AzubiSystem HQ" } });
     }
     const student = studentsDB.find(s => s.email === email);
     if (student && password === "123456") {
         return res.json({ success: true, user: { name: student.name, email: student.email, role: "azubi", org: student.className } });
     }
-    res.json({ success: false, message: "Falsche Anmeldedaten." });
+    res.json({ success: false, message: "Anmeldedaten ungültig / بيانات الدخول غير صحيحة." });
 });
 
-// إدارة المسؤولين (Ausbilder / Super Admin)
+// إدارة المسؤولين
 app.get('/api/admins', (req, res) => res.json(adminsDB));
 app.post('/api/admins', (req, res) => {
     const { name, email, role, phone, org } = req.body;
@@ -62,31 +62,37 @@ app.post('/api/admins', (req, res) => {
     res.json({ success: true, adminsDB });
 });
 
-// إدارة الطلاب والمعلومات الشاملة
+// إدارة بيانات المتدربين الشاملة مع الحقول الحرة الجديدة
 app.get('/api/students', (req, res) => res.json(studentsDB));
 app.post('/api/students', (req, res) => {
-    const { action, id, name, email, className, phone, address, birthdate, notes } = req.body;
+    const { action, id, name, email, className, phone, address, birthdate, startDate, domain, specialization, notes } = req.body;
     if (action === 'add') {
         studentsDB.push({
             id: Date.now(),
             name: name || "Neuer Azubi",
             email: email || "azubi@system.de",
             className: className || classesDB[0],
-            phone: phone || "+49 15... ",
-            address: address || "Deutschland",
-            birthdate: birthdate || "01.01.2000",
-            notes: notes || "Keine Notizen"
+            phone: phone || "+49 ...",
+            address: address || "",
+            birthdate: birthdate || "",
+            startDate: startDate || "",
+            domain: domain || "",
+            specialization: specialization || "",
+            notes: notes || ""
         });
     } else if (action === 'edit') {
         const s = studentsDB.find(x => x.id == id);
         if (s) {
-            s.name = name !== undefined ? name : s.name;
-            s.email = email !== undefined ? email : s.email;
-            s.className = className !== undefined ? className : s.className;
-            s.phone = phone !== undefined ? phone : s.phone;
-            s.address = address !== undefined ? address : s.address;
-            s.birthdate = birthdate !== undefined ? birthdate : s.birthdate;
-            s.notes = notes !== undefined ? notes : s.notes;
+            if (name !== undefined) s.name = name;
+            if (email !== undefined) s.email = email;
+            if (className !== undefined) s.className = className;
+            if (phone !== undefined) s.phone = phone;
+            if (address !== undefined) s.address = address;
+            if (birthdate !== undefined) s.birthdate = birthdate;
+            if (startDate !== undefined) s.startDate = startDate;
+            if (domain !== undefined) s.domain = domain;
+            if (specialization !== undefined) s.specialization = specialization;
+            if (notes !== undefined) s.notes = notes;
         }
     } else if (action === 'delete') {
         studentsDB = studentsDB.filter(x => x.id != id);
@@ -163,4 +169,4 @@ app.post('/api/messages', (req, res) => {
     res.json({ success: true });
 });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`Server läuft auf Port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`AzubiSystem läuft auf Port ${PORT}`));
