@@ -3,8 +3,8 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
@@ -13,39 +13,57 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname)));
 
-// قاعدة البيانات المؤقتة في الذاكرة
-let adminsDB = [{ id: 1, name: "Super Admin", email: "azubisystem.ha@gmail.com", role: "Super Admin", phone: "+49 176 63160304", org: "AzubiSystem HQ" }];
+// قاعدة البيانات الرئيسية في الذاكرة
+let adminsDB = [
+    { id: 1, name: "Super Admin", email: "azubisystem.ha@gmail.com", role: "Super Admin", phone: "+49 176 63160304", org: "AzubiSystem HQ" }
+];
+
+let teachersDB = [
+    { id: 101, name: "Herr Schmidt", email: "schmidt@berufsschule.de", school: "BS-1 Berlin", subject: "Elektrotechnik" }
+];
+
 let studentsDB = [];
 let reportsDB = [];
 let homeworkDB = [];
 let homeworkSubmissionsDB = [];
 let messagesDB = [];
-let classesDB = ["Klasse 1", "Klasse 2", "Klasse 3", "Klasse 4", "Klasse 5", "Klasse 6", "Klasse 7", "Klasse 8", "Klasse 9", "Klasse 10"];
+let classesDB = ["Klasse 1", "Klasse 2", "Klasse 3", "Klasse 4", "Klasse 5"];
+
+// مناهج IHK/HWK المدمجة للتطبيق تلقائياً
+const ihkCurriculumDB = [
+    { code: "BBiG-01", title: "Berufsbildung, Arbeits- und Tarifrecht" },
+    { code: "BBiG-02", title: "Aufbau und Organisation des Ausbildungsbetriebes" },
+    { code: "BBiG-03", title: "Sicherheit und Gesundheitsschutz bei der Arbeit" },
+    { code: "BBiG-04", title: "Umweltschutz und Nachhaltigkeit" },
+    { code: "BBiG-05", title: "Digitalisierte Arbeitswelt & Datenschutz (DSGVO)" },
+    { code: "SPEC-01", title: "Betriebliche Geschäftsprozesse & Qualitätssicherung" },
+    { code: "SPEC-02", title: "Planung, Durchführung und Kontrolle von Arbeitsaufgaben" }
+];
 
 const monthsList = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 
 let annualCalendarDB = monthsList.map((m, idx) => ({
     month: m,
     className: "Klasse 1",
-    phase: idx === 0 ? "Orientierung (01.01 - 31.01)" : idx === 5 ? "Betriebsprüfung (01.06 - 30.06)" : "Betrieb (Regulär)",
+    phase: idx === 0 ? "Orientierung & Probezeit" : idx === 5 ? "Zwischenprüfung (IHK)" : idx === 11 ? "Abschlussprüfung (IHK)" : "Betriebliche Ausbildung",
     schoolDays: "KW 1-2: Berufsschule",
     workDays: "KW 3-4: Praxis im Betrieb",
-    note: "Gemäß BBiG Ausbildungsplan"
+    note: "Gemäß BBiG Ausbildungsrahmenplan"
 }));
 
 const skillCategories = [
-    { id: "verstaendnis", name: "1. التفاهم (Verständnis)" },
-    { id: "integration", name: "2. الاندماج (Integration)" },
-    { id: "kommunikation", name: "3. التواصل (Kommunikation)" },
-    { id: "zuhoeren", name: "4. الاستماع (Zuhören)" },
-    { id: "lernen", name: "5. التعلم (Lernen)" },
-    { id: "mitarbeit", name: "6. المشاركة (Mitarbeit)" },
-    { id: "deutsch", name: "7. اللغة الألمانية (Deutsch)" }
+    { id: "verstaendnis", name: "1. Fachliches Verständnis (الفهم الفني)" },
+    { id: "integration", name: "2. Team-Integration (الاندماج)" },
+    { id: "kommunikation", name: "3. Kommunikation & Sprache (التواصل)" },
+    { id: "zuhoeren", name: "4. Aktives Zuhören (الاستماع النشط)" },
+    { id: "lernen", name: "5. Lern- und Arbeitsbereitschaft (الاستعداد للتعلم)" },
+    { id: "mitarbeit", name: "6. Eigenständige Mitarbeit (المشاركة المستقلة)" },
+    { id: "deutsch", name: "7. Fachdeutsch im Betrieb (اللغة المهنية)" }
 ];
 
 let customGradesDB = [];
 
-// دالة الدخول المرنة والمتوافقة مع كافة الخيارات
+// تسجيل الدخول المرن الشامل (Admins, Azubis, Teachers)
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
     const cleanEmail = (email || "").trim().toLowerCase();
@@ -54,15 +72,20 @@ app.post('/api/login', (req, res) => {
         return res.json({ success: true, user: { name: "Super Admin", email: "azubisystem.ha@gmail.com", role: "admin", org: "AzubiSystem HQ" } });
     }
 
-    const student = studentsDB.find(s => (s.email || "").trim().toLowerCase() === cleanEmail);
-    if (student && password === "123456") {
-        return res.json({ success: true, user: { name: student.name, email: student.email, role: "azubi", org: student.className } });
+    const teacher = teachersDB.find(t => (t.email || "").trim().toLowerCase() === cleanEmail);
+    if (teacher && password === "123456") {
+        return res.json({ success: true, user: { name: teacher.name, email: teacher.email, role: "teacher", org: teacher.school } });
     }
 
-    res.json({ success: false, message: "بيانات الدخول غير صحيحة / Anmeldedaten ungültig." });
+    const student = studentsDB.find(s => (s.email || "").trim().toLowerCase() === cleanEmail);
+    if (student && password === "123456") {
+        return res.json({ success: true, user: { name: student.name, email: student.email, role: "azubi", org: student.className, id: student.id } });
+    }
+
+    res.json({ success: false, message: "Anmeldedaten ungültig / بيانات الدخول غير صحيحة." });
 });
 
-// إدارة المسؤولين
+// المسارات الأساسية
 app.get('/api/admins', (req, res) => res.json(adminsDB));
 app.post('/api/admins', (req, res) => {
     const { name, email, role, phone, org } = req.body;
@@ -70,10 +93,16 @@ app.post('/api/admins', (req, res) => {
     res.json({ success: true, adminsDB });
 });
 
-// إدارة بيانات المتدربين مع كافة الحقول النصية المفتوحة
+app.get('/api/teachers', (req, res) => res.json(teachersDB));
+app.post('/api/teachers', (req, res) => {
+    const { name, email, school, subject } = req.body;
+    teachersDB.push({ id: Date.now(), name, email, school, subject });
+    res.json({ success: true, teachersDB });
+});
+
 app.get('/api/students', (req, res) => res.json(studentsDB));
 app.post('/api/students', (req, res) => {
-    const { action, id, name, email, className, phone, address, birthdate, startDate, domain, specialization, notes } = req.body;
+    const { action, id, name, email, className, phone, address, birthdate, startDate, domain, specialization, probezeitEnd, currentDept, notes } = req.body;
     
     if (action === 'add') {
         studentsDB.push({
@@ -84,9 +113,12 @@ app.post('/api/students', (req, res) => {
             phone: phone || "+49 ...",
             address: address || "",
             birthdate: birthdate || "",
-            startDate: startDate || "",
+            startDate: startDate || new Date().toISOString().split('T')[0],
             domain: domain || "",
             specialization: specialization || "",
+            probezeitEnd: probezeitEnd || "",
+            currentDept: currentDept || "Hauptabteilung",
+            signature: null,
             notes: notes || ""
         });
     } else if (action === 'edit') {
@@ -101,8 +133,13 @@ app.post('/api/students', (req, res) => {
             if (startDate !== undefined) s.startDate = startDate;
             if (domain !== undefined) s.domain = domain;
             if (specialization !== undefined) s.specialization = specialization;
+            if (probezeitEnd !== undefined) s.probezeitEnd = probezeitEnd;
+            if (currentDept !== undefined) s.currentDept = currentDept;
             if (notes !== undefined) s.notes = notes;
         }
+    } else if (action === 'save_signature') {
+        const s = studentsDB.find(x => x.id == id);
+        if (s) s.signature = req.body.signature;
     } else if (action === 'delete') {
         studentsDB = studentsDB.filter(x => x.id != id);
     }
@@ -121,45 +158,17 @@ app.post('/api/classes', (req, res) => {
     res.json({ success: true, classesDB });
 });
 
+app.get('/api/ihk-curriculum', (req, res) => res.json(ihkCurriculumDB));
+
 app.get('/api/stats', (req, res) => {
-    res.json({ totalAdmins: adminsDB.length, totalAzubis: studentsDB.length, totalReports: reportsDB.length, totalHomework: homeworkDB.length });
+    res.json({
+        totalAdmins: adminsDB.length,
+        totalAzubis: studentsDB.length,
+        totalTeachers: teachersDB.length,
+        totalReports: reportsDB.length,
+        totalHomework: homeworkDB.length
+    });
 });
 
 app.get('/api/skills/categories', (req, res) => res.json(skillCategories));
-app.get('/api/skills/grades', (req, res) => res.json(customGradesDB));
-app.post('/api/skills/grades', (req, res) => {
-    const { categoryId, week, grade } = req.body;
-    const existing = customGradesDB.find(g => g.categoryId === categoryId && g.week === week);
-    if (existing) { existing.grade = grade; } else { customGradesDB.push({ categoryId, week, grade }); }
-    res.json({ success: true, customGradesDB });
-});
-
-app.get('/api/calendar/annual', (req, res) => res.json(annualCalendarDB));
-app.post('/api/calendar/annual', (req, res) => {
-    const { month, className, phase, schoolDays, workDays, note } = req.body;
-    let existing = annualCalendarDB.find(c => c.month === month && c.className === className);
-    if (existing) {
-        existing.phase = phase || existing.phase;
-        existing.schoolDays = schoolDays || existing.schoolDays;
-        existing.workDays = workDays || existing.workDays;
-        existing.note = note || existing.note;
-    } else {
-        annualCalendarDB.push({ month, className, phase, schoolDays, workDays, note });
-    }
-    res.json({ success: true, calendar: annualCalendarDB });
-});
-
-app.post('/api/reports', (req, res) => {
-    reportsDB.push({ id: Date.now(), week: req.body.week, dept: req.body.dept, text: req.body.text, author: req.body.author, status: "Ausstehend", signedBy: null, timestamp: new Date().toLocaleString('de-DE') });
-    res.json({ success: true });
-});
-app.get('/api/reports', (req, res) => res.json(reportsDB));
-app.post('/api/reports/approve', (req, res) => {
-    const r = reportsDB.find(x => x.id === req.body.reportId);
-    if (r) { r.status = "Genehmigt 🗸"; r.signedBy = req.body.adminName; }
-    res.json({ success: true });
-});
-
-app.get('/api/homework', (req, res) => res.json(homeworkDB));
-app.post('/api/homework', (req, res) => {
-    homeworkDB.push({ id: Date.now(), className: req.body.className, studentName: req.body.studentName, title: req.body.title, desc: req.body.desc, pdfUrl: req.body.pdfUrl || "#",
+app.get('/api/skills/grades', (req, res) => res.json

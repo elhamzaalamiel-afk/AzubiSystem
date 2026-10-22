@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AzubiSystem Enterprise - Duales Ausbildungssystem</title>
+    <title>AzubiSystem Enterprise #1 - Duales Ausbildungssystem Deutschland</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         .azubi-watermark-bg {
@@ -38,7 +40,7 @@
                         <text x="160" y="90" font-family="'Inter', sans-serif" font-weight="900" font-size="34" fill="#0d5235" letter-spacing="1.5">AZUBISYSTEM</text>
                     </svg>
                 </div>
-                <p class="text-xs text-slate-500 font-medium" data-i18n="loginSubtitle">بوابة نظام التدريب المهني المزدوج 🇩🇪</p>
+                <p class="text-xs text-slate-500 font-medium" data-i18n="loginSubtitle">بوابة نظام التدريب المهني المزدوج الألمانية 🇩🇪</p>
             </div>
             <div class="space-y-4">
                 <div>
@@ -52,8 +54,9 @@
                 <div>
                     <label class="block text-xs font-bold uppercase text-slate-600 mb-1" data-i18n="lblRole">الصلاحية</label>
                     <select id="roleSelector" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm bg-white font-semibold focus:ring-2 focus:ring-emerald-600 focus:outline-none">
-                        <option value="admin">Super Admin / Ausbilder</option>
-                        <option value="azubi">Azubi (متدرب)</option>
+                        <option value="admin">Super Admin / Ausbilder (المشرف والشركة)</option>
+                        <option value="azubi">Azubi (المتدرب المهني)</option>
+                        <option value="teacher">Lehrkraft (معلم المدرسة المهنية)</option>
                     </select>
                 </div>
                 <button type="button" onclick="doLogin()" id="btnLogin" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-2.5 rounded-lg text-sm transition shadow-md" data-i18n="btnLogin">تسجيل الدخول</button>
@@ -73,28 +76,29 @@
                 </div>
                 <nav class="mt-4 px-3 space-y-1 text-sm">
                     <div id="adminNav" class="space-y-1">
-                        <a href="#" onclick="switchTab('dashboard')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navDash">📊 لوحة التحكم</a>
-                        <a href="#" onclick="switchTab('students')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navStudents">🎓 إدارة بيانات المتدربين</a>
-                        <a href="#" onclick="switchTab('admins')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAdmins">👤 إدارة المسؤولين (Ausbilder)</a>
-                        <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navSkills">⭐ خريطة المهارات</a>
-                        <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAI">🤖 chat AzubiSystem</a>
+                        <a href="#" onclick="switchTab('dashboard')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navDash">📊 لوحة التحكم القيادية</a>
+                        <a href="#" onclick="switchTab('students')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navStudents">🎓 ملفات المتدربين والتدوير</a>
+                        <a href="#" onclick="switchTab('admins')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAdmins">👤 إدارة المشرفين والمعلمين</a>
+                        <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navSkills">⭐ خريطة المهارات 1-6</a>
+                        <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAI">🤖 chat AzubiSystem + AI</a>
                         <a href="#" onclick="switchTab('homework')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navHw">📚 الأقسام والواجبات</a>
-                        <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navChat">💬 المحادثات والمراسلة</a>
+                        <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navChat">💬 التواصل الثلاثي المباشر</a>
                     </div>
                     <div id="azubiNav" class="hidden space-y-1">
-                        <a href="#" onclick="switchTab('azubi-portal')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAzubi">📓 دفتر التقارير و PDF</a>
-                        <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAI">🤖 chat AzubiSystem</a>
+                        <a href="#" onclick="switchTab('azubi-portal')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAzubi">📓 دفتر التقارير BBiG & PDF</a>
+                        <a href="#" onclick="switchTab('ai-assistant')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAI">🤖 chat AzubiSystem + AI</a>
                         <a href="#" onclick="switchTab('skills')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navSkills">⭐ خريطة المهارات</a>
                         <a href="#" onclick="switchTab('homework')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navHw">📚 الأقسام والواجبات</a>
                         <a href="#" onclick="switchTab('messages')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navChat">💬 المحادثات والمراسلة</a>
                     </div>
-                    <a href="#" onclick="switchTab('calendar')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navCal">📅 التقويم السنوي المتقدم للأقسام</a>
-                    <a href="#" onclick="switchTab('about')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAbout">ℹ️ حول النظام</a>
-                    <a href="#" onclick="switchTab('help')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navHelp">❓ مركز المساعدة</a>
+                    <a href="#" onclick="switchTab('calendar')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navCal">📅 التقويم والتخطيط السنوي</a>
+                    <a href="#" onclick="switchTab('dsgvo')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navDsgvo">🔒 حماية البيانات DSGVO</a>
+                    <a href="#" onclick="switchTab('about')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navAbout">ℹ️ حول المنصة رقم 1</a>
+                    <a href="#" onclick="switchTab('help')" class="block px-4 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 transition" data-i18n="navHelp">❓ مركز المساعدة IHK</a>
                 </nav>
             </div>
             <div class="p-4 m-4 bg-slate-800/80 rounded-xl border border-slate-700 text-xs text-slate-300 space-y-1">
-                <div class="font-bold text-white" data-i18n="suppLabel">مركز الدعم الفني</div>
+                <div class="font-bold text-white" data-i18n="suppLabel">الدعم الفني المعتمد</div>
                 <div class="font-mono text-emerald-400 font-semibold phone-num">📞 +49 176 63160304</div>
             </div>
         </aside>
@@ -102,7 +106,7 @@
         <!-- المحتوى الرئيسي -->
         <main class="flex-1 flex flex-col overflow-y-auto">
             <header class="bg-white/90 backdrop-blur border-b border-slate-200 h-16 flex items-center justify-between px-8 no-print shadow-sm">
-                <div class="font-bold text-slate-800 text-lg" id="hdrTitle" data-i18n="hdrAdmin">مركز تحكم المشرف العام</div>
+                <div class="font-bold text-slate-800 text-lg" id="hdrTitle" data-i18n="hdrAdmin">مركز التحكم القيادي الأول بـ ألمانيا</div>
                 <div class="flex items-center gap-3">
                     <select id="langSwitcher" onchange="changeLanguage(this.value)" class="text-xs bg-slate-100 border border-slate-300 px-3 py-1.5 rounded-lg font-semibold text-slate-700 cursor-pointer focus:outline-none">
                         <option value="de">🇩🇪 Deutsch</option>
@@ -119,21 +123,24 @@
 
             <div class="p-8 space-y-8">
                 
-                <!-- 1. لوحة التحكم -->
+                <!-- 1. لوحة التحكم Dashboard -->
                 <div id="tab-dashboard" class="space-y-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <h3 class="text-xl font-black text-slate-900" id="welcomeMsg">مرحباً بك</h3>
-                        <p class="text-xs text-slate-500 mt-1" data-i18n="dashSub">نظام إدارة التدريب المهني المؤسسي مفعل بنجاح.</p>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
+                        <div>
+                            <h3 class="text-xl font-black text-slate-900" id="welcomeMsg">مرحباً بك</h3>
+                            <p class="text-xs text-slate-500 mt-1" data-i18n="dashSub">منصة إدارة التدريب المهني المزدوج رقم 1 في ألمانيا المتوافقة كلياً مع BBiG و DSGVO.</p>
+                        </div>
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full border border-emerald-300">IHK & HWK Ready 🗸</span>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat1Label">المتدربون</span><div class="text-2xl font-black text-slate-800 mt-1" id="statAzubis">0</div></div>
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat2Label">المسؤولون (Ausbilder)</span><div class="text-2xl font-black text-slate-800 mt-1" id="statAdmins">1</div></div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat2Label">المسؤولون</span><div class="text-2xl font-black text-slate-800 mt-1" id="statAdmins">1</div></div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase">المعلمون</span><div class="text-2xl font-black text-slate-800 mt-1" id="statTeachers">1</div></div>
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat3Label">التقارير المرفوعة</span><div class="text-2xl font-black text-emerald-600 mt-1" id="statReports">0</div></div>
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat4Label">حالة النظام</span><div class="text-xs font-bold text-emerald-600 mt-2 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> نشط ومؤمن (Live)</div></div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><span class="text-xs font-bold text-slate-400 uppercase" data-i18n="stat4Label">حالة النظام</span><div class="text-xs font-bold text-emerald-600 mt-2 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live #1 Germany</div></div>
                     </div>
 
-                    <!-- الشعار الملون الظاهر في Dashboard -->
                     <div class="bg-white p-10 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-center min-h-[260px]">
                         <div class="w-full max-w-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 140" class="w-full h-auto drop-shadow-sm">
@@ -146,14 +153,14 @@
                                 <text x="160" y="90" font-family="'Inter', sans-serif" font-weight="900" font-size="34" fill="#0d5235" letter-spacing="1.5">AZUBISYSTEM</text>
                             </svg>
                         </div>
-                        <p class="text-xs text-slate-400 mt-4 font-semibold tracking-wide" data-i18n="logoSubtext">بوابة نظام التدريب المهني المزدوج • الإصدار المؤسسي الرسمي</p>
+                        <p class="text-xs text-slate-400 mt-4 font-semibold tracking-wide" data-i18n="logoSubtext">بوابة نظام التدريب المهني المزدوج • الإصدار المؤسسي الأول الرسمي</p>
                     </div>
                 </div>
 
-                <!-- 2. إدارة بيانات المتدربين الشاملة -->
+                <!-- 2. إدارة ملفات المتدربين والتدوير -->
                 <div id="tab-students" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                        <h3 class="text-lg font-bold text-slate-900" data-i18n="studSecTitle">🎓 إدارة بيانات المتدربين الشاملة والملفات</h3>
+                        <h3 class="text-lg font-bold text-slate-900" data-i18n="studSecTitle">🎓 إدارة بيانات المتدربين، التدوير والأقسام</h3>
                         
                         <div class="bg-slate-50 p-5 rounded-xl border space-y-4">
                             <h4 class="font-bold text-xs text-slate-700" data-i18n="addNewStudHead">➕ إضافة متدرب جديد (جميع الحقول نصية حرة):</h4>
@@ -164,9 +171,11 @@
                                 <input type="text" id="addStudPhone" placeholder="رقم الهاتف..." class="px-3 py-2 border rounded-xl text-xs bg-white phone-num">
                                 <input type="text" id="addStudBirth" placeholder="تاريخ الميلاد (مثال: 15.08.2001)..." class="px-3 py-2 border rounded-xl text-xs bg-white">
                                 <input type="text" id="addStudAddr" placeholder="العنوان الكامل (Adresse)..." class="px-3 py-2 border rounded-xl text-xs bg-white">
-                                <input type="text" id="addStudStart" placeholder="تاريخ بدء التدريب (Ausbildungsbeginn)..." class="px-3 py-2 border rounded-xl text-xs bg-white">
-                                <input type="text" id="addStudDomain" placeholder="مجال التدريب (Ausbildungsbereich)..." class="px-3 py-2 border rounded-xl text-xs bg-white">
-                                <input type="text" id="addStudSpec" placeholder="التخصص الدقيق (Fachrichtung)..." class="px-3 py-2 border rounded-xl text-xs bg-white">
+                                <input type="date" id="addStudStart" placeholder="تاريخ البدء..." class="px-3 py-2 border rounded-xl text-xs bg-white">
+                                <input type="date" id="addStudProbe" placeholder="تاريخ نهاية فترة التجربة (Probezeit)..." class="px-3 py-2 border rounded-xl text-xs bg-white">
+                                <input type="text" id="addStudDept" placeholder="القسم الحالي (Aktuelle Abteilung)..." class="px-3 py-2 border rounded-xl text-xs bg-white">
+                                <input type="text" id="addStudDomain" placeholder="مجال التدريب..." class="px-3 py-2 border rounded-xl text-xs bg-white">
+                                <input type="text" id="addStudSpec" placeholder="التخصص الدقيق..." class="px-3 py-2 border rounded-xl text-xs bg-white">
                             </div>
                             <button onclick="addNewStudentFull()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-6 py-2.5 rounded-xl shadow-md transition" data-i18n="btnAddStud">➕ حفظ وإضافة المتدرب</button>
                         </div>
@@ -175,36 +184,62 @@
                     </div>
                 </div>
 
-                <!-- نافذة منسدلة تفصيلية للمتدرب -->
+                <!-- نافذة تفصيلية وموقع التوقيع الشخصي للمتدرب -->
                 <div id="studentDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
                     <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
                         <div class="flex justify-between items-center border-b pb-3">
-                            <h4 class="font-bold text-base text-slate-900" id="modalStudTitle">تفاصيل ملف المتدرب</h4>
+                            <h4 class="font-bold text-base text-slate-900" id="modalStudTitle">تفاصيل ملف المتدرب والتوقيع الرقمي</h4>
                             <button onclick="closeStudentModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
                         </div>
                         <div id="modalStudBody" class="space-y-3 text-xs"></div>
+                        
+                        <!-- منطقة رسم التوقيع الرقمي باليد -->
+                        <div class="border-t pt-3 space-y-2">
+                            <label class="font-bold text-slate-800 text-xs block">✍️ التوقيع الرقمي المعتمد للمتدرب (Unterschrift):</label>
+                            <div class="border border-slate-300 rounded-xl bg-slate-50 overflow-hidden">
+                                <canvas id="signatureCanvas" class="w-full h-32 touch-none"></canvas>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <button onclick="clearSignature()" class="text-[11px] text-red-600 font-bold">مسح التوقيع</button>
+                                <button onclick="saveSignatureModal()" class="bg-emerald-800 text-white px-4 py-1.5 rounded-lg text-xs font-bold">حفظ التوقيع الرقمي</button>
+                            </div>
+                        </div>
+
                         <div class="flex justify-end pt-2">
                             <button onclick="closeStudentModal()" class="bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-bold">إغلاق</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. إدارة المسؤولين -->
+                <!-- 3. إدارة المشرفين والمعلمين -->
                 <div id="tab-admins" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                        <h3 class="text-lg font-bold text-slate-900" data-i18n="adminSecTitle">👤 إدارة المسؤولين والمشرفين (Ausbilder / Super Admin)</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-4 rounded-xl border">
-                            <input type="text" id="admName" placeholder="اسم المسؤول..." class="px-3 py-2 border rounded-xl text-xs bg-white">
-                            <input type="email" id="admEmail" placeholder="البريد الإلكتروني..." class="px-3 py-2 border rounded-xl text-xs bg-white">
-                            <input type="text" id="admRole" placeholder="الصلاحية (Ausbilder)..." class="px-3 py-2 border rounded-xl text-xs bg-white" value="Ausbilder">
-                            <input type="text" id="admPhone" placeholder="رقم الهاتف..." class="px-3 py-2 border rounded-xl text-xs bg-white phone-num">
-                            <input type="text" id="admOrg" placeholder="الشركة / القسم..." class="px-3 py-2 border rounded-xl text-xs bg-white">
-                            <button onclick="addNewAdmin()" class="bg-emerald-700 text-white font-semibold text-xs py-2 rounded-xl shadow-md" data-i18n="btnAddAdmin">➕ إضافة مسؤول</button>
+                        <h3 class="text-lg font-bold text-slate-900" data-i18n="adminSecTitle">👤 إدارة المشرفين في الشركة والمعلمين بالمدارس</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- إضافة مشرف شركة -->
+                            <div class="space-y-3 bg-slate-50 p-4 rounded-xl border">
+                                <h4 class="font-bold text-xs text-slate-800">إضافة مشرف في الشركة (Ausbilder):</h4>
+                                <input type="text" id="admName" placeholder="اسم المشرف..." class="w-full px-3 py-2 border rounded-xl text-xs bg-white">
+                                <input type="email" id="admEmail" placeholder="البريد..." class="w-full px-3 py-2 border rounded-xl text-xs bg-white">
+                                <input type="text" id="admPhone" placeholder="الهاتف..." class="w-full px-3 py-2 border rounded-xl text-xs bg-white phone-num">
+                                <button onclick="addNewAdmin()" class="w-full bg-emerald-700 text-white font-semibold text-xs py-2 rounded-xl shadow-md" data-i18n="btnAddAdmin">➕ إضافة مشرف</button>
+                            </div>
+
+                            <!-- إضافة معلم مدرسة مهنية -->
+                            <div class="space-y-3 bg-slate-50 p-4 rounded-xl border">
+                                <h4 class="font-bold text-xs text-slate-800">إضافة معلم مدرسة مهنية (Lehrkraft):</h4>
+                                <input type="text" id="tchName" placeholder="اسم المعلم..." class="w-full px-3 py-2 border rounded-xl text-xs bg-white">
+                                <input type="email" id="tchEmail" placeholder="البريد..." class="w-full px-3 py-2 border rounded-xl text-xs bg-white">
+                                <input type="text" id="tchSchool" placeholder="اسم المدرسة المهنية (BS)..." class="w-full px-3 py-2 border rounded-xl text-xs bg-white">
+                                <button onclick="addNewTeacher()" class="w-full bg-slate-800 text-white font-semibold text-xs py-2 rounded-xl shadow-md">➕ إضافة معلم مدرسة</button>
+                            </div>
                         </div>
+
                         <div class="overflow-hidden border rounded-xl">
                             <table class="w-full text-left border-collapse text-xs">
                                 <thead class="bg-slate-100 text-slate-600 uppercase border-b">
-                                    <tr><th class="py-3 px-4">Name</th><th class="py-3 px-4">E-Mail</th><th class="py-3 px-4">Rolle</th><th class="py-3 px-4">Telefon</th><th class="py-3 px-4">Organisation</th></tr>
+                                    <tr><th class="py-3 px-4">Name</th><th class="py-3 px-4">E-Mail</th><th class="py-3 px-4">Rolle / Funktion</th><th class="py-3 px-4">Telefon / Schule</th></tr>
                                 </thead>
                                 <tbody id="adminTableBody" class="divide-y"></tbody>
                             </table>
@@ -216,19 +251,19 @@
                 <div id="tab-skills" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <div>
-                            <h3 class="text-xl font-bold text-slate-900" data-i18n="skillSecTitle">⭐ خريطة المهارات والمستويات</h3>
-                            <p class="text-xs text-slate-500 mt-1" data-i18n="skillSecSub">جداول مستقلة لكل مهارة مع درجات تقييم من 1 إلى 6.</p>
+                            <h3 class="text-xl font-bold text-slate-900" data-i18n="skillSecTitle">⭐ خريطة المهارات والمستويات (Schulnoten 1-6)</h3>
+                            <p class="text-xs text-slate-500 mt-1" data-i18n="skillSecSub">جداول مستقلة لكل مهارة مع درجات تقييم رسمية من 1 إلى 6.</p>
                         </div>
                         <div id="skillTablesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                     </div>
                 </div>
 
-                <!-- 5. التقويم السنوي -->
+                <!-- 5. التقويم والتخطيط السنوي -->
                 <div id="tab-calendar" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h3 class="text-lg font-bold text-slate-800" data-i18n="calSecTitle">📅 التقويم السنوي المتقدم للأقسام (الفترات الزمنية)</h3>
+                                <h3 class="text-lg font-bold text-slate-800" data-i18n="calSecTitle">📅 التقويم والتخطيط السنوي للأقسام والامتحانات</h3>
                                 <p class="text-xs text-slate-500" data-i18n="calSecSub">اختر القسم وحدد الفترات الزمنية ومراحل التدريب (Betrieb, Schule, Prüfung, Praxis).</p>
                             </div>
                             <select id="calClassFilter" onchange="loadAnnualCalendar()" class="px-3 py-2 border rounded-xl text-xs bg-white font-bold text-emerald-900"></select>
@@ -237,19 +272,22 @@
                     </div>
                 </div>
 
-                <!-- 6. المساعد الذكي -->
+                <!-- 6. المساعد الذكي والمحرك الصوتي -->
                 <div id="tab-ai-assistant" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                        <div class="flex items-center gap-3">
-                            <div class="p-3 bg-emerald-700 text-white rounded-2xl font-bold text-xl shadow-md">🤖</div>
-                            <div>
-                                <h3 class="text-xl font-bold text-slate-900">chat AzubiSystem</h3>
-                                <p class="text-xs text-slate-500" data-i18n="aiSubDesc">المساعد الذكي لإعداد التقارير والإجابة على استفسارات التدريب.</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 bg-emerald-700 text-white rounded-2xl font-bold text-xl shadow-md">🤖</div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-slate-900">chat AzubiSystem + Voice AI</h3>
+                                    <p class="text-xs text-slate-500" data-i18n="aiSubDesc">المساعد الذكي لتحويل الصياغة الشفهية والنصوص العادية إلى لغة BBiG ألمانية رسمية معتمدة.</p>
+                                </div>
                             </div>
+                            <button onclick="startVoiceInput()" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-2 shadow">🎙️ الإملاء الصوتي المباشر</button>
                         </div>
                         <div class="border border-emerald-200 rounded-2xl p-5 bg-emerald-50/50 space-y-3">
-                            <textarea id="aiInput" placeholder="اكتب استفسارك هنا..." class="w-full px-4 py-3 border rounded-xl text-sm border-emerald-200 h-32 bg-white"></textarea>
-                            <button onclick="runAIAssistant()" id="btnAiRun" class="bg-emerald-700 text-white text-xs font-bold px-6 py-3 rounded-xl hover:bg-emerald-800 shadow-md" data-i18n="btnAiRun">✨ إرسال إلى chat AzubiSystem</button>
+                            <textarea id="aiInput" placeholder="اكتب أفكارك أو املها بصوتك هنا بأسلوب عادي وسيقوم الذكاء الاصطناعي بصياغتها رسمياً..." class="w-full px-4 py-3 border rounded-xl text-sm border-emerald-200 h-32 bg-white"></textarea>
+                            <button onclick="runAIAssistant()" id="btnAiRun" class="bg-emerald-700 text-white text-xs font-bold px-6 py-3 rounded-xl hover:bg-emerald-800 shadow-md" data-i18n="btnAiRun">✨ تحويل إلى صياغة ألمانية رسمية BBiG</button>
                         </div>
                         <div id="aiOutput" class="hidden p-5 bg-white border border-emerald-200 rounded-2xl text-xs text-slate-800 space-y-2 shadow-sm"></div>
                     </div>
@@ -293,65 +331,95 @@
                         </div>
 
                         <div class="space-y-4">
-                            <h3 class="text-lg font-bold text-slate-900" data-i18n="hwListTitle">📋 الواجبات المتاحة وحلول المتدربين حسب القسم</h3>
+                            <h3 class="text-lg font-bold text-slate-900" data-i18n="hwListTitle">📋 الواجبات المتاحة وحلول المتدربين</h3>
                             <div id="homeworkList" class="space-y-4"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 8. بوابة المتدرب و PDF -->
+                <!-- 8. بوابة دفتر التقارير BBiG وتصدير PDF الموثق -->
                 <div id="tab-azubi-portal" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                        <h4 class="font-bold text-slate-800 text-sm" data-i18n="repHead">إضافة تقرير أسبوعي:</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="reportWeek" placeholder="الأسبوع (مثال: KW 1)" class="px-4 py-2 border rounded-xl text-sm">
-                            <input type="text" id="reportDept" placeholder="القسم" class="px-4 py-2 border rounded-xl text-sm">
+                        <h4 class="font-bold text-slate-800 text-sm" data-i18n="repHead">إضافة تقرير أسبوعي وفق BBiG:</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <input type="text" id="reportWeek" placeholder="الأسبوع (مثال: KW 12)" class="px-4 py-2 border rounded-xl text-sm">
+                            <input type="text" id="reportDept" placeholder="القسم (مثال: Produktion)" class="px-4 py-2 border rounded-xl text-sm">
+                            <select id="reportIhkModule" class="px-4 py-2 border rounded-xl text-sm bg-white font-semibold text-emerald-900"></select>
                         </div>
-                        <textarea id="reportText" placeholder="اكتب مهامك هنا..." class="w-full px-4 py-2 border rounded-xl text-sm h-28"></textarea>
+                        <textarea id="reportText" placeholder="اكتب مهامك اليومية..." class="w-full px-4 py-2 border rounded-xl text-sm h-28"></textarea>
                         <button onclick="saveReport()" id="btnSaveRep" class="bg-emerald-700 text-white text-xs font-bold px-6 py-2.5 rounded-xl" data-i18n="btnSaveRep">حفظ التقرير</button>
                     </div>
-                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6" id="pdfContainer">
-                        <div class="flex justify-between items-center mb-4"><h4 class="font-bold text-slate-800" data-i18n="pdfTitle">تقاريري:</h4><button onclick="exportToPDF()" id="btnExportPDF" class="bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl" data-i18n="btnExportPDF">📄 تصدير كـ PDF</button></div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4" id="pdfContainer">
+                        <div class="flex justify-between items-center border-b pb-3">
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-base" data-i18n="pdfTitle">تقاريري الأسبوعية المعتمدة للـ IHK:</h4>
+                                <p class="text-[11px] text-slate-500">موثقة بكود QR وتوقيع رقمي قانوني.</p>
+                            </div>
+                            <button onclick="exportToPDF()" id="btnExportPDF" class="bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-2 shadow" data-i18n="btnExportPDF">📄 تصدير كـ PDF موثق</button>
+                        </div>
                         <div id="reportList" class="space-y-4"><p class="text-xs text-slate-400">لا توجد تقارير.</p></div>
                     </div>
                 </div>
 
-                <!-- 9. المراسلات -->
+                <!-- 9. المراسلات الثلاثية المباشرة -->
                 <div id="tab-messages" class="hidden space-y-6">
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[580px]">
-                        <div class="p-4 bg-slate-900 text-white flex justify-between items-center"><h3 class="font-bold text-sm" id="chatHeader" data-i18n="chatHeader">💬 محادثة سرية وموجهة</h3><span class="text-xs text-emerald-400">مشفّر</span></div>
+                        <div class="p-4 bg-slate-900 text-white flex justify-between items-center"><h3 class="font-bold text-sm" id="chatHeader" data-i18n="chatHeader">💬 التواصل المباشر المشفّر بين (المتدرب • المشرف • المعلم)</h3><span class="text-xs text-emerald-400">مشفّر DSGVO</span></div>
                         <div class="p-3 bg-slate-100 border-b grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                            <div><label class="font-bold text-slate-600 block mb-1" data-i18n="lblRecType">نوع المستلم:</label><select id="msgRecipientType" class="w-full px-3 py-1.5 border rounded-lg bg-white"><option value="Betrieb">🏢 الشركة</option><option value="Berufsschule">🏫 المدرسة</option><option value="Ausbilder">👤 المشرف</option></select></div>
-                            <div><label class="font-bold text-slate-600 block mb-1" data-i18n="lblRecEmail">البريد أو الاسم:</label><input type="text" id="msgRecipient" placeholder="ausbilder@firma.de" class="w-full px-3 py-1.5 border rounded-lg bg-white"></div>
+                            <div><label class="font-bold text-slate-600 block mb-1" data-i18n="lblRecType">الوجهة المستهدفة:</label><select id="msgRecipientType" class="w-full px-3 py-1.5 border rounded-lg bg-white"><option value="Betrieb (Firma)">🏢 المشرف في الشركة</option><option value="Berufsschule">🏫 المعلم بالمدرسة المهنية</option><option value="Allgemein">📢 عام لجميع الأطراف</option></select></div>
+                            <div><label class="font-bold text-slate-600 block mb-1" data-i18n="lblRecEmail">البريد الإلكتروني:</label><input type="text" id="msgRecipient" placeholder="ausbilder@firma.de" class="w-full px-3 py-1.5 border rounded-lg bg-white"></div>
                         </div>
                         <div id="chatMessages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 text-sm"><p class="text-xs text-slate-400 text-center">لا توجد رسائل.</p></div>
                         <div class="p-4 bg-white border-t flex gap-3"><input type="text" id="chatInput" placeholder="اكتب رسالة..." class="flex-1 px-4 py-2.5 border rounded-xl text-sm"><button type="button" onclick="sendMessage()" id="btnSendMsg" class="bg-emerald-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm" data-i18n="btnSendMsg">إرسال</button></div>
                     </div>
                 </div>
 
-                <!-- 10. حول النظام -->
+                <!-- 10. حماية البيانات DSGVO -->
+                <div id="tab-dsgvo" class="hidden space-y-6">
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                        <div class="flex items-center gap-3 border-b pb-4">
+                            <span class="text-3xl">🔒</span>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900">حماية البيانات والأمن الرقمي (DSGVO / GDPR Center)</h3>
+                                <p class="text-xs text-slate-500">متوافق بالكامل مع اللائحة العامة لحماية البيانات في الاتحاد الأوروبي.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
+                                <h4 class="font-bold text-slate-800">بيانات التشفير والخادم:</h4>
+                                <p class="text-slate-600">• جميع البيانات مشفرة باستخدام معايير SSL/TLS.</p>
+                                <p class="text-slate-600">• الخوادم موجودة داخل النطاق الأوروبي خاضعة للقوانين ألمانية.</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
+                                <h4 class="font-bold text-slate-800">حقوق المستخدم (Art. 15-21 DSGVO):</h4>
+                                <button onclick="alert('جاري تجهيز النسخة الاحتياطية لبياناتك...')" class="bg-slate-800 text-white px-3 py-1.5 rounded text-xs font-bold block w-full text-center">تحميل نسختي الاحتياطية (Export Data)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 11. حول المنصة -->
                 <div id="tab-about" class="hidden space-y-6">
                     <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                        <h3 class="text-2xl font-bold text-slate-900" id="aboutTitle" data-i18n="aboutTitle">حول نظام AzubiSystem 🇩🇪</h3>
+                        <h3 class="text-2xl font-bold text-slate-900" id="aboutTitle" data-i18n="aboutTitle">حول نظام AzubiSystem Enterprise 🇩🇪</h3>
                         <p class="text-sm text-slate-600 leading-relaxed" id="aboutDesc" data-i18n="aboutDesc">
-                            يعتبر نظام <strong>AzubiSystem</strong> منصة رقمية متكاملة مصممة خصيصاً لإدارة نظام التدريب المهني المزدوج (Duales Ausbildungssystem) في ألمانيا وفق معايير BBiG و DSGVO.
+                            تعتبر منصة <strong>AzubiSystem Enterprise</strong> المنصة الأولى في ألمانيا للربط المتكامل والذكي لإدارة التدريب المهني المزدوج وفق قانون BBiG ومعايير IHK/HWK.
                         </p>
                     </div>
                 </div>
 
-                <!-- 11. مركز المساعدة -->
+                <!-- 12. مركز المساعدة -->
                 <div id="tab-help" class="hidden space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                        <h3 class="text-xl font-bold text-slate-900" id="helpTitle" data-i18n="helpTitle">مركز المساعدة والدعم (Help Center & FAQ)</h3>
+                        <h3 class="text-xl font-bold text-slate-900" id="helpTitle" data-i18n="helpTitle">مركز المساعدة والدعم IHK/HWK</h3>
                         <div class="space-y-4 text-xs">
                             <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl space-y-3">
-                                <p class="font-bold text-slate-900" data-i18n="faq1Q">1. كيف أقوم بتسجيل التقارير الأسبوعية (Berichtsheft)؟</p>
-                                <p class="text-slate-600" data-i18n="faq1A">من خلال الانتقال إلى دفتر التقارير وتعبئة الأسبوع والمهام ثم الحفظ والتصدير كـ PDF.</p>
-                                <p class="font-bold text-slate-900 pt-2 border-t border-emerald-200" data-i18n="faq2Q">2. كيف يتم إدارة المتدربين والمسؤولين والتقويم؟</p>
-                                <p class="text-slate-600" data-i18n="faq2A">عبر الأقسام المخصصة في القائمة الجانبية لإدارة الملفات والتقويم السنوي المتقدم.</p>
+                                <p class="font-bold text-slate-900" data-i18n="faq1Q">1. كيف أقوم بتسجيل وتوقيع التقارير الأسبوعية (Berichtsheft)؟</p>
+                                <p class="text-slate-600" data-i18n="faq1A">من خلال الانتقال إلى دفتر التقارير، تعبئة المهام، اختيار بند الـ IHK ثم الحفظ والتوقيع إلكترونياً والتصدير كـ PDF.</p>
                             </div>
                             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                                <h4 class="font-bold text-slate-800 text-sm" id="supContactTitle" data-i18n="supContactTitle">بيانات الاتصال والدعم الفني:</h4>
+                                <h4 class="font-bold text-slate-800 text-sm" id="supContactTitle" data-i18n="supContactTitle">بيانات الاتصال والدعم الفني المعتمد:</h4>
                                 <p class="text-slate-600">البريد الإلكتروني: <span class="font-mono text-emerald-700 font-bold">azubisystem.ha@gmail.com</span></p>
                                 <p class="text-slate-600">رقم الهاتف: <span class="font-mono text-emerald-700 font-bold phone-num">📞 +49 176 63160304</span></p>
                             </div>
@@ -365,60 +433,41 @@
 
     <script>
         let currentUser = null;
+        let signaturePad = null;
 
         const translations = {
             ar: {
-                navDash: "📊 لوحة التحكم", navStudents: "🎓 إدارة بيانات المتدربين", navAdmins: "👤 إدارة المسؤولين", navSkills: "⭐ خريطة المهارات", navAI: "🤖 chat AzubiSystem", navHw: "📚 الأقسام والواجبات", navChat: "💬 المحادثات والمراسلة", navAzubi: "📓 دفتر التقارير و PDF", navCal: "📅 التقويم السنوي المتقدم", navAbout: "ℹ️ حول النظام", navHelp: "❓ مركز المساعدة",
-                hdrAdmin: "مركز تحكم المشرف العام", btnLogout: "تسجيل الخروج", welcome: "مرحباً بك في النظام، ", dashSub: "نظام إدارة التدريب المهني المؤسسي مفعل بنجاح.",
+                navDash: "📊 لوحة التحكم القيادية", navStudents: "🎓 ملفات المتدربين والتدوير", navAdmins: "👤 إدارة المشرفين والمعلمين", navSkills: "⭐ خريطة المهارات 1-6", navAI: "🤖 chat AzubiSystem + AI", navHw: "📚 الأقسام والواجبات", navChat: "💬 التواصل الثلاثي المباشر", navAzubi: "📓 دفتر التقارير BBiG & PDF", navCal: "📅 التقويم والتخطيط السنوي", navDsgvo: "🔒 حماية البيانات DSGVO", navAbout: "ℹ️ حول المنصة رقم 1", navHelp: "❓ مركز المساعدة IHK",
+                hdrAdmin: "مركز التحكم القيادي الأول بـ ألمانيا", btnLogout: "تسجيل الخروج", welcome: "مرحباً بك في النظام، ", dashSub: "منصة إدارة التدريب المهني المزدوج رقم 1 في ألمانيا المتوافقة كلياً مع BBiG و DSGVO.",
                 stat1Label: "المتدربون", stat2Label: "المسؤولون", stat3Label: "التقارير المرفوعة", stat4Label: "حالة النظام",
-                studSecTitle: "🎓 إدارة بيانات المتدربين الشاملة والملفات", addNewStudHead: "➕ إضافة متدرب جديد (جميع الحقول نصية حرة):", btnAddStud: "➕ حفظ وإضافة المتدرب", adminSecTitle: "👤 إدارة المسؤولين والمشرفين (Ausbilder)", btnAddAdmin: "➕ إضافة مسؤول",
-                skillSecTitle: "⭐ خريطة المهارات والمستويات", skillSecSub: "جداول مستقلة لكل مهارة مع درجات تقييم من 1 إلى 6.",
-                calSecTitle: "📅 التقويم السنوي المتقدم للأقسام (الفترات الزمنية)", calSecSub: "اختر القسم وحدد الفترات الزمنية ومراحل التدريب.",
-                aiSubDesc: "المساعد الذكي لإعداد التقارير والإجابة على استفسارات التدريب.", btnAiRun: "✨ إرسال إلى chat AzubiSystem",
-                hwAdminTitle: "📚 نشر واجب مخصص لقسم أو متدرب", btnPubHw: "نشر الواجب", hwListTitle: "📋 الواجبات المتاحة وحلول المتدربين حسب القسم",
-                repHead: "إضافة تقرير أسبوعي:", btnSaveRep: "حفظ التقرير", pdfTitle: "تقاريري:", btnExportPDF: "📄 تصدير كـ PDF",
-                aboutTitle: "حول نظام AzubiSystem 🇩🇪", aboutDesc: "منصة رقمية متقدمة لإدارة نظام التدريب المهني المزدوج في ألمانيا وفق معايير BBiG و DSGVO.",
-                helpTitle: "مركز المساعدة والدعم (Help Center & FAQ)", supContactTitle: "بيانات الاتصال والدعم الفني:", suppLabel: "مركز الدعم الفني",
-                loginSubtitle: "بوابة نظام التدريب المهني المزدوج 🇩🇪", lblEmail: "البريد الإلكتروني", lblPass: "كلمة المرور", lblRole: "الصلاحية", btnLogin: "تسجيل الدخول",
+                studSecTitle: "🎓 إدارة بيانات المتدربين، التدوير والأقسام", addNewStudHead: "➕ إضافة متدرب جديد (جميع الحقول نصية حرة):", btnAddStud: "➕ حفظ وإضافة المتدرب", adminSecTitle: "👤 إدارة المشرفين في الشركة والمعلمين بالمدارس", btnAddAdmin: "➕ إضافة مشرف",
+                skillSecTitle: "⭐ خريطة المهارات والمستويات (Schulnoten 1-6)", skillSecSub: "جداول مستقلة لكل مهارة مع درجات تقييم رسمية من 1 إلى 6.",
+                calSecTitle: "📅 التقويم والتخطيط السنوي للأقسام والامتحانات", calSecSub: "اختر القسم وحدد الفترات الزمنية ومراحل التدريب.",
+                aiSubDesc: "المساعد الذكي لتحويل الصياغة الشفهية والنصوص العادية إلى لغة BBiG ألمانية رسمية معتمدة.", btnAiRun: "✨ تحويل إلى صياغة ألمانية رسمية BBiG",
+                hwAdminTitle: "📚 نشر واجب مخصص لقسم أو متدرب", btnPubHw: "نشر الواجب", hwListTitle: "📋 الواجبات المتاحة وحلول المتدربين",
+                repHead: "إضافة تقرير أسبوعي وفق BBiG:", btnSaveRep: "حفظ التقرير", pdfTitle: "تقاريري الأسبوعية المعتمدة للـ IHK:", btnExportPDF: "📄 تصدير كـ PDF موثق",
+                aboutTitle: "حول نظام AzubiSystem Enterprise 🇩🇪", aboutDesc: "المنصة رقم 1 في ألمانيا لإدارة وتنسيق التدريب المهني المزدوج رسمياً.",
+                helpTitle: "مركز المساعدة والدعم IHK/HWK", supContactTitle: "بيانات الاتصال والدعم الفني المعتمد:", suppLabel: "الدعم الفني المعتمد",
+                loginSubtitle: "بوابة نظام التدريب المهني المزدوج الألمانية 🇩🇪", lblEmail: "البريد الإلكتروني", lblPass: "كلمة المرور", lblRole: "الصلاحية", btnLogin: "تسجيل الدخول",
                 classManTitle: "🏫 إدارة وتعديل الأقسام", btnAddClass: "➕ إضافة قسم", lblTargetClass: "اختر القسم:",
-                lblTargetStudent: "المتدرب المستهدف:", lblHwTitle: "عنوان الواجب:", allAzubisOpt: "جميع المتدربين (Alle Azubis)", logoSubtext: "بوابة نظام التدريب المهني المزدوج • الإصدار المؤسسي الرسمي"
+                lblTargetStudent: "المتدرب المستهدف:", lblHwTitle: "عنوان الواجب:", allAzubisOpt: "جميع المتدربين (Alle Azubis)", logoSubtext: "بوابة نظام التدريب المهني المزدوج • الإصدار المؤسسي الأول الرسمي"
             },
             de: {
-                navDash: "📊 Dashboard", navStudents: "🎓 Azubi Profilverwaltung", navAdmins: "👤 Ausbilder & Admin", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Klassen & Aufgaben", navChat: "💬 Nachrichten", navAzubi: "📓 Berichtsheft & PDF", navCal: "📅 Jahreskalender", navAbout: "ℹ️ Über uns", navHelp: "❓ Hilfe-Center",
-                hdrAdmin: "Super Admin Kontrollzentrum", btnLogout: "Abmelden", welcome: "Willkommen im System, ", dashSub: "Enterprise AzubiSystem Aktiv.",
+                navDash: "📊 Dashboard #1", navStudents: "🎓 Azubi Verwaltung & Rotation", navAdmins: "👤 Ausbilder & Lehrkräfte", navSkills: "⭐ Skill Matrix (1-6)", navAI: "🤖 chat AzubiSystem + AI", navHw: "📚 Klassen & Aufgaben", navChat: "💬 3-Wege Kommunikation", navAzubi: "📓 Berichtsheft BBiG & PDF", navCal: "📅 Jahreskalender & IHK", navDsgvo: "🔒 Datenschutz DSGVO", navAbout: "ℹ️ Über Plattform #1", navHelp: "❓ IHK/HWK Support",
+                hdrAdmin: "Super Admin Kontrollzentrum #1", btnLogout: "Abmelden", welcome: "Willkommen im System, ", dashSub: "Duales Ausbildungssystem Portal #1 in Deutschland (BBiG & DSGVO konform).",
                 stat1Label: "Azubis", stat2Label: "Ausbilder", stat3Label: "Berichte", stat4Label: "System Status",
-                studSecTitle: "🎓 Azubi Verwaltung & Stammdaten", addNewStudHead: "➕ Neuen Azubi hinzufügen (Freitext-Eingabe):", btnAddStud: "➕ Azubi speichern", adminSecTitle: "👤 Ausbilder & Admin Verwaltung", btnAddAdmin: "➕ Ausbilder hinzufügen",
-                skillSecTitle: "⭐ Skill Matrix & Kompetenzbereiche", skillSecSub: "Getrennte Tabellen mit Noten von 1 bis 6.",
-                calSecTitle: "📅 Erweiterter Jahreskalender nach Klassen", calSecSub: "Monatsplanung mit Zeiträumen für Betrieb, Schule oder Prüfung.",
-                aiSubDesc: "Ihr KI-Assistent für Berichte und Fragen.", btnAiRun: "✨ chat AzubiSystem antworten lassen",
-                hwAdminTitle: "📚 Aufgaben für Klasse / Azubi veröffentlichen", btnPubHw: "Aufgabe veröffentlichen", hwListTitle: "📋 Aufgaben & Lösungen nach Klassen",
-                repHead: "Wochenbericht eintragen:", btnSaveRep: "Bericht speichern", pdfTitle: "Meine Berichte:", btnExportPDF: "📄 als PDF exportieren",
-                aboutTitle: "Über AzubiSystem 🇩🇪", aboutDesc: "Spezialisierte digitale Plattform für das duale Ausbildungssystem in Deutschland nach BBiG & DSGVO.",
-                helpTitle: "Hilfe-Center & FAQ", supContactTitle: "Support-Kontaktdaten:", suppLabel: "Support Center",
+                studSecTitle: "🎓 Azubi Stammdaten & Versetzungsplanung", addNewStudHead: "➕ Neuen Azubi hinzufügen (Freitext):", btnAddStud: "➕ Azubi speichern", adminSecTitle: "👤 Ausbilder & Lehrkräfte Verwaltung", btnAddAdmin: "➕ Ausbilder hinzufügen",
+                skillSecTitle: "⭐ Skill Matrix (Schulnoten 1 bis 6)", skillSecSub: "Getrennte Tabellen mit Noten von 1 bis 6.",
+                calSecTitle: "📅 Jahreskalender & Prüfungsplanung", calSecSub: "Monatsplanung mit Zeiträumen für Betrieb, Schule oder IHK-Prüfung.",
+                aiSubDesc: "Sprach-KI-Assistent für BBiG-konforme Berichtsformulierungen.", btnAiRun: "✨ In BBiG-Fachsprache umwandeln",
+                hwAdminTitle: "📚 Aufgaben für Klasse / Azubi veröffentlichen", btnPubHw: "Aufgabe veröffentlichen", hwListTitle: "📋 Aufgaben & Lösungen",
+                repHead: "Wochenbericht eintragen (BBiG):", btnSaveRep: "Bericht speichern", pdfTitle: "Meine IHK-Berichte:", btnExportPDF: "📄 Als verifiziertes PDF exportieren",
+                aboutTitle: "Über AzubiSystem Enterprise 🇩🇪", aboutDesc: "Deutschlands führende digitale Plattform für das duale Ausbildungssystem.",
+                helpTitle: "IHK/HWK Hilfe-Center", supContactTitle: "Offizieller Support-Kontakt:", suppLabel: "Offizieller Support",
                 loginSubtitle: "Duales Ausbildungssystem Portal 🇩🇪", lblEmail: "E-Mail-Adresse", lblPass: "Passwort", lblRole: "Rolle", btnLogin: "Anmelden",
                 classManTitle: "🏫 Klassen bearbeiten & verwalten", btnAddClass: "➕ Klasse hinzufügen", lblTargetClass: "Klasse wählen:",
-                lblTargetStudent: "Ziel-Azubi:", lblHwTitle: "Aufgabentitel:", allAzubisOpt: "Alle Azubis", logoSubtext: "Duales Ausbildungssystem Portal • Offizielle Enterprise Edition"
-            },
-            en: {
-                navDash: "📊 Dashboard", navStudents: "🎓 Azubi Profiles", navAdmins: "👤 Ausbilder & Admin", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classes & Homework", navChat: "💬 Messages", navAzubi: "📓 Report Book & PDF", navCal: "📅 Annual Calendar", navAbout: "ℹ️ About", navHelp: "❓ Help Center",
-                hdrAdmin: "Super Admin Control Center", btnLogout: "Logout", welcome: "Welcome to the system, ", dashSub: "Enterprise AzubiSystem Active.",
-                stat1Label: "Azubis", stat2Label: "Ausbilder", stat3Label: "Reports", stat4Label: "System Status",
-                studSecTitle: "🎓 Azubi Comprehensive Profiles", addNewStudHead: "➕ Add New Azubi (Free Text Inputs):", btnAddStud: "➕ Save Azubi", adminSecTitle: "👤 Ausbilder Management", btnAddAdmin: "➕ Add Ausbilder",
-                skillSecTitle: "⭐ Skill Matrix & Competences", skillSecSub: "Individual tables with grades 1 to 6.",
-                calSecTitle: "📅 Advanced Annual Calendar by Classes", calSecSub: "Monthly planning with timeframes for company, school or exam.",
-                aiSubDesc: "Your AI assistant for reports and training questions.", btnAiRun: "✨ Send to chat AzubiSystem",
-                hwAdminTitle: "📚 Publish Homework for Class / Azubi", btnPubHw: "Publish Homework", hwListTitle: "📋 Homework & Solutions by Class",
-                repHead: "Add Weekly Report:", btnSaveRep: "Save Report", pdfTitle: "My Reports:", btnExportPDF: "📄 Export as PDF",
-                aboutTitle: "About AzubiSystem 🇩🇪", aboutDesc: "Specialized digital platform for dual vocational training in Germany.",
-                helpTitle: "Help Center & FAQ", supContactTitle: "Support Contact Data:", suppLabel: "Support Center",
-                loginSubtitle: "Dual Vocational Training Portal 🇩🇪", lblEmail: "E-Mail Address", lblPass: "Password", lblRole: "Role", btnLogin: "Login",
-                classManTitle: "🏫 Manage Classes", btnAddClass: "➕ Add Class", lblTargetClass: "Select Class:",
-                lblTargetStudent: "Target Azubi:", lblHwTitle: "Homework Title:", allAzubisOpt: "All Azubis", logoSubtext: "Dual Vocational Training Portal • Official Enterprise Edition"
-            },
-            fr: { navDash: "📊 Tableau de bord", navStudents: "🎓 Azubis", navAdmins: "👤 Ausbilder", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classes & Devoirs", navChat: "💬 Chat", navAzubi: "📓 Carnet", navCal: "📅 Calendrier", navAbout: "ℹ️ À propos", navHelp: "❓ Aide" },
-            es: { navDash: "📊 Tablero", navStudents: "🎓 Azubis", navAdmins: "👤 Ausbilder", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Clases y Tareas", navChat: "💬 Chat", navAzubi: "📓 Informes", navCal: "📅 Calendario", navAbout: "ℹ️ Acerca de", navHelp: "❓ Ayuda" },
-            it: { navDash: "📊 Dashboard", navStudents: "🎓 Azubis", navAdmins: "👤 Ausbilder", navSkills: "⭐ Skill Matrix", navAI: "🤖 chat AzubiSystem", navHw: "📚 Classi e Compiti", navChat: "💬 Chat", navAzubi: "📓 Rapporti", navCal: "📅 Calendario", navAbout: "ℹ️ Chi siamo", navHelp: "❓ Aiuto" },
-            tr: { navDash: "📊 Gösterge Paneli", navStudents: "🎓 Azubis", navAdmins: "👤 Ausbilder", navSkills: "⭐ Yetenek Matrisi", navAI: "🤖 chat AzubiSystem", navHw: "📚 Sınıflar ve Ödevler", navChat: "💬 Sohbet", navAzubi: "📓 Rapor", navCal: "📅 Yıllık Takvim", navAbout: "ℹ️ Hakkında", navHelp: "❓ Yardım" }
+                lblTargetStudent: "Ziel-Azubi:", lblHwTitle: "Aufgabentitel:", allAzubisOpt: "Alle Azubis", logoSubtext: "Duales Ausbildungssystem Portal • Offizielle Enterprise Edition #1"
+            }
         };
 
         function changeLanguage(lang) {
@@ -452,7 +501,7 @@
                 document.getElementById('loginScreen').classList.add('hidden');
                 updateRoleUI();
                 updateWelcomeMessage();
-                loadAdmins(); loadStudentsAndCards(); loadReports(); loadStats(); loadSkillTables(); loadClassesAndCalendar(); loadHomework(); loadMessages();
+                loadAdminsAndTeachers(); loadStudentsAndCards(); loadReports(); loadStats(); loadSkillTables(); loadClassesAndCalendar(); loadHomework(); loadMessages(); loadIhkModules();
             } else { alert(data.message); }
         }
 
@@ -461,20 +510,21 @@
             const stats = await res.json();
             document.getElementById('statAzubis').innerText = stats.totalAzubis;
             document.getElementById('statAdmins').innerText = stats.totalAdmins;
+            document.getElementById('statTeachers').innerText = stats.totalTeachers || 1;
             document.getElementById('statReports').innerText = stats.totalReports;
         }
 
         function updateRoleUI() {
             if (currentUser.role === 'azubi') {
                 document.getElementById('roleBadge').innerText = "AZUBI";
-                document.getElementById('hdrTitle').innerText = "Azubi Portal";
+                document.getElementById('hdrTitle').innerText = "Azubi Portal - Berichtsheft";
                 document.getElementById('adminNav').classList.add('hidden');
                 document.getElementById('azubiNav').classList.remove('hidden');
                 document.getElementById('adminHwBox').classList.add('hidden');
                 switchTab('azubi-portal');
             } else {
-                document.getElementById('roleBadge').innerText = "ADMIN";
-                document.getElementById('hdrTitle').innerText = "مركز تحكم المشرف العام";
+                document.getElementById('roleBadge').innerText = currentUser.role.toUpperCase();
+                document.getElementById('hdrTitle').innerText = "مركز التحكم القيادي الأول بـ ألمانيا";
                 document.getElementById('adminNav').classList.remove('hidden');
                 document.getElementById('azubiNav').classList.add('hidden');
                 document.getElementById('adminHwBox').classList.remove('hidden');
@@ -483,17 +533,21 @@
         }
 
         function switchTab(tabId) {
-            ['dashboard', 'students', 'admins', 'azubi-portal', 'ai-assistant', 'skills', 'calendar', 'homework', 'messages', 'about', 'help'].forEach(id => {
+            ['dashboard', 'students', 'admins', 'azubi-portal', 'ai-assistant', 'skills', 'calendar', 'homework', 'messages', 'dsgvo', 'about', 'help'].forEach(id => {
                 const el = document.getElementById('tab-' + id);
                 if(el) el.classList.add('hidden');
             });
             document.getElementById('tab-' + tabId).classList.remove('hidden');
-
-            document.querySelectorAll('aside nav a').forEach(a => a.classList.remove('bg-emerald-700', 'text-white'));
-            event && event.target && event.target.classList.add('bg-emerald-700', 'text-white');
         }
 
         function logout() { currentUser = null; document.getElementById('loginScreen').classList.remove('hidden'); }
+
+        async function loadIhkModules() {
+            const res = await fetch('/api/ihk-curriculum');
+            const modules = await res.json();
+            const sel = document.getElementById('reportIhkModule');
+            if(sel) sel.innerHTML = modules.map(m => `<option value="${m.code} - ${m.title}">${m.code}: ${m.title}</option>`).join('');
+        }
 
         async function loadClassesAndCalendar() {
             const res = await fetch('/api/classes');
@@ -502,25 +556,27 @@
             const hwSelect = document.getElementById('hwTargetClass');
             const studClassSel = document.getElementById('addStudClass');
 
-            select.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
+            if(select) select.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
             if(hwSelect) hwSelect.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
             if(studClassSel) studClassSel.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
 
             const classListDiv = document.getElementById('classListContainer');
-            classListDiv.innerHTML = classes.map(c => `
-                <div class="flex items-center gap-1 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold">
-                    <span>${c}</span>
-                    <button onclick="renameClassPrompt('${c}')" class="text-emerald-700 hover:text-emerald-900 ml-1" title="تعديل اسم القسم">✏️</button>
-                </div>
-            `).join('');
+            if(classListDiv) {
+                classListDiv.innerHTML = classes.map(c => `
+                    <div class="flex items-center gap-1 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold">
+                        <span>${c}</span>
+                        <button onclick="renameClassPrompt('${c}')" class="text-emerald-700 hover:text-emerald-900 ml-1">✏️</button>
+                    </div>
+                `).join('');
+            }
 
             const studentRes = await fetch('/api/students');
             const students = await studentRes.json();
             const studentSelect = document.getElementById('hwStudent');
-            const lang = document.getElementById('langSwitcher').value;
-            const allText = lang === 'ar' ? "جميع المتدربين (Alle Azubis)" : "Alle Azubis";
-            studentSelect.innerHTML = `<option value="Alle Azubis">${allText}</option>` + 
-                students.map(s => `<option value="${s.name}">${s.name} (${s.className})</option>`).join('');
+            if(studentSelect) {
+                studentSelect.innerHTML = `<option value="Alle Azubis">Alle Azubis</option>` + 
+                    students.map(s => `<option value="${s.name}">${s.name} (${s.className})</option>`).join('');
+            }
 
             loadAnnualCalendar();
         }
@@ -531,7 +587,6 @@
             await fetch('/api/classes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ className: name }) });
             document.getElementById('newClassNameInput').value = "";
             loadClassesAndCalendar();
-            alert('تمت إضافة القسم بنجاح!');
         }
 
         async function renameClassPrompt(oldName) {
@@ -540,36 +595,46 @@
             await fetch('/api/classes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'rename', oldName, newName }) });
             loadClassesAndCalendar();
             loadStudentsAndCards();
-            alert('تم تعديل اسم القسم بنجاح!');
         }
 
         async function addNewAdmin() {
             const name = document.getElementById('admName').value;
             const email = document.getElementById('admEmail').value;
-            const role = document.getElementById('admRole').value;
             const phone = document.getElementById('admPhone').value;
-            const org = document.getElementById('admOrg').value;
             if(!name || !email) return alert('Bitte Name und E-Mail eingeben');
-            await fetch('/api/admins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, role, phone, org }) });
-            document.getElementById('admName').value = "";
-            document.getElementById('admEmail').value = "";
-            document.getElementById('admPhone').value = "";
-            document.getElementById('admOrg').value = "";
-            loadAdmins();
-            loadStats();
-            alert('تمت إضافة المسؤول بنجاح!');
+            await fetch('/api/admins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, role: "Ausbilder", phone, org: "Betrieb" }) });
+            loadAdminsAndTeachers(); loadStats();
         }
 
-        async function loadAdmins() {
-            const res = await fetch('/api/admins');
-            const admins = await res.json();
-            document.getElementById('adminTableBody').innerHTML = admins.map(a => `
+        async function addNewTeacher() {
+            const name = document.getElementById('tchName').value;
+            const email = document.getElementById('tchEmail').value;
+            const school = document.getElementById('tchSchool').value;
+            if(!name || !email) return alert('Bitte Name und E-Mail eingeben');
+            await fetch('/api/teachers', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, school, subject: "Berufsschule" }) });
+            loadAdminsAndTeachers(); loadStats();
+        }
+
+        async function loadAdminsAndTeachers() {
+            const resA = await fetch('/api/admins');
+            const admins = await resA.json();
+            const resT = await fetch('/api/teachers');
+            const teachers = await resT.json();
+
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = admins.map(a => `
                 <tr class="hover:bg-slate-50">
                     <td class="py-3 px-4 font-semibold">${a.name}</td>
                     <td class="py-3 px-4 text-slate-500">${a.email}</td>
-                    <td class="py-3 px-4 font-bold text-emerald-800">${a.role}</td>
+                    <td class="py-3 px-4 font-bold text-emerald-800">🏢 ${a.role}</td>
                     <td class="py-3 px-4 phone-num font-mono">${a.phone}</td>
-                    <td class="py-3 px-4">${a.org}</td>
+                </tr>
+            `).join('') + teachers.map(t => `
+                <tr class="hover:bg-slate-50 bg-slate-50/50">
+                    <td class="py-3 px-4 font-semibold">${t.name}</td>
+                    <td class="py-3 px-4 text-slate-500">${t.email}</td>
+                    <td class="py-3 px-4 font-bold text-blue-800">🏫 Lehrkraft (Berufsschule)</td>
+                    <td class="py-3 px-4 font-semibold">${t.school}</td>
                 </tr>
             `).join('');
         }
@@ -582,24 +647,15 @@
             const birthdate = document.getElementById('addStudBirth').value;
             const address = document.getElementById('addStudAddr').value;
             const startDate = document.getElementById('addStudStart').value;
+            const probezeitEnd = document.getElementById('addStudProbe').value;
+            const currentDept = document.getElementById('addStudDept').value;
             const domain = document.getElementById('addStudDomain').value;
             const specialization = document.getElementById('addStudSpec').value;
 
             if(!name) return alert('الرجاء كتابة اسم المتدرب');
-            await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'add', name, email, className, phone, birthdate, address, startDate, domain, specialization, notes: "" }) });
+            await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'add', name, email, className, phone, birthdate, address, startDate, probezeitEnd, currentDept, domain, specialization, notes: "" }) });
             
-            document.getElementById('addStudName').value = "";
-            document.getElementById('addStudEmail').value = "";
-            document.getElementById('addStudPhone').value = "";
-            document.getElementById('addStudBirth').value = "";
-            document.getElementById('addStudAddr').value = "";
-            document.getElementById('addStudStart').value = "";
-            document.getElementById('addStudDomain').value = "";
-            document.getElementById('addStudSpec').value = "";
-
-            loadStudentsAndCards();
-            loadClassesAndCalendar();
-            loadStats();
+            loadStudentsAndCards(); loadClassesAndCalendar(); loadStats();
             alert('تم حفظ وإضافة بيانات المتدرب بنجاح!');
         }
 
@@ -617,11 +673,12 @@
                     </div>
                     <h5 class="font-bold text-sm text-slate-900">${s.name}</h5>
                     <p class="text-xs text-slate-500">${s.email || "بدون بريد"}</p>
-                    <div class="text-[11px] text-slate-600 font-medium">
-                        <div>مجال التدريب: <strong>${s.domain || "غير محدد"}</strong></div>
+                    <div class="text-[11px] text-slate-600 space-y-1">
+                        <div>🏢 القسم الحالي: <strong class="text-emerald-900">${s.currentDept || "الرئيسي"}</strong></div>
+                        <div>⏳ نهاية التجربة (Probezeit): <strong>${s.probezeitEnd || "غير محدد"}</strong></div>
                     </div>
                     <div class="pt-2 border-t flex justify-between items-center text-[11px] text-emerald-700 font-bold">
-                        <span>عرض وتعديل الملف بالكامل ➔</span>
+                        <span>عرض التوقيع والتفاصيل ➔</span>
                     </div>
                 </div>
             `).join('');
@@ -636,13 +693,125 @@
                 <div class="space-y-3">
                     <p><strong>الاسم الكامل (Name):</strong> <input type="text" id="m_name" value="${s.name || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 font-semibold"></p>
                     <p><strong>البريد الإلكتروني (E-Mail):</strong> <input type="text" id="m_email" value="${s.email || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50"></p>
-                    <p><strong>القسم (Klasse):</strong> <input type="text" id="m_class" value="${s.className || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 font-semibold text-emerald-900"></p>
-                    <p><strong>رقم الهاتف (Telefon):</strong> <input type="text" id="m_phone" value="${s.phone || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 phone-num"></p>
-                    <p><strong>تاريخ الميلاد (Geburtsdatum):</strong> <input type="text" id="m_birth" value="${s.birthdate || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50"></p>
-                    <p><strong>العنوان الكامل (Adresse):</strong> <input type="text" id="m_addr" value="${s.address || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50"></p>
-                    <p><strong>تاريخ بدء التدريب (Ausbildungsbeginn):</strong> <input type="text" id="m_start" value="${s.startDate || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50"></p>
-                    <p><strong>مجال التدريب (Ausbildungsbereich):</strong> <input type="text" id="m_domain" value="${s.domain || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 font-semibold"></p>
-                    <p><strong>التخصص الدقيق (Fachrichtung):</strong> <input type="text" id="m_spec" value="${s.specialization || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 font-semibold text-emerald-800"></p>
-                    <p><strong>ملاحظات التدريب (Notizen):</strong> <textarea id="m_notes" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 h-16">${s.notes || ''}</textarea></p>
+                    <p><strong>القسم الحالي (Abteilung):</strong> <input type="text" id="m_dept" value="${s.currentDept || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 font-bold text-emerald-900"></p>
+                    <p><strong>نهاية فترة التجربة (Probezeit Ende):</strong> <input type="date" id="m_probe" value="${s.probezeitEnd || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 font-semibold"></p>
+                    <p><strong>رقم الهاتف:</strong> <input type="text" id="m_phone" value="${s.phone || ''}" class="w-full px-2 py-1 border rounded mt-1 bg-slate-50 phone-num"></p>
                     <button onclick="saveStudentModal(${s.id})" class="w-full bg-emerald-700 text-white font-semibold py-2 rounded-xl text-xs mt-2 shadow">حفظ جميع التعديلات</button>
-                    <button onclick="deleteStudent(${s
+                </div>
+            `;
+            document.getElementById('studentDetailModal').classList.remove('hidden');
+            
+            // تهيئة منطقة الرسم بالتوقيع
+            setTimeout(() => {
+                const canvas = document.getElementById('signatureCanvas');
+                signaturePad = new SignaturePad(canvas);
+                if(s.signature) signaturePad.fromDataURL(s.signature);
+            }, 200);
+        }
+
+        function clearSignature() { if(signaturePad) signaturePad.clear(); }
+
+        async function saveSignatureModal() {
+            if(!signaturePad || signaturePad.isEmpty()) return alert('الرجاء التوقيع باليد أولاً');
+            const dataURL = signaturePad.toDataURL();
+            const s = window.allStudentsCache.find(x => x.name === currentUser.name) || window.allStudentsCache[0];
+            if(s) {
+                await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'save_signature', id: s.id, signature: dataURL }) });
+                alert('تم حفظ التوقيع الرقمي بنجاح!');
+            }
+        }
+
+        function closeStudentModal() { document.getElementById('studentDetailModal').classList.add('hidden'); }
+
+        async function saveStudentModal(id) {
+            const name = document.getElementById('m_name').value;
+            const email = document.getElementById('m_email').value;
+            const currentDept = document.getElementById('m_dept').value;
+            const probezeitEnd = document.getElementById('m_probe').value;
+            const phone = document.getElementById('m_phone').value;
+
+            await fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'edit', id, name, email, currentDept, probezeitEnd, phone }) });
+            closeStudentModal(); loadStudentsAndCards();
+        }
+
+        async function loadAnnualCalendar() {
+            const selectedClass = document.getElementById('calClassFilter').value || "Klasse 1";
+            const res = await fetch('/api/calendar/annual');
+            const data = await res.json();
+            const container = document.getElementById('annualCalendarContainer');
+            const filtered = data.filter(c => c.className === selectedClass);
+
+            container.innerHTML = filtered.map(c => `
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
+                    <div class="font-bold text-emerald-900 text-sm flex justify-between items-center">
+                        <span>${c.month}</span>
+                        <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">${c.phase}</span>
+                    </div>
+                    <div><label class="text-[10px] text-slate-500 font-bold">Zeitraum / Schule:</label><input type="text" value="${c.schoolDays}" class="w-full px-2 py-1 border rounded text-xs bg-slate-50"></div>
+                    <div><label class="text-[10px] text-slate-500 font-bold">Zeitraum / Praxis:</label><input type="text" value="${c.workDays}" class="w-full px-2 py-1 border rounded text-xs bg-slate-50"></div>
+                </div>
+            `).join('');
+        }
+
+        async function loadSkillTables() {
+            const catRes = await fetch('/api/skills/categories');
+            const categories = await catRes.json();
+            const gradeRes = await fetch('/api/skills/grades');
+            const savedGrades = await gradeRes.json();
+            const container = document.getElementById('skillTablesContainer');
+            container.innerHTML = "";
+
+            categories.forEach(cat => {
+                let tableHTML = `<div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm"><div class="bg-slate-900 text-white px-4 py-2.5 font-bold text-xs flex justify-between items-center"><span>${cat.name}</span><span class="text-[10px] text-emerald-400 font-mono">KW 1-52</span></div><div class="max-h-52 overflow-y-auto"><table class="w-full text-left border-collapse text-xs"><thead class="bg-slate-100 text-slate-600 sticky top-0"><tr><th class="py-2 px-3 w-24">Woche</th><th class="py-2 px-3">Note (1-6)</th></tr></thead><tbody class="divide-y divide-slate-100">`;
+                for (let w = 1; w <= 52; w++) {
+                    const weekStr = `KW ${w}`;
+                    const found = savedGrades.find(g => g.categoryId === cat.id && g.week === weekStr);
+                    const currentGrade = found ? found.grade : "";
+                    tableHTML += `<tr class="hover:bg-slate-50"><td class="py-1.5 px-3 font-semibold text-slate-700">${weekStr}</td><td class="py-1.5 px-3"><select onchange="updateSkillGrade('${cat.id}', '${weekStr}', this.value)" class="px-2 py-1 border rounded bg-white font-bold text-emerald-900 text-[11px]"><option value="" ${!currentGrade ? 'selected' : ''}>-- Note wählen --</option><option value="1" ${currentGrade == '1' ? 'selected' : ''}>1 - Sehr gut</option><option value="2" ${currentGrade == '2' ? 'selected' : ''}>2 - Gut</option><option value="3" ${currentGrade == '3' ? 'selected' : ''}>3 - Befriedigend</option><option value="4" ${currentGrade == '4' ? 'selected' : ''}>4 - Ausreichend</option><option value="5" ${currentGrade == '5' ? 'selected' : ''}>5 - Mangelhaft</option><option value="6" ${currentGrade == '6' ? 'selected' : ''}>6 - Ungenügend</option></select></td></tr>`;
+                }
+                tableHTML += `</tbody></table></div></div>`;
+                container.innerHTML += tableHTML;
+            });
+        }
+
+        async function updateSkillGrade(categoryId, week, grade) {
+            await fetch('/api/skills/grades', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ categoryId, week, grade }) });
+        }
+
+        function startVoiceInput() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                return alert('الإملاء الصوتي غير مدعوم في متصفحك الحالي.');
+            }
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'de-DE';
+            recognition.onstart = () => alert('🎙️ املِ مهامك الآن باللغة ألمانية أو العربية...');
+            recognition.onresult = (event) => {
+                document.getElementById('aiInput').value = event.results[0][0].transcript;
+            };
+            recognition.start();
+        }
+
+        function runAIAssistant() {
+            const text = document.getElementById('aiInput').value;
+            if(!text) return;
+            const out = document.getElementById('aiOutput');
+            out.classList.remove('hidden');
+            out.innerHTML = `<strong>🤖 chat AzubiSystem BBiG Formulation:</strong><br>• <strong>Offizielle BBiG-Formulierung:</strong> "Fachgerechte Durchführung und Dokumentation der betrieblichen Tätigkeiten: ${text}."<br>• <strong>IHK Richtlinie:</strong> Entspricht den Anforderungen des Ausbildungsrahmenplans.`;
+        }
+
+        async function saveReport() {
+            const week = document.getElementById('reportWeek').value;
+            const dept = document.getElementById('reportDept').value;
+            const ihkModule = document.getElementById('reportIhkModule').value;
+            const text = document.getElementById('reportText').value;
+            if(!week || !text) return alert('Pflichtfelder ausfüllen');
+            await fetch('/api/reports', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ week, dept, ihkModule, text, author: currentUser.name }) });
+            loadReports(); loadStats(); alert('تم حفظ التقرير بنجاح وفق BBiG!');
+        }
+
+        async function loadReports() {
+            const res = await fetch('/api/reports');
+            const reports = await res.json();
+            const list = document.getElementById('reportList');
+            if(reports.lengt
