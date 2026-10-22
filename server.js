@@ -60,8 +60,12 @@ app.post('/api/users', (req, res) => {
 
 app.get('/api/classes', (req, res) => res.json(classesDB));
 app.post('/api/classes', (req, res) => {
-    const { className } = req.body;
-    if (className && !classesDB.includes(className)) { classesDB.push(className); }
+    const { action, oldName, newName, className } = req.body;
+    if (action === 'rename' && oldName && newName) {
+        classesDB = classesDB.map(c => c === oldName ? newName : c);
+    } else if (className && !classesDB.includes(className)) {
+        classesDB.push(className);
+    }
     res.json({ success: true, classesDB });
 });
 
