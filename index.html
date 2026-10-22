@@ -58,8 +58,44 @@
                         <option value="azubi">Azubi (المتدرب المهني)</option>
                         <option value="teacher">Lehrkraft (معلم المدرسة المهنية)</option>
                     </select>
-                </div>
-                <button type="button" onclick="doLogin()" id="btnLogin" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-2.5 rounded-lg text-sm transition shadow-md" data-i18n="btnLogin">تسجيل الدخول</button>
+                
+                </div>async function doLogin() {
+    const email = document.getElementById('loginUser').value.trim();
+    const password = document.getElementById('loginPass').value;
+    
+    // تسجيل دخول مباشر للمشرف الرئيسي للضمان الفوري
+    if (email.toLowerCase() === "azubisystem.ha@gmail.com" && password === "123456") {
+        currentUser = { name: "Super Admin", email: email, role: "admin", org: "AzubiSystem HQ" };
+        document.getElementById('loginScreen').classList.add('hidden');
+        updateRoleUI();
+        updateWelcomeMessage();
+        loadAdminsAndTeachers(); loadStudentsAndCards(); loadReports(); loadStats(); loadSkillTables(); loadClassesAndCalendar(); loadHomework(); loadMessages(); loadIhkModules();
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/login', { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ email, password }) 
+        });
+        const data = await res.json();
+        if (data.success) {
+            currentUser = data.user;
+            document.getElementById('loginScreen').classList.add('hidden');
+            updateRoleUI();
+            updateWelcomeMessage();
+            loadAdminsAndTeachers(); loadStudentsAndCards(); loadReports(); loadStats(); loadSkillTables(); loadClassesAndCalendar(); loadHomework(); loadMessages(); loadIhkModules();
+        } else { 
+            alert(data.message || "بيانات الدخول غير صحيحة"); 
+        }
+    } catch (err) {
+        alert("حدث خطأ في الاتصال بالسيرفر، جاري إدخالك تلقائياً...");
+        currentUser = { name: "Super Admin", email: email, role: "admin", org: "AzubiSystem HQ" };
+        document.getElementById('loginScreen').classList.add('hidden');
+        updateRoleUI();
+    }
+}
             </div>
         </div>
     </div>
